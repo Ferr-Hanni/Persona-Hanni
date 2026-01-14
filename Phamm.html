@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanni Pham | NewJeans</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Lucu & Pixel -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500;700&family=Press+Start+2P&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navigasi -->
+    <nav class="navbar">
+        <div class="logo">HANNI PHAM PERSONA</div>
+        <div class="menu">
+            <button id="mode-btn" class="pixel-btn">💕 Cozy Mode</button>
+            <button id="dark-mode-btn" class="pixel-btn">🌙 Dark Mode</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="badge">NewJeans Member</div>
+            <h1 class="glitch" data-text="HANNI">하니</h1>
+            <p class="subtitle" id="hero-subtitle">P E R S O N A</p>
+            
+           <!-- REAL FUNCTIONAL MUSIC PLAYER -->
+            <div class="music-player-real">
+                <!-- Audio Element - Taruh file musik di folder assets/music/ -->
+                <audio id="bg-music" loop>
+                    <source src="assets/music/darling darling by newjeans’ hanni.mp3" type="audio/mpeg">
+                    Browser kamu tidak support audio.
+                </audio>
+
+                <div class="player-controls">
+                    <button id="play-pause-btn" class="control-btn">▶</button>
+                    
+                    <div class="track-info-real">
+                        <span class="scrolling-text">🎵 Darling - cover by Hanni 🎵</span>
+                    </div>
+
+                    <div class="volume-control">
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                    </div>
+                </div>
+                
+                <!-- Visualizer Bars (Gerak pas musik nyala) -->
+                <div class="visualizer" id="visualizer">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    <div class="bar"></div><div class="bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-image-wrapper">
+            <img 
+                src="assets/img/home.jpg" 
+                alt="Hanni" 
+                id="hanni-img"
+            >
+            <div class="speech-bubble" id="speech-bubble">Naurrr~!</div>
+
+            <div class="outfit-selector">
+                <button class="outfit-btn" data-img="assets/img/default.jpg" title="Default">🧢</button>
+                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci Ambassador">👜</button>
+                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage My Boo Outfit">🎤</button>
+                <button class="outfit-btn" data-img="assets/img/mygirl.jpg" title="Photo">🐰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section Kepribadian -->
+    <section class="personality" id="charm-section">
+        <h2 class="section-title">Hanni's Charms</h2>
+        <div class="traits-container">
+            <div class="trait-card" id="card-1">
+                <div class="card-icon">🇦🇺</div>
+                <h3>Viet-Aussie</h3>
+                <p>Logat Australia yang ikonik & multibahasa jenius.</p>
+            </div>
+            <div class="trait-card" id="card-2">
+                <div class="card-icon">🎤</div>
+                <h3>Honey Voice</h3>
+                <p>Suara yang manis seperti madu & dance yang swag.</p>
+            </div>
+            <div class="trait-card" id="card-3">
+                <div class="card-icon">🥖</div>
+                <h3>Bread Lover</h3>
+                <p>Sangat terobsesi dengan roti. Roti is life.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Sticker Deco Area -->
+    <section class="sticker-zone" id="sticker-area">
+        <h2>🎀 Y2K Sticker Deco 🎀</h2>
+        <p>Klik di dalam kotak putih untuk menempel stiker!</p>
+        <div class="sticker-canvas">
+            <div class="placeholder-text">Tap here!</div>
+        </div>
+    </section>
+
+    <!-- Fitur 1: Hanni's Fortune Cookie -->
+    <section class="game-section">
+        <div class="game-container">
+            <h2>🥠 Hanni's Fortune Cookie 🥠</h2>
+            <p class="fortune-desc">Crack open untuk dapat wisdom dari Hanni!</p>
+            
+            <div class="fortune-cookie-wrapper">
+                <div class="cookie" id="fortune-cookie">
+                    <div class="cookie-top">🥠</div>
+                    <div class="fortune-paper" id="fortune-paper">
+                        <p id="fortune-text">Klik cookie untuk mulai!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="fortune-btn" class="pixel-btn">✨ Crack Cookie!</button>
+            
+            <div class="fortune-stats">
+                <span>Fortunes collected: <strong id="fortune-count">0</strong></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur 2: Hanni's Bread Clicker Game -->
+    <section class="game-section bread-game-section">
+        <div class="game-container">
+            <h2>🍞 Hanni's Bread Empire 🍞</h2>
+            <p>Help Hanni collect bread! Klik sebanyak mungkin!</p>
+            
+            <div class="bread-display">
+                <div class="bread-count-big" id="bread-count">0</div>
+                <div class="bread-label">Breads Collected</div>
+            </div>
+            
+            <button id="bread-clicker" class="bread-btn">🍞</button>
+            
+            <div class="bread-stats">
+                <div class="stat-item">
+                    <span>Per Click: <strong id="click-power">1</strong>🍞</span>
+                </div>
+                <div class="stat-item">
+                    <span>Level: <strong id="bread-level">Bread Rookie</strong></span>
+                </div>
+            </div>
+            
+            <div class="bread-upgrades">
+                <button class="upgrade-btn" id="upgrade-1" data-cost="10" data-power="1">
+                    <div class="upgrade-name">🥖 Baguette Power</div>
+                    <div class="upgrade-cost">Cost: 10🍞</div>
+                </button>
+                <button class="upgrade-btn" id="upgrade-2" data-cost="50" data-power="5">
+                    <div class="upgrade-name">🥐 Croissant Boost</div>
+                    <div class="upgrade-cost">Cost: 50🍞</div>
+                </button>
+                <button class="upgrade-btn" id="upgrade-3" data-cost="200" data-power="20">
+                    <div class="upgrade-name">🎂 Bakery Boss</div>
+                    <div class="upgrade-cost">Cost: 200🍞</div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur 3: Phammily Photo Booth -->
+    <section class="photo-booth-section">
+        <h2 class="section-title">📸 Hanni Photo Booth 📸</h2>
+        <p class="booth-desc">Pilih frame & filter lucu buat foto Hanni!</p>
+        
+        <div class="photo-booth-container">
+            <div class="photo-frame" id="photo-frame">
+                <img src="assets/img/home.jpg" alt="Hanni" id="booth-img">
+                <div class="frame-overlay" id="frame-overlay"></div>
+                <div class="photo-stickers" id="photo-stickers"></div>
+            </div>
+            
+            <div class="booth-controls">
+                <div class="control-group">
+                    <h3>🖼️ Frames</h3>
+                    <div class="frame-options">
+                        <button class="frame-btn active" data-frame="none">No Frame</button>
+                        <button class="frame-btn" data-frame="hearts">💕 Hearts</button>
+                        <button class="frame-btn" data-frame="stars">⭐ Stars</button>
+                        <button class="frame-btn" data-frame="flowers">🌸 Flowers</button>
+                        <button class="frame-btn" data-frame="glitter">✨ Glitter</button>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3>🎨 Filters</h3>
+                    <div class="filter-options">
+                        <button class="filter-btn active" data-filter="none">Original</button>
+                        <button class="filter-btn" data-filter="y2k">Y2K Pink</button>
+                        <button class="filter-btn" data-filter="vintage">Vintage</button>
+                        <button class="filter-btn" data-filter="dreamy">Dreamy</button>
+                        <button class="filter-btn" data-filter="neon">Neon</button>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3>💬 Add Stickers</h3>
+                    <div class="sticker-options">
+                        <button class="add-sticker-btn" data-sticker="🐰">🐰</button>
+                        <button class="add-sticker-btn" data-sticker="💕">💕</button>
+                        <button class="add-sticker-btn" data-sticker="⭐">⭐</button>
+                        <button class="add-sticker-btn" data-sticker="🎀">🎀</button>
+                        <button class="add-sticker-btn" data-sticker="✨">✨</button>
+                        <button class="add-sticker-btn" data-sticker="Naurrr!">Naurrr!</button>
+                        <button class="add-sticker-btn" data-sticker="Pham💙">Pham💙</button>
+                    </div>
+                    <button id="clear-stickers" class="pixel-btn small-btn">🗑️ Clear All</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Designed for Bunnies 🐇 | Feri | 2025 Edition</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
