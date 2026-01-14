@@ -2,10 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Hanni Pham from NewJeans - Interactive persona website">
     <title>Hanni Pham | NewJeans</title>
+    
+    <!-- Preconnect untuk faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="assets/img/home.jpg" as="image">
+    
     <link rel="stylesheet" href="style.css">
-    <!-- Font Lucu & Pixel -->
+    
+    <!-- Font dengan display=swap untuk faster render -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500;700&family=Press+Start+2P&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,8 +25,8 @@
     <nav class="navbar">
         <div class="logo">HANNI PHAM PERSONA</div>
         <div class="menu">
-            <button id="mode-btn" class="pixel-btn">💕 Cozy Mode</button>
-            <button id="dark-mode-btn" class="pixel-btn">🌙 Dark Mode</button>
+            <button id="mode-btn" class="pixel-btn" aria-label="Toggle Cozy Mode">💕 Cozy Mode</button>
+            <button id="dark-mode-btn" class="pixel-btn" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
         </div>
     </nav>
 
@@ -28,25 +39,25 @@
             
            <!-- REAL FUNCTIONAL MUSIC PLAYER -->
             <div class="music-player-real">
-                <!-- Audio Element - Taruh file musik di folder assets/music/ -->
-                <audio id="bg-music" loop>
-                    <source src="assets/music/darling darling by newjeans’ hanni.mp3" type="audio/mpeg">
+                <!-- Audio dengan preload none -->
+                <audio id="bg-music" loop preload="none">
+                    <source src="assets/music/darling darling by newjeansâ€™ hanni.mp3" type="audio/mpeg">
                     Browser kamu tidak support audio.
                 </audio>
 
                 <div class="player-controls">
-                    <button id="play-pause-btn" class="control-btn">▶</button>
+                    <button id="play-pause-btn" class="control-btn" aria-label="Play/Pause music">▶</button>
                     
                     <div class="track-info-real">
                         <span class="scrolling-text">🎵 Darling - cover by Hanni 🎵</span>
                     </div>
 
                     <div class="volume-control">
-                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" aria-label="Volume control">
                     </div>
                 </div>
                 
-                <!-- Visualizer Bars (Gerak pas musik nyala) -->
+                <!-- Visualizer Bars -->
                 <div class="visualizer" id="visualizer">
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div>
                     <div class="bar"></div><div class="bar"></div>
@@ -57,16 +68,19 @@
         <div class="hero-image-wrapper">
             <img 
                 src="assets/img/home.jpg" 
-                alt="Hanni" 
+                alt="Hanni from NewJeans" 
                 id="hanni-img"
+                loading="eager"
+                width="320"
+                height="320"
             >
             <div class="speech-bubble" id="speech-bubble">Naurrr~!</div>
 
             <div class="outfit-selector">
-                <button class="outfit-btn" data-img="assets/img/default.jpg" title="Default">🧢</button>
-                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci Ambassador">👜</button>
-                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage My Boo Outfit">🎤</button>
-                <button class="outfit-btn" data-img="assets/img/mygirl.jpg" title="Photo">🐰</button>
+                <button class="outfit-btn" data-img="assets/img/default.jpg" title="Default" aria-label="Default outfit">🧢</button>
+                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci Ambassador" aria-label="Gucci outfit">👜</button>
+                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage My Boo Outfit" aria-label="My Boo outfit">🎤</button>
+                <button class="outfit-btn" data-img="assets/img/mygirl.jpg" title="Photo" aria-label="Casual outfit">🐰</button>
             </div>
         </div>
     </header>
@@ -97,7 +111,7 @@
     <section class="sticker-zone" id="sticker-area">
         <h2>🎀 Y2K Sticker Deco 🎀</h2>
         <p>Klik di dalam kotak putih untuk menempel stiker!</p>
-        <div class="sticker-canvas">
+        <div class="sticker-canvas" role="button" tabindex="0" aria-label="Click to add stickers">
             <div class="placeholder-text">Tap here!</div>
         </div>
     </section>
@@ -109,7 +123,7 @@
             <p class="fortune-desc">Crack open untuk dapat wisdom dari Hanni!</p>
             
             <div class="fortune-cookie-wrapper">
-                <div class="cookie" id="fortune-cookie">
+                <div class="cookie" id="fortune-cookie" role="button" tabindex="0" aria-label="Fortune cookie">
                     <div class="cookie-top">🥠</div>
                     <div class="fortune-paper" id="fortune-paper">
                         <p id="fortune-text">Klik cookie untuk mulai!</p>
@@ -136,7 +150,7 @@
                 <div class="bread-label">Breads Collected</div>
             </div>
             
-            <button id="bread-clicker" class="bread-btn">🍞</button>
+            <button id="bread-clicker" class="bread-btn" aria-label="Click to collect bread">🍞</button>
             
             <div class="bread-stats">
                 <div class="stat-item">
@@ -171,7 +185,7 @@
         
         <div class="photo-booth-container">
             <div class="photo-frame" id="photo-frame">
-                <img src="assets/img/home.jpg" alt="Hanni" id="booth-img">
+                <img src="assets/img/home.jpg" alt="Hanni photo booth" id="booth-img" loading="lazy" width="400" height="400">
                 <div class="frame-overlay" id="frame-overlay"></div>
                 <div class="photo-stickers" id="photo-stickers"></div>
             </div>

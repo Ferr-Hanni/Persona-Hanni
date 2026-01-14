@@ -1,4 +1,27 @@
-// --- CONFIG DATA ---
+// ========================================
+// PERFORMANCE UTILITIES
+// ========================================
+
+// Debounce function untuk optimize event handlers
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Check if mobile
+const isMobile = window.innerWidth < 768;
+
+// ========================================
+// CONFIG DATA
+// ========================================
+
 const normalState = {
     subtitle: "Hanni the Idol 🌟",
     bubble: "Naurrr! ~",
@@ -32,7 +55,10 @@ const darkState = {
 let isPotatoMode = false;
 let isDarkMode = false;
 
-// --- DOM ELEMENTS ---
+// ========================================
+// DOM ELEMENTS
+// ========================================
+
 const body = document.body;
 const modeBtn = document.getElementById('mode-btn');
 const darkModeBtn = document.getElementById('dark-mode-btn');
@@ -45,32 +71,41 @@ const cards = [
     document.getElementById('card-3')
 ];
 
-// --- 1. FITUR GANTI MODE (COZY) ---
-modeBtn.addEventListener('click', () => {
-    // Matikan dark mode dulu kalau aktif
-    if (isDarkMode) {
-        body.classList.remove('dark-mode');
-        isDarkMode = false;
-        darkModeBtn.innerText = "🌙 Dark Mode";
-    }
-    
-    isPotatoMode = !isPotatoMode;
-    const currentState = isPotatoMode ? potatoState : normalState;
+// ========================================
+// MODE SWITCHING
+// ========================================
 
-    // Toggle Class Body
-    if (isPotatoMode) {
+function switchToMode(targetMode) {
+    // Reset all modes
+    isPotatoMode = false;
+    isDarkMode = false;
+    body.classList.remove('potato-mode', 'dark-mode');
+    
+    let currentState = normalState;
+    
+    if (targetMode === 'potato') {
+        isPotatoMode = true;
         body.classList.add('potato-mode');
         modeBtn.innerText = "✨ Idol Mode";
-    } else {
-        body.classList.remove('potato-mode');
+        darkModeBtn.innerText = "🌙 Dark Mode";
+        currentState = potatoState;
+    } else if (targetMode === 'dark') {
+        isDarkMode = true;
+        body.classList.add('dark-mode');
+        darkModeBtn.innerText = "☀️ Light Mode";
         modeBtn.innerText = "💕 Cozy Mode";
+        currentState = darkState;
+    } else {
+        modeBtn.innerText = "💕 Cozy Mode";
+        darkModeBtn.innerText = "🌙 Dark Mode";
+        currentState = normalState;
     }
-
-    // Ganti Konten Utama
+    
+    // Update content
     heroSubtitle.innerText = currentState.subtitle;
     speechBubble.innerText = currentState.bubble;
-
-    // Ganti Konten Cards
+    
+    // Update cards
     cards.forEach((card, index) => {
         const data = currentState.cards[index];
         card.querySelector('h3').innerText = data.title;
@@ -78,57 +113,44 @@ modeBtn.addEventListener('click', () => {
         card.querySelector('.card-icon').innerText = data.icon;
         
         if (isPotatoMode) {
-            const randomRot = Math.random() * 6 - 3; 
+            const randomRot = Math.random() * 6 - 3;
             card.style.setProperty('--rotation', `${randomRot}deg`);
         } else {
             card.style.removeProperty('--rotation');
         }
     });
-});
+}
 
-// --- 2. FITUR DARK MODE ---
-darkModeBtn.addEventListener('click', () => {
-    // Matikan cozy mode dulu kalau aktif
-    if (isPotatoMode) {
-        body.classList.remove('potato-mode');
-        isPotatoMode = false;
-        modeBtn.innerText = "💕 Cozy Mode";
-    }
-    
-    isDarkMode = !isDarkMode;
-    const currentState = isDarkMode ? darkState : normalState;
-
-    // Toggle Class Body
-    if (isDarkMode) {
-        body.classList.add('dark-mode');
-        darkModeBtn.innerText = "☀️ Light Mode";
-    } else {
-        body.classList.remove('dark-mode');
-        darkModeBtn.innerText = "🌙 Dark Mode";
-    }
-
-    // Ganti Konten Utama
-    heroSubtitle.innerText = currentState.subtitle;
-    speechBubble.innerText = currentState.bubble;
-
-    // Ganti Konten Cards
-    cards.forEach((card, index) => {
-        const data = currentState.cards[index];
-        card.querySelector('h3').innerText = data.title;
-        card.querySelector('p').innerText = data.text;
-        card.querySelector('.card-icon').innerText = data.icon;
-        
-        // Dark mode tidak punya rotasi
-        card.style.removeProperty('--rotation');
+// Mode button handlers
+if (modeBtn) {
+    modeBtn.addEventListener('click', () => {
+        if (isPotatoMode) {
+            switchToMode('normal');
+        } else {
+            switchToMode('potato');
+        }
     });
-});
+}
 
-// --- 3. FITUR STICKER DECO ---
+if (darkModeBtn) {
+    darkModeBtn.addEventListener('click', () => {
+        if (isDarkMode) {
+            switchToMode('normal');
+        } else {
+            switchToMode('dark');
+        }
+    });
+}
+
+// ========================================
+// STICKER DECO AREA
+// ========================================
+
 const stickerCanvas = document.querySelector('.sticker-canvas');
 const stickers = ["🎀", "🐰", "💖", "🧢", "✨", "💙", "🍞", "🔥", "⭐", "🌸"];
 
-if(stickerCanvas) {
-    stickerCanvas.addEventListener('click', (e) => {
+if (stickerCanvas) {
+    const addSticker = (e) => {
         const rect = stickerCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -144,13 +166,19 @@ if(stickerCanvas) {
 
         stickerCanvas.appendChild(el);
 
+        // Limit stickers to prevent performance issues
         if (stickerCanvas.children.length > 25) {
-            stickerCanvas.removeChild(stickerCanvas.children[1]); 
+            stickerCanvas.removeChild(stickerCanvas.children[1]);
         }
-    });
+    };
+    
+    stickerCanvas.addEventListener('click', addSticker);
 }
 
-// --- 4. FITUR FORTUNE COOKIE ---
+// ========================================
+// FORTUNE COOKIE
+// ========================================
+
 const fortuneBtn = document.getElementById('fortune-btn');
 const fortuneText = document.getElementById('fortune-text');
 const fortuneCookie = document.getElementById('fortune-cookie');
@@ -181,33 +209,39 @@ const fortunes = [
     "🎭 Life is a stage. Perform your best act today!"
 ];
 
-if(fortuneBtn) {
-    fortuneBtn.addEventListener('click', () => {
-        // Animasi cookie crack
-        fortuneCookie.style.transform = "rotate(20deg) scale(0.8)";
+function crackFortune() {
+    fortuneCookie.style.transform = "rotate(20deg) scale(0.8)";
+    
+    setTimeout(() => {
+        const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+        fortuneText.innerText = randomFortune;
+        fortunesCollected++;
+        fortuneCount.innerText = fortunesCollected;
+        
+        fortuneCookie.style.transform = "rotate(0deg) scale(1)";
+        
+        const paper = document.getElementById('fortune-paper');
+        paper.style.transform = "scale(1.05)";
+        paper.style.background = "#FFF9C4";
         
         setTimeout(() => {
-            const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-            fortuneText.innerText = randomFortune;
-            fortunesCollected++;
-            fortuneCount.innerText = fortunesCollected;
-            
-            // Reset animasi
-            fortuneCookie.style.transform = "rotate(0deg) scale(1)";
-            
-            // Animasi paper
-            const paper = document.getElementById('fortune-paper');
-            paper.style.transform = "scale(1.05)";
-            paper.style.background = "#FFF9C4";
-            
-            setTimeout(() => {
-                paper.style.transform = "scale(1)";
-            }, 300);
+            paper.style.transform = "scale(1)";
         }, 300);
-    });
+    }, 300);
 }
 
-// --- 5. FITUR BREAD CLICKER GAME ---
+if (fortuneBtn) {
+    fortuneBtn.addEventListener('click', crackFortune);
+}
+
+if (fortuneCookie) {
+    fortuneCookie.addEventListener('click', crackFortune);
+}
+
+// ========================================
+// BREAD CLICKER GAME
+// ========================================
+
 const breadClicker = document.getElementById('bread-clicker');
 const breadCountDisplay = document.getElementById('bread-count');
 const clickPowerDisplay = document.getElementById('click-power');
@@ -237,15 +271,17 @@ function updateBreadLevel() {
 function createFloatingBread(x, y) {
     const floater = document.createElement('div');
     floater.innerText = `+${clickPower} 🍞`;
-    floater.style.position = 'fixed';
-    floater.style.left = x + 'px';
-    floater.style.top = y + 'px';
-    floater.style.fontSize = '1.5rem';
-    floater.style.fontWeight = 'bold';
-    floater.style.color = '#D35400';
-    floater.style.pointerEvents = 'none';
-    floater.style.zIndex = '1000';
-    floater.style.animation = 'floatUp 1s ease-out';
+    floater.style.cssText = `
+        position: fixed;
+        left: ${x}px;
+        top: ${y}px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #D35400;
+        pointer-events: none;
+        z-index: 1000;
+        animation: floatUp 1s ease-out;
+    `;
     
     document.body.appendChild(floater);
     
@@ -254,22 +290,12 @@ function createFloatingBread(x, y) {
     }, 1000);
 }
 
-// Add CSS animation for floating text
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes floatUp {
-        0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(-100px); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
-
-if(breadClicker) {
+if (breadClicker) {
     breadClicker.addEventListener('click', (e) => {
         breadCount += clickPower;
         breadCountDisplay.innerText = breadCount;
         
-        // Animasi button
+        // Animation
         breadClicker.style.transform = 'scale(0.9) rotate(-10deg)';
         setTimeout(() => {
             breadClicker.style.transform = 'scale(1) rotate(0deg)';
@@ -278,25 +304,22 @@ if(breadClicker) {
         // Floating text
         createFloatingBread(e.clientX, e.clientY);
         
-        // Update level
+        // Update level & buttons
         updateBreadLevel();
-        
-        // Update upgrade buttons
         updateUpgradeButtons();
     });
 }
 
-// --- 6. UPGRADE SYSTEM ---
+// ========================================
+// UPGRADE SYSTEM
+// ========================================
+
 const upgradeButtons = document.querySelectorAll('.upgrade-btn');
 
 function updateUpgradeButtons() {
     upgradeButtons.forEach(btn => {
         const cost = parseInt(btn.getAttribute('data-cost'));
-        if (breadCount >= cost) {
-            btn.disabled = false;
-        } else {
-            btn.disabled = true;
-        }
+        btn.disabled = breadCount < cost;
     });
 }
 
@@ -329,7 +352,10 @@ upgradeButtons.forEach(btn => {
     });
 });
 
-// --- 7. PHOTO BOOTH FEATURE ---
+// ========================================
+// PHOTO BOOTH
+// ========================================
+
 const photoFrame = document.getElementById('photo-frame');
 const boothImg = document.getElementById('booth-img');
 const frameOverlay = document.getElementById('frame-overlay');
@@ -339,16 +365,12 @@ const photoStickersContainer = document.getElementById('photo-stickers');
 const frameBtns = document.querySelectorAll('.frame-btn');
 frameBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Remove active from all
         frameBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const frame = btn.getAttribute('data-frame');
-        
-        // Remove all frame classes
         frameOverlay.className = 'frame-overlay';
         
-        // Add selected frame
         if (frame !== 'none') {
             frameOverlay.classList.add(`frame-${frame}`);
         }
@@ -359,44 +381,32 @@ frameBtns.forEach(btn => {
 const filterBtns = document.querySelectorAll('.filter-btn');
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Remove active from all
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const filter = btn.getAttribute('data-filter');
-        
-        // Remove all filter classes
         boothImg.className = '';
         
-        // Add selected filter
         if (filter !== 'none') {
             boothImg.classList.add(`filter-${filter}`);
         }
     });
 });
 
-// Fungsi untuk membuat stiker bisa di-drag
+// Draggable stickers function
 function makeStickerDraggable(sticker) {
     let isDragging = false;
-    let currentX;
-    let currentY;
-    let initialX;
-    let initialY;
+    let currentX = 0;
+    let currentY = 0;
+    let initialX = 0;
+    let initialY = 0;
     let xOffset = 0;
     let yOffset = 0;
 
-    // Mouse events
     sticker.addEventListener('mousedown', dragStart);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', dragEnd);
-
-    // Touch events untuk mobile
     sticker.addEventListener('touchstart', dragStart);
-    document.addEventListener('touchmove', drag);
-    document.addEventListener('touchend', dragEnd);
 
     function dragStart(e) {
-        // Cek apakah mouse atau touch
         if (e.type === "touchstart") {
             initialX = e.touches[0].clientX - xOffset;
             initialY = e.touches[0].clientY - yOffset;
@@ -405,10 +415,9 @@ function makeStickerDraggable(sticker) {
             initialY = e.clientY - yOffset;
         }
 
-        // Cek apakah klik pada sticker ini
         if (e.target === sticker) {
             isDragging = true;
-            sticker.style.zIndex = 1000; // Taruh di depan semua stiker lain
+            sticker.style.zIndex = 1000;
         }
     }
 
@@ -427,26 +436,24 @@ function makeStickerDraggable(sticker) {
             xOffset = currentX;
             yOffset = currentY;
 
-            // Get rotation value
             const rotation = sticker.style.getPropertyValue('--rot') || '0deg';
-            
-            // Update posisi stiker
-            setTranslate(currentX, currentY, sticker, rotation);
+            sticker.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation})`;
         }
     }
 
-    function dragEnd(e) {
+    function dragEnd() {
         if (isDragging) {
             initialX = currentX;
             initialY = currentY;
             isDragging = false;
-            sticker.style.zIndex = ''; // Reset z-index
+            sticker.style.zIndex = '';
         }
     }
 
-    function setTranslate(xPos, yPos, el, rotation) {
-        el.style.transform = `translate(${xPos}px, ${yPos}px) rotate(${rotation})`;
-    }
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('touchend', dragEnd);
 }
 
 // Add stickers to photo
@@ -459,10 +466,9 @@ addStickerBtns.forEach(btn => {
         sticker.className = 'photo-sticker';
         sticker.innerText = stickerText;
         
-        // Random position
-        const randomX = Math.random() * 70 + 10; // 10-80%
+        const randomX = Math.random() * 70 + 10;
         const randomY = Math.random() * 70 + 10;
-        const randomRot = Math.random() * 40 - 20; // -20 to 20 degrees
+        const randomRot = Math.random() * 40 - 20;
         
         sticker.style.left = randomX + '%';
         sticker.style.top = randomY + '%';
@@ -470,11 +476,8 @@ addStickerBtns.forEach(btn => {
         sticker.style.setProperty('--rot', `${randomRot}deg`);
         
         photoStickersContainer.appendChild(sticker);
-        
-        // ✨ TAMBAHKAN FUNGSI DRAG! ✨
         makeStickerDraggable(sticker);
         
-        // Button animation
         btn.style.transform = 'scale(1.2)';
         setTimeout(() => {
             btn.style.transform = 'scale(1)';
@@ -484,13 +487,16 @@ addStickerBtns.forEach(btn => {
 
 // Clear stickers
 const clearStickersBtn = document.getElementById('clear-stickers');
-if(clearStickersBtn) {
+if (clearStickersBtn) {
     clearStickersBtn.addEventListener('click', () => {
         photoStickersContainer.innerHTML = '';
     });
 }
 
-// --- 8. FITUR MUSIK PLAYER ---
+// ========================================
+// MUSIC PLAYER
+// ========================================
+
 const audio = document.getElementById('bg-music');
 const playBtn = document.getElementById('play-pause-btn');
 const visualizer = document.getElementById('visualizer');
@@ -499,7 +505,7 @@ const volumeSlider = document.getElementById('volume-slider');
 let isPlaying = false;
 
 function toggleMusic() {
-    if (!audio) return; 
+    if (!audio) return;
 
     if (isPlaying) {
         audio.pause();
@@ -512,56 +518,81 @@ function toggleMusic() {
             visualizer.classList.add('playing');
             isPlaying = true;
         }).catch(error => {
-            console.log("Autoplay dicegah browser. Klik tombol play untuk mulai.");
+            console.log("Autoplay prevented. Click play button to start.");
         });
     }
 }
 
-if(playBtn) {
+if (playBtn) {
     playBtn.addEventListener('click', toggleMusic);
 }
 
-if(volumeSlider) {
+if (volumeSlider) {
     volumeSlider.addEventListener('input', (e) => {
-        if(audio) audio.volume = e.target.value;
+        if (audio) audio.volume = e.target.value;
     });
 }
 
-// Auto-play saat load (kalau browser izinkan)
-window.addEventListener('load', () => {
-    if(audio) {
+// Don't auto-play on mobile to save bandwidth
+if (!isMobile && audio) {
+    window.addEventListener('load', () => {
         audio.volume = 0.5;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                playBtn.innerText = "⏸";
-                visualizer.classList.add('playing');
-                isPlaying = true;
-            }).catch(error => {
-                console.log("Menunggu interaksi user untuk play musik.");
-            });
-        }
-    }
-});
+        audio.play().then(() => {
+            playBtn.innerText = "⏸";
+            visualizer.classList.add('playing');
+            isPlaying = true;
+        }).catch(() => {
+            console.log("Waiting for user interaction to play music.");
+        });
+    });
+}
 
-// --- 9. FITUR OOTD PICKER ---
+// ========================================
+// OUTFIT PICKER
+// ========================================
+
 const outfitBtns = document.querySelectorAll('.outfit-btn');
-const mainImg = document.getElementById('hanni-img');
 
 outfitBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const newSrc = btn.getAttribute('data-img');
         
-        mainImg.style.opacity = "0";
-        mainImg.style.transform = "scale(0.9)";
+        hanniImg.style.opacity = "0";
+        hanniImg.style.transform = "scale(0.9)";
         
         setTimeout(() => {
-            mainImg.src = newSrc;
-            mainImg.style.opacity = "1";
-            mainImg.style.transform = "scale(1)";
+            hanniImg.src = newSrc;
+            hanniImg.style.opacity = "1";
+            hanniImg.style.transform = "scale(1)";
         }, 200);
     });
 });
 
+// ========================================
+// PERFORMANCE OPTIMIZATIONS
+// ========================================
+
+// Lazy load images when they come into view
+if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+}
+
 // Initialize
 updateUpgradeButtons();
+
+console.log("🐰 Hanni Persona Website Loaded! Naurrr~ 💕");
