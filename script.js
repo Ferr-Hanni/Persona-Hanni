@@ -1,27 +1,4 @@
-// ========================================
-// PERFORMANCE UTILITIES
-// ========================================
-
-// Debounce function untuk optimize event handlers
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Check if mobile
-const isMobile = window.innerWidth < 768;
-
-// ========================================
-// CONFIG DATA
-// ========================================
-
+// --- CONFIG DATA ---
 const normalState = {
     subtitle: "Hanni the Idol 🌟",
     bubble: "Naurrr! ~",
@@ -55,10 +32,7 @@ const darkState = {
 let isPotatoMode = false;
 let isDarkMode = false;
 
-// ========================================
-// DOM ELEMENTS
-// ========================================
-
+// --- DOM ELEMENTS ---
 const body = document.body;
 const modeBtn = document.getElementById('mode-btn');
 const darkModeBtn = document.getElementById('dark-mode-btn');
@@ -71,41 +45,32 @@ const cards = [
     document.getElementById('card-3')
 ];
 
-// ========================================
-// MODE SWITCHING
-// ========================================
-
-function switchToMode(targetMode) {
-    // Reset all modes
-    isPotatoMode = false;
-    isDarkMode = false;
-    body.classList.remove('potato-mode', 'dark-mode');
-    
-    let currentState = normalState;
-    
-    if (targetMode === 'potato') {
-        isPotatoMode = true;
-        body.classList.add('potato-mode');
-        modeBtn.innerText = "✨ Idol Mode";
+// --- 1. FITUR GANTI MODE (COZY) ---
+modeBtn.addEventListener('click', () => {
+    // Matikan dark mode dulu kalau aktif
+    if (isDarkMode) {
+        body.classList.remove('dark-mode');
+        isDarkMode = false;
         darkModeBtn.innerText = "🌙 Dark Mode";
-        currentState = potatoState;
-    } else if (targetMode === 'dark') {
-        isDarkMode = true;
-        body.classList.add('dark-mode');
-        darkModeBtn.innerText = "☀️ Light Mode";
-        modeBtn.innerText = "💕 Cozy Mode";
-        currentState = darkState;
-    } else {
-        modeBtn.innerText = "💕 Cozy Mode";
-        darkModeBtn.innerText = "🌙 Dark Mode";
-        currentState = normalState;
     }
     
-    // Update content
+    isPotatoMode = !isPotatoMode;
+    const currentState = isPotatoMode ? potatoState : normalState;
+
+    // Toggle Class Body
+    if (isPotatoMode) {
+        body.classList.add('potato-mode');
+        modeBtn.innerText = "✨ Idol Mode";
+    } else {
+        body.classList.remove('potato-mode');
+        modeBtn.innerText = "💕 Cozy Mode";
+    }
+
+    // Ganti Konten Utama
     heroSubtitle.innerText = currentState.subtitle;
     speechBubble.innerText = currentState.bubble;
-    
-    // Update cards
+
+    // Ganti Konten Cards
     cards.forEach((card, index) => {
         const data = currentState.cards[index];
         card.querySelector('h3').innerText = data.title;
@@ -113,44 +78,57 @@ function switchToMode(targetMode) {
         card.querySelector('.card-icon').innerText = data.icon;
         
         if (isPotatoMode) {
-            const randomRot = Math.random() * 6 - 3;
+            const randomRot = Math.random() * 6 - 3; 
             card.style.setProperty('--rotation', `${randomRot}deg`);
         } else {
             card.style.removeProperty('--rotation');
         }
     });
-}
+});
 
-// Mode button handlers
-if (modeBtn) {
-    modeBtn.addEventListener('click', () => {
-        if (isPotatoMode) {
-            switchToMode('normal');
-        } else {
-            switchToMode('potato');
-        }
+// --- 2. FITUR DARK MODE ---
+darkModeBtn.addEventListener('click', () => {
+    // Matikan cozy mode dulu kalau aktif
+    if (isPotatoMode) {
+        body.classList.remove('potato-mode');
+        isPotatoMode = false;
+        modeBtn.innerText = "💕 Cozy Mode";
+    }
+    
+    isDarkMode = !isDarkMode;
+    const currentState = isDarkMode ? darkState : normalState;
+
+    // Toggle Class Body
+    if (isDarkMode) {
+        body.classList.add('dark-mode');
+        darkModeBtn.innerText = "☀️ Light Mode";
+    } else {
+        body.classList.remove('dark-mode');
+        darkModeBtn.innerText = "🌙 Dark Mode";
+    }
+
+    // Ganti Konten Utama
+    heroSubtitle.innerText = currentState.subtitle;
+    speechBubble.innerText = currentState.bubble;
+
+    // Ganti Konten Cards
+    cards.forEach((card, index) => {
+        const data = currentState.cards[index];
+        card.querySelector('h3').innerText = data.title;
+        card.querySelector('p').innerText = data.text;
+        card.querySelector('.card-icon').innerText = data.icon;
+        
+        // Dark mode tidak punya rotasi
+        card.style.removeProperty('--rotation');
     });
-}
+});
 
-if (darkModeBtn) {
-    darkModeBtn.addEventListener('click', () => {
-        if (isDarkMode) {
-            switchToMode('normal');
-        } else {
-            switchToMode('dark');
-        }
-    });
-}
-
-// ========================================
-// STICKER DECO AREA
-// ========================================
-
+// --- 3. FITUR STICKER DECO ---
 const stickerCanvas = document.querySelector('.sticker-canvas');
 const stickers = ["🎀", "🐰", "💖", "🧢", "✨", "💙", "🍞", "🔥", "⭐", "🌸"];
 
-if (stickerCanvas) {
-    const addSticker = (e) => {
+if(stickerCanvas) {
+    stickerCanvas.addEventListener('click', (e) => {
         const rect = stickerCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -166,19 +144,13 @@ if (stickerCanvas) {
 
         stickerCanvas.appendChild(el);
 
-        // Limit stickers to prevent performance issues
         if (stickerCanvas.children.length > 25) {
-            stickerCanvas.removeChild(stickerCanvas.children[1]);
+            stickerCanvas.removeChild(stickerCanvas.children[1]); 
         }
-    };
-    
-    stickerCanvas.addEventListener('click', addSticker);
+    });
 }
 
-// ========================================
-// FORTUNE COOKIE
-// ========================================
-
+// --- 4. FITUR FORTUNE COOKIE ---
 const fortuneBtn = document.getElementById('fortune-btn');
 const fortuneText = document.getElementById('fortune-text');
 const fortuneCookie = document.getElementById('fortune-cookie');
@@ -209,39 +181,33 @@ const fortunes = [
     "🎭 Life is a stage. Perform your best act today!"
 ];
 
-function crackFortune() {
-    fortuneCookie.style.transform = "rotate(20deg) scale(0.8)";
-    
-    setTimeout(() => {
-        const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-        fortuneText.innerText = randomFortune;
-        fortunesCollected++;
-        fortuneCount.innerText = fortunesCollected;
-        
-        fortuneCookie.style.transform = "rotate(0deg) scale(1)";
-        
-        const paper = document.getElementById('fortune-paper');
-        paper.style.transform = "scale(1.05)";
-        paper.style.background = "#FFF9C4";
+if(fortuneBtn) {
+    fortuneBtn.addEventListener('click', () => {
+        // Animasi cookie crack
+        fortuneCookie.style.transform = "rotate(20deg) scale(0.8)";
         
         setTimeout(() => {
-            paper.style.transform = "scale(1)";
+            const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            fortuneText.innerText = randomFortune;
+            fortunesCollected++;
+            fortuneCount.innerText = fortunesCollected;
+            
+            // Reset animasi
+            fortuneCookie.style.transform = "rotate(0deg) scale(1)";
+            
+            // Animasi paper
+            const paper = document.getElementById('fortune-paper');
+            paper.style.transform = "scale(1.05)";
+            paper.style.background = "#FFF9C4";
+            
+            setTimeout(() => {
+                paper.style.transform = "scale(1)";
+            }, 300);
         }, 300);
-    }, 300);
+    });
 }
 
-if (fortuneBtn) {
-    fortuneBtn.addEventListener('click', crackFortune);
-}
-
-if (fortuneCookie) {
-    fortuneCookie.addEventListener('click', crackFortune);
-}
-
-// ========================================
-// BREAD CLICKER GAME
-// ========================================
-
+// --- 5. FITUR BREAD CLICKER GAME ---
 const breadClicker = document.getElementById('bread-clicker');
 const breadCountDisplay = document.getElementById('bread-count');
 const clickPowerDisplay = document.getElementById('click-power');
@@ -271,17 +237,15 @@ function updateBreadLevel() {
 function createFloatingBread(x, y) {
     const floater = document.createElement('div');
     floater.innerText = `+${clickPower} 🍞`;
-    floater.style.cssText = `
-        position: fixed;
-        left: ${x}px;
-        top: ${y}px;
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #D35400;
-        pointer-events: none;
-        z-index: 1000;
-        animation: floatUp 1s ease-out;
-    `;
+    floater.style.position = 'fixed';
+    floater.style.left = x + 'px';
+    floater.style.top = y + 'px';
+    floater.style.fontSize = '1.5rem';
+    floater.style.fontWeight = 'bold';
+    floater.style.color = '#D35400';
+    floater.style.pointerEvents = 'none';
+    floater.style.zIndex = '1000';
+    floater.style.animation = 'floatUp 1s ease-out';
     
     document.body.appendChild(floater);
     
@@ -290,12 +254,22 @@ function createFloatingBread(x, y) {
     }, 1000);
 }
 
-if (breadClicker) {
+// Add CSS animation for floating text
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes floatUp {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-100px); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+
+if(breadClicker) {
     breadClicker.addEventListener('click', (e) => {
         breadCount += clickPower;
         breadCountDisplay.innerText = breadCount;
         
-        // Animation
+        // Animasi button
         breadClicker.style.transform = 'scale(0.9) rotate(-10deg)';
         setTimeout(() => {
             breadClicker.style.transform = 'scale(1) rotate(0deg)';
@@ -304,22 +278,25 @@ if (breadClicker) {
         // Floating text
         createFloatingBread(e.clientX, e.clientY);
         
-        // Update level & buttons
+        // Update level
         updateBreadLevel();
+        
+        // Update upgrade buttons
         updateUpgradeButtons();
     });
 }
 
-// ========================================
-// UPGRADE SYSTEM
-// ========================================
-
+// --- 6. UPGRADE SYSTEM ---
 const upgradeButtons = document.querySelectorAll('.upgrade-btn');
 
 function updateUpgradeButtons() {
     upgradeButtons.forEach(btn => {
         const cost = parseInt(btn.getAttribute('data-cost'));
-        btn.disabled = breadCount < cost;
+        if (breadCount >= cost) {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+        }
     });
 }
 
@@ -352,10 +329,7 @@ upgradeButtons.forEach(btn => {
     });
 });
 
-// ========================================
-// PHOTO BOOTH
-// ========================================
-
+// --- 7. PHOTO BOOTH FEATURE ---
 const photoFrame = document.getElementById('photo-frame');
 const boothImg = document.getElementById('booth-img');
 const frameOverlay = document.getElementById('frame-overlay');
@@ -365,12 +339,16 @@ const photoStickersContainer = document.getElementById('photo-stickers');
 const frameBtns = document.querySelectorAll('.frame-btn');
 frameBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+        // Remove active from all
         frameBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const frame = btn.getAttribute('data-frame');
+        
+        // Remove all frame classes
         frameOverlay.className = 'frame-overlay';
         
+        // Add selected frame
         if (frame !== 'none') {
             frameOverlay.classList.add(`frame-${frame}`);
         }
@@ -381,32 +359,44 @@ frameBtns.forEach(btn => {
 const filterBtns = document.querySelectorAll('.filter-btn');
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+        // Remove active from all
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const filter = btn.getAttribute('data-filter');
+        
+        // Remove all filter classes
         boothImg.className = '';
         
+        // Add selected filter
         if (filter !== 'none') {
             boothImg.classList.add(`filter-${filter}`);
         }
     });
 });
 
-// Draggable stickers function
+// Fungsi untuk membuat stiker bisa di-drag
 function makeStickerDraggable(sticker) {
     let isDragging = false;
-    let currentX = 0;
-    let currentY = 0;
-    let initialX = 0;
-    let initialY = 0;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
     let xOffset = 0;
     let yOffset = 0;
 
+    // Mouse events
     sticker.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+
+    // Touch events untuk mobile
     sticker.addEventListener('touchstart', dragStart);
+    document.addEventListener('touchmove', drag);
+    document.addEventListener('touchend', dragEnd);
 
     function dragStart(e) {
+        // Cek apakah mouse atau touch
         if (e.type === "touchstart") {
             initialX = e.touches[0].clientX - xOffset;
             initialY = e.touches[0].clientY - yOffset;
@@ -415,9 +405,10 @@ function makeStickerDraggable(sticker) {
             initialY = e.clientY - yOffset;
         }
 
+        // Cek apakah klik pada sticker ini
         if (e.target === sticker) {
             isDragging = true;
-            sticker.style.zIndex = 1000;
+            sticker.style.zIndex = 1000; // Taruh di depan semua stiker lain
         }
     }
 
@@ -436,24 +427,26 @@ function makeStickerDraggable(sticker) {
             xOffset = currentX;
             yOffset = currentY;
 
+            // Get rotation value
             const rotation = sticker.style.getPropertyValue('--rot') || '0deg';
-            sticker.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation})`;
+            
+            // Update posisi stiker
+            setTranslate(currentX, currentY, sticker, rotation);
         }
     }
 
-    function dragEnd() {
+    function dragEnd(e) {
         if (isDragging) {
             initialX = currentX;
             initialY = currentY;
             isDragging = false;
-            sticker.style.zIndex = '';
+            sticker.style.zIndex = ''; // Reset z-index
         }
     }
 
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag);
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
+    function setTranslate(xPos, yPos, el, rotation) {
+        el.style.transform = `translate(${xPos}px, ${yPos}px) rotate(${rotation})`;
+    }
 }
 
 // Add stickers to photo
@@ -466,9 +459,10 @@ addStickerBtns.forEach(btn => {
         sticker.className = 'photo-sticker';
         sticker.innerText = stickerText;
         
-        const randomX = Math.random() * 70 + 10;
+        // Random position
+        const randomX = Math.random() * 70 + 10; // 10-80%
         const randomY = Math.random() * 70 + 10;
-        const randomRot = Math.random() * 40 - 20;
+        const randomRot = Math.random() * 40 - 20; // -20 to 20 degrees
         
         sticker.style.left = randomX + '%';
         sticker.style.top = randomY + '%';
@@ -476,8 +470,11 @@ addStickerBtns.forEach(btn => {
         sticker.style.setProperty('--rot', `${randomRot}deg`);
         
         photoStickersContainer.appendChild(sticker);
+        
+        // ✨ TAMBAHKAN FUNGSI DRAG! ✨
         makeStickerDraggable(sticker);
         
+        // Button animation
         btn.style.transform = 'scale(1.2)';
         setTimeout(() => {
             btn.style.transform = 'scale(1)';
@@ -487,16 +484,13 @@ addStickerBtns.forEach(btn => {
 
 // Clear stickers
 const clearStickersBtn = document.getElementById('clear-stickers');
-if (clearStickersBtn) {
+if(clearStickersBtn) {
     clearStickersBtn.addEventListener('click', () => {
         photoStickersContainer.innerHTML = '';
     });
 }
 
-// ========================================
-// MUSIC PLAYER
-// ========================================
-
+// --- 8. FITUR MUSIK PLAYER ---
 const audio = document.getElementById('bg-music');
 const playBtn = document.getElementById('play-pause-btn');
 const visualizer = document.getElementById('visualizer');
@@ -505,7 +499,7 @@ const volumeSlider = document.getElementById('volume-slider');
 let isPlaying = false;
 
 function toggleMusic() {
-    if (!audio) return;
+    if (!audio) return; 
 
     if (isPlaying) {
         audio.pause();
@@ -518,81 +512,631 @@ function toggleMusic() {
             visualizer.classList.add('playing');
             isPlaying = true;
         }).catch(error => {
-            console.log("Autoplay prevented. Click play button to start.");
+            console.log("Autoplay dicegah browser. Klik tombol play untuk mulai.");
         });
     }
 }
 
-if (playBtn) {
+if(playBtn) {
     playBtn.addEventListener('click', toggleMusic);
 }
 
-if (volumeSlider) {
+if(volumeSlider) {
     volumeSlider.addEventListener('input', (e) => {
-        if (audio) audio.volume = e.target.value;
+        if(audio) audio.volume = e.target.value;
     });
 }
 
-// Don't auto-play on mobile to save bandwidth
-if (!isMobile && audio) {
-    window.addEventListener('load', () => {
+// Auto-play saat load (kalau browser izinkan)
+window.addEventListener('load', () => {
+    if(audio) {
         audio.volume = 0.5;
-        audio.play().then(() => {
-            playBtn.innerText = "⏸";
-            visualizer.classList.add('playing');
-            isPlaying = true;
-        }).catch(() => {
-            console.log("Waiting for user interaction to play music.");
-        });
-    });
-}
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                playBtn.innerText = "⏸";
+                visualizer.classList.add('playing');
+                isPlaying = true;
+            }).catch(error => {
+                console.log("Menunggu interaksi user untuk play musik.");
+            });
+        }
+    }
+});
 
-// ========================================
-// OUTFIT PICKER
-// ========================================
-
+// --- 9. FITUR OOTD PICKER ---
 const outfitBtns = document.querySelectorAll('.outfit-btn');
+const mainImg = document.getElementById('hanni-img');
 
 outfitBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const newSrc = btn.getAttribute('data-img');
         
-        hanniImg.style.opacity = "0";
-        hanniImg.style.transform = "scale(0.9)";
+        mainImg.style.opacity = "0";
+        mainImg.style.transform = "scale(0.9)";
         
         setTimeout(() => {
-            hanniImg.src = newSrc;
-            hanniImg.style.opacity = "1";
-            hanniImg.style.transform = "scale(1)";
+            mainImg.src = newSrc;
+            mainImg.style.opacity = "1";
+            mainImg.style.transform = "scale(1)";
         }, 200);
     });
 });
 
-// ========================================
-// PERFORMANCE OPTIMIZATIONS
-// ========================================
-
-// Lazy load images when they come into view
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-                }
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-    
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
-}
-
 // Initialize
 updateUpgradeButtons();
 
-console.log("🐰 Hanni Persona Website Loaded! Naurrr~ 💕");
+// ===== NEW FEATURES JAVASCRIPT =====
+
+// --- 10. FLOATING PARTICLES BACKGROUND ---
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    const particles = ['🌸', '💕', '⭐', '✨', '🐰', '💙', '🎀', '🌺'];
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.innerText = particles[Math.floor(Math.random() * particles.length)];
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
+        particle.style.setProperty('--delay', Math.random() * 5 + 's');
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// --- 11. THEME SELECTOR ---
+const themeModal = document.getElementById('theme-modal');
+const themeSelectorBtn = document.getElementById('theme-selector-btn');
+const closeModal = document.querySelector('.close-modal');
+const themeCards = document.querySelectorAll('.theme-card');
+
+if (themeSelectorBtn) {
+    themeSelectorBtn.addEventListener('click', () => {
+        themeModal.style.display = 'block';
+    });
+}
+
+if (closeModal) {
+    closeModal.addEventListener('click', () => {
+        themeModal.style.display = 'none';
+    });
+}
+
+window.addEventListener('click', (e) => {
+    if (e.target === themeModal) {
+        themeModal.style.display = 'none';
+    }
+});
+
+themeCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Remove active from all
+        themeCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        
+        const theme = card.getAttribute('data-theme');
+        document.body.setAttribute('data-theme', theme);
+        
+        // Save to localStorage
+        localStorage.setItem('hanniTheme', theme);
+    });
+});
+
+// Load saved theme
+const savedTheme = localStorage.getItem('hanniTheme');
+if (savedTheme) {
+    document.body.setAttribute('data-theme', savedTheme);
+    themeCards.forEach(card => {
+        if (card.getAttribute('data-theme') === savedTheme) {
+            card.classList.add('active');
+        }
+    });
+}
+
+// --- 12. DOWNLOAD PHOTO BOOTH ---
+const downloadPhotoBtn = document.getElementById('download-photo');
+if (downloadPhotoBtn) {
+    downloadPhotoBtn.addEventListener('click', async () => {
+        const photoFrame = document.getElementById('photo-frame');
+        
+        try {
+            // Use html2canvas if available, otherwise basic download
+            if (typeof html2canvas !== 'undefined') {
+                const canvas = await html2canvas(photoFrame, {
+                    backgroundColor: null,
+                    scale: 2
+                });
+                
+                const link = document.createElement('a');
+                link.download = 'hanni-photo-booth.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            } else {
+                alert('📸 Screenshot feature requires html2canvas library. For now, you can use browser screenshot!');
+            }
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Use browser screenshot feature (Ctrl/Cmd + Shift + S) to save your photo!');
+        }
+    });
+}
+
+// --- 13. RANDOM QUOTE GENERATOR ---
+const quoteBtn = document.getElementById('quote-btn');
+const quoteText = document.getElementById('quote-text');
+
+const hanniQuotes = [
+    "Naurrr! That's so not right! 😂",
+    "I love bread so much, it's like my best friend! 🍞",
+    "Phammily forever! 💙",
+    "Australian accent? Yeah, I can't help it mate! 🇦🇺",
+    "NewJeans never dies! We're always fresh! 🐰",
+    "Being silly is part of my charm, right? 😊",
+    "Vietnam and Australia vibes together! 🇻🇳🇦🇺",
+    "Music is my life, my passion, my everything! 🎵",
+    "I'm just naturally cute, can't help it! 🥰",
+    "Bunnies are the best! That's why I'm one! 🐇",
+    "Let's make beautiful memories together! ✨",
+    "Dance like nobody's watching! 💃",
+    "Positive vibes only! 🌈",
+    "Food is happiness, especially bread! 🥖",
+    "Every day is a new adventure! 🌟"
+];
+
+if (quoteBtn) {
+    quoteBtn.addEventListener('click', () => {
+        const randomQuote = hanniQuotes[Math.floor(Math.random() * hanniQuotes.length)];
+        quoteText.style.opacity = '0';
+        
+        setTimeout(() => {
+            quoteText.innerText = randomQuote;
+            quoteText.style.opacity = '1';
+        }, 200);
+    });
+}
+
+// --- 14. MESSAGE BOARD ---
+const messageNameInput = document.getElementById('message-name');
+const messageTextInput = document.getElementById('message-text');
+const postMessageBtn = document.getElementById('post-message-btn');
+const messagesDisplay = document.getElementById('messages-display');
+const charCount = document.getElementById('char-count');
+
+// Character counter
+if (messageTextInput) {
+    messageTextInput.addEventListener('input', () => {
+        const count = messageTextInput.value.length;
+        charCount.innerText = `${count}/200`;
+    });
+}
+
+// Post message
+if (postMessageBtn) {
+    postMessageBtn.addEventListener('click', () => {
+        const name = messageNameInput.value.trim() || 'Anonymous Bunny';
+        const text = messageTextInput.value.trim();
+        
+        if (!text) {
+            alert('Please write a message! 💕');
+            return;
+        }
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'user-message';
+        messageDiv.innerHTML = `
+            <div class="message-header">
+                <span class="message-author">${name}</span>
+                <span class="message-time">Just now</span>
+            </div>
+            <div class="message-content">${text}</div>
+        `;
+        
+        messagesDisplay.insertBefore(messageDiv, messagesDisplay.firstChild);
+        
+        // Clear inputs
+        messageNameInput.value = '';
+        messageTextInput.value = '';
+        charCount.innerText = '0/200';
+        
+        // Limit messages
+        if (messagesDisplay.children.length > 10) {
+            messagesDisplay.removeChild(messagesDisplay.lastChild);
+        }
+    });
+}
+
+// --- 15. BUNNY HOP GAME ---
+const bunnyCanvas = document.getElementById('bunny-game');
+const startBunnyBtn = document.getElementById('start-bunny-game');
+const bunnyScoreDisplay = document.getElementById('bunny-score');
+const bunnyHighScoreDisplay = document.getElementById('bunny-high-score');
+
+let bunnyGame = null;
+let bunnyHighScore = localStorage.getItem('bunnyHighScore') || 0;
+bunnyHighScoreDisplay.innerText = bunnyHighScore;
+
+class BunnyHopGame {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.score = 0;
+        this.gameOver = false;
+        this.bunny = { x: 50, y: 200, width: 40, height: 40, velocityY: 0, jumping: false };
+        this.obstacles = [];
+        this.gravity = 0.6;
+        this.jumpForce = -12;
+        this.gameSpeed = 3;
+        this.frameCount = 0;
+    }
+    
+    start() {
+        this.gameOver = false;
+        this.score = 0;
+        this.obstacles = [];
+        this.bunny.y = 200;
+        this.bunny.velocityY = 0;
+        this.gameLoop();
+    }
+    
+    jump() {
+        if (!this.bunny.jumping) {
+            this.bunny.velocityY = this.jumpForce;
+            this.bunny.jumping = true;
+        }
+    }
+    
+    update() {
+        if (this.gameOver) return;
+        
+        // Update bunny
+        this.bunny.velocityY += this.gravity;
+        this.bunny.y += this.bunny.velocityY;
+        
+        // Ground collision
+        if (this.bunny.y >= 200) {
+            this.bunny.y = 200;
+            this.bunny.velocityY = 0;
+            this.bunny.jumping = false;
+        }
+        
+        // Spawn obstacles
+        this.frameCount++;
+        if (this.frameCount % 100 === 0) {
+            this.obstacles.push({ x: this.canvas.width, y: 220, width: 30, height: 50 });
+        }
+        
+        // Update obstacles
+        this.obstacles.forEach((obs, index) => {
+            obs.x -= this.gameSpeed;
+            
+            // Remove off-screen obstacles
+            if (obs.x + obs.width < 0) {
+                this.obstacles.splice(index, 1);
+                this.score++;
+            }
+            
+            // Collision detection
+            if (
+                this.bunny.x < obs.x + obs.width &&
+                this.bunny.x + this.bunny.width > obs.x &&
+                this.bunny.y < obs.y + obs.height &&
+                this.bunny.y + this.bunny.height > obs.y
+            ) {
+                this.gameOver = true;
+                if (this.score > bunnyHighScore) {
+                    bunnyHighScore = this.score;
+                    localStorage.setItem('bunnyHighScore', bunnyHighScore);
+                    bunnyHighScoreDisplay.innerText = bunnyHighScore;
+                }
+            }
+        });
+        
+        bunnyScoreDisplay.innerText = this.score;
+    }
+    
+    draw() {
+        // Clear canvas
+        this.ctx.fillStyle = '#87CEEB';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw ground
+        this.ctx.fillStyle = '#98FB98';
+        this.ctx.fillRect(0, 240, this.canvas.width, 60);
+        
+        // Draw bunny
+        this.ctx.fillStyle = '#FFB6C1';
+        this.ctx.fillRect(this.bunny.x, this.bunny.y, this.bunny.width, this.bunny.height);
+        this.ctx.fillText('🐰', this.bunny.x + 5, this.bunny.y + 30);
+        
+        // Draw obstacles
+        this.ctx.fillStyle = '#8B4513';
+        this.obstacles.forEach(obs => {
+            this.ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        });
+        
+        // Game over text
+        if (this.gameOver) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.fillStyle = 'white';
+            this.ctx.font = '30px Arial';
+            this.ctx.fillText('Game Over!', 220, 130);
+            this.ctx.font = '20px Arial';
+            this.ctx.fillText('Press Start to play again', 180, 170);
+        }
+    }
+    
+    gameLoop() {
+        if (!this.gameOver) {
+            this.update();
+            this.draw();
+            requestAnimationFrame(() => this.gameLoop());
+        } else {
+            this.draw();
+        }
+    }
+}
+
+if (startBunnyBtn && bunnyCanvas) {
+    startBunnyBtn.addEventListener('click', () => {
+        bunnyGame = new BunnyHopGame(bunnyCanvas);
+        bunnyGame.start();
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && bunnyGame && !bunnyGame.gameOver) {
+            e.preventDefault();
+            bunnyGame.jump();
+        }
+    });
+}
+
+// --- 16. MEMORY MATCH GAME ---
+const memoryGrid = document.getElementById('memory-grid');
+const startMemoryBtn = document.getElementById('start-memory-game');
+const memoryMovesDisplay = document.getElementById('memory-moves');
+const memoryTimeDisplay = document.getElementById('memory-time');
+
+let memoryCards = ['🐰', '💕', '⭐', '🍞', '🎀', '💙', '🌸', '✨'];
+let memoryDeck = [...memoryCards, ...memoryCards];
+let flippedCards = [];
+let matchedPairs = 0;
+let moves = 0;
+let memoryTimer = 0;
+let memoryInterval = null;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function createMemoryGame() {
+    memoryGrid.innerHTML = '';
+    memoryDeck = shuffleArray([...memoryCards, ...memoryCards]);
+    flippedCards = [];
+    matchedPairs = 0;
+    moves = 0;
+    memoryTimer = 0;
+    memoryMovesDisplay.innerText = '0';
+    memoryTimeDisplay.innerText = '0';
+    
+    if (memoryInterval) clearInterval(memoryInterval);
+    memoryInterval = setInterval(() => {
+        memoryTimer++;
+        memoryTimeDisplay.innerText = memoryTimer;
+    }, 1000);
+    
+    memoryDeck.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.index = index;
+        card.dataset.symbol = symbol;
+        card.innerText = '?';
+        card.addEventListener('click', flipMemoryCard);
+        memoryGrid.appendChild(card);
+    });
+}
+
+function flipMemoryCard(e) {
+    const card = e.target;
+    
+    if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+        return;
+    }
+    
+    card.classList.add('flipped');
+    card.innerText = card.dataset.symbol;
+    flippedCards.push(card);
+    
+    if (flippedCards.length === 2) {
+        moves++;
+        memoryMovesDisplay.innerText = moves;
+        
+        setTimeout(() => {
+            if (flippedCards[0].dataset.symbol === flippedCards[1].dataset.symbol) {
+                flippedCards.forEach(c => c.classList.add('matched'));
+                matchedPairs++;
+                
+                if (matchedPairs === memoryCards.length) {
+                    clearInterval(memoryInterval);
+                    setTimeout(() => {
+                        alert(`🎉 You won! Time: ${memoryTimer}s, Moves: ${moves}`);
+                    }, 300);
+                }
+            } else {
+                flippedCards.forEach(c => {
+                    c.classList.remove('flipped');
+                    c.innerText = '?';
+                });
+            }
+            flippedCards = [];
+        }, 800);
+    }
+}
+
+if (startMemoryBtn) {
+    startMemoryBtn.addEventListener('click', createMemoryGame);
+}
+
+// --- 17. SLIDE PUZZLE GAME ---
+const puzzleGrid = document.getElementById('puzzle-grid');
+const startPuzzleBtn = document.getElementById('start-puzzle-game');
+const puzzleMovesDisplay = document.getElementById('puzzle-moves');
+
+let puzzleState = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+let puzzleMoves = 0;
+
+function createPuzzle() {
+    puzzleGrid.innerHTML = '';
+    puzzleMoves = 0;
+    puzzleMovesDisplay.innerText = '0';
+    
+    // Shuffle
+    for (let i = 0; i < 100; i++) {
+        const emptyIndex = puzzleState.indexOf(0);
+        const possibleMoves = getPossibleMoves(emptyIndex);
+        const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+        [puzzleState[emptyIndex], puzzleState[randomMove]] = [puzzleState[randomMove], puzzleState[emptyIndex]];
+    }
+    
+    renderPuzzle();
+}
+
+function getPossibleMoves(emptyIndex) {
+    const moves = [];
+    const row = Math.floor(emptyIndex / 3);
+    const col = emptyIndex % 3;
+    
+    if (row > 0) moves.push(emptyIndex - 3); // Up
+    if (row < 2) moves.push(emptyIndex + 3); // Down
+    if (col > 0) moves.push(emptyIndex - 1); // Left
+    if (col < 2) moves.push(emptyIndex + 1); // Right
+    
+    return moves;
+}
+
+function renderPuzzle() {
+    puzzleGrid.innerHTML = '';
+    
+    puzzleState.forEach((num, index) => {
+        const tile = document.createElement('div');
+        tile.className = num === 0 ? 'puzzle-tile empty' : 'puzzle-tile';
+        tile.innerText = num === 0 ? '' : num;
+        tile.dataset.index = index;
+        
+        if (num !== 0) {
+            tile.addEventListener('click', () => movePuzzleTile(index));
+        }
+        
+        puzzleGrid.appendChild(tile);
+    });
+}
+
+function movePuzzleTile(tileIndex) {
+    const emptyIndex = puzzleState.indexOf(0);
+    const possibleMoves = getPossibleMoves(emptyIndex);
+    
+    if (possibleMoves.includes(tileIndex)) {
+        [puzzleState[emptyIndex], puzzleState[tileIndex]] = [puzzleState[tileIndex], puzzleState[emptyIndex]];
+        puzzleMoves++;
+        puzzleMovesDisplay.innerText = puzzleMoves;
+        renderPuzzle();
+        
+        // Check win
+        const solved = puzzleState.every((num, idx) => num === idx + 1 || (idx === 8 && num === 0));
+        if (solved) {
+            setTimeout(() => {
+                alert(`🎉 Puzzle solved in ${puzzleMoves} moves!`);
+            }, 300);
+        }
+    }
+}
+
+if (startPuzzleBtn) {
+    startPuzzleBtn.addEventListener('click', createPuzzle);
+}
+
+// --- 18. WALLPAPER DOWNLOAD ---
+const downloadWallpaperBtns = document.querySelectorAll('.download-wallpaper-btn');
+
+downloadWallpaperBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const imgSrc = btn.getAttribute('data-img');
+        const link = document.createElement('a');
+        link.href = imgSrc;
+        link.download = 'hanni-wallpaper.jpg';
+        link.click();
+    });
+});
+
+// --- 19. PHAMMILY PROFILE ---
+const profileNameInput = document.getElementById('profile-name');
+const profileBiasInput = document.getElementById('profile-bias');
+const profileCountrySelect = document.getElementById('profile-country');
+const profileMessageInput = document.getElementById('profile-message');
+const saveProfileBtn = document.getElementById('save-profile-btn');
+const profileDisplay = document.getElementById('profile-display');
+const editProfileBtn = document.getElementById('edit-profile-btn');
+
+if (saveProfileBtn) {
+    saveProfileBtn.addEventListener('click', () => {
+        const name = profileNameInput.value.trim();
+        const bias = profileBiasInput.value.trim();
+        const country = profileCountrySelect.value;
+        const message = profileMessageInput.value.trim();
+        
+        if (!name || !bias || !country || !message) {
+            alert('Please fill in all fields! 💕');
+            return;
+        }
+        
+        // Save to localStorage
+        const profile = { name, bias, country, message };
+        localStorage.setItem('hanniProfile', JSON.stringify(profile));
+        
+        // Display profile
+        document.getElementById('display-name').innerText = name;
+        document.getElementById('display-bias').innerText = bias;
+        document.getElementById('display-country').innerText = country;
+        document.getElementById('display-message').innerText = message;
+        
+        document.querySelector('.profile-inputs').style.display = 'none';
+        profileDisplay.style.display = 'block';
+    });
+}
+
+if (editProfileBtn) {
+    editProfileBtn.addEventListener('click', () => {
+        document.querySelector('.profile-inputs').style.display = 'block';
+        profileDisplay.style.display = 'none';
+    });
+}
+
+// Load saved profile
+const savedProfile = localStorage.getItem('hanniProfile');
+if (savedProfile) {
+    const profile = JSON.parse(savedProfile);
+    profileNameInput.value = profile.name;
+    profileBiasInput.value = profile.bias;
+    profileCountrySelect.value = profile.country;
+    profileMessageInput.value = profile.message;
+    
+    document.getElementById('display-name').innerText = profile.name;
+    document.getElementById('display-bias').innerText = profile.bias;
+    document.getElementById('display-country').innerText = profile.country;
+    document.getElementById('display-message').innerText = profile.message;
+    
+    document.querySelector('.profile-inputs').style.display = 'none';
+    profileDisplay.style.display = 'block';
+}
+
+// Initialize particles on load
+window.addEventListener('DOMContentLoaded', () => {
+    createParticles();
+});

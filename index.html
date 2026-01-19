@@ -2,33 +2,60 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="Hanni Pham from NewJeans - Interactive persona website">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hanni Pham | NewJeans</title>
-    
-    <!-- Preconnect untuk faster font loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="style.css" as="style">
-    <link rel="preload" href="assets/img/home.jpg" as="image">
-    
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Font dengan display=swap untuk faster render -->
+    <!-- Font Lucu & Pixel -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500;700&family=Press+Start+2P&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <!-- Floating Particles Background -->
+    <div class="particles-container" id="particles"></div>
 
     <!-- Navigasi -->
     <nav class="navbar">
         <div class="logo">HANNI PHAM PERSONA</div>
         <div class="menu">
-            <button id="mode-btn" class="pixel-btn" aria-label="Toggle Cozy Mode">💕 Cozy Mode</button>
-            <button id="dark-mode-btn" class="pixel-btn" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
+            <button id="theme-selector-btn" class="pixel-btn">🎨 Themes</button>
+            <button id="mode-btn" class="pixel-btn">💕 Cozy Mode</button>
+            <button id="dark-mode-btn" class="pixel-btn">🌙 Dark Mode</button>
         </div>
     </nav>
+
+    <!-- Theme Selector Modal -->
+    <div class="modal" id="theme-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>🎨 Choose Your Vibe!</h2>
+            <div class="theme-grid">
+                <button class="theme-card active" data-theme="default">
+                    <div class="theme-preview pink-theme"></div>
+                    <span>💗 Soft Pink</span>
+                </button>
+                <button class="theme-card" data-theme="lavender">
+                    <div class="theme-preview lavender-theme"></div>
+                    <span>💜 Lavender Dream</span>
+                </button>
+                <button class="theme-card" data-theme="mint">
+                    <div class="theme-preview mint-theme"></div>
+                    <span>💚 Fresh Mint</span>
+                </button>
+                <button class="theme-card" data-theme="peach">
+                    <div class="theme-preview peach-theme"></div>
+                    <span>🍑 Peachy Soft</span>
+                </button>
+                <button class="theme-card" data-theme="sky">
+                    <div class="theme-preview sky-theme"></div>
+                    <span>💙 Sky Blue</span>
+                </button>
+                <button class="theme-card" data-theme="sunset">
+                    <div class="theme-preview sunset-theme"></div>
+                    <span>🌅 Sunset Glow</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <header class="hero">
@@ -39,25 +66,25 @@
             
            <!-- REAL FUNCTIONAL MUSIC PLAYER -->
             <div class="music-player-real">
-                <!-- Audio dengan preload none -->
-                <audio id="bg-music" loop preload="none">
+                <!-- Audio Element - Taruh file musik di folder assets/music/ -->
+                <audio id="bg-music" loop>
                     <source src="assets/music/darling darling by newjeans’ hanni.mp3" type="audio/mpeg">
                     Browser kamu tidak support audio.
                 </audio>
 
                 <div class="player-controls">
-                    <button id="play-pause-btn" class="control-btn" aria-label="Play/Pause music">▶</button>
+                    <button id="play-pause-btn" class="control-btn">▶</button>
                     
                     <div class="track-info-real">
                         <span class="scrolling-text">🎵 Darling - cover by Hanni 🎵</span>
                     </div>
 
                     <div class="volume-control">
-                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" aria-label="Volume control">
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
                     </div>
                 </div>
                 
-                <!-- Visualizer Bars -->
+                <!-- Visualizer Bars (Gerak pas musik nyala) -->
                 <div class="visualizer" id="visualizer">
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div>
                     <div class="bar"></div><div class="bar"></div>
@@ -68,19 +95,16 @@
         <div class="hero-image-wrapper">
             <img 
                 src="assets/img/home.jpg" 
-                alt="Hanni from NewJeans" 
+                alt="Hanni" 
                 id="hanni-img"
-                loading="eager"
-                width="320"
-                height="320"
             >
             <div class="speech-bubble" id="speech-bubble">Naurrr~!</div>
 
             <div class="outfit-selector">
-                <button class="outfit-btn" data-img="assets/img/default.jpg" title="Default" aria-label="Default outfit">🧢</button>
-                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci Ambassador" aria-label="Gucci outfit">👜</button>
-                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage My Boo Outfit" aria-label="My Boo outfit">🎤</button>
-                <button class="outfit-btn" data-img="assets/img/mygirl.jpg" title="Photo" aria-label="Casual outfit">🐰</button>
+                <button class="outfit-btn" data-img="assets/img/default.jpg" title="Default">🧢</button>
+                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci Ambassador">👜</button>
+                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage My Boo Outfit">🎤</button>
+                <button class="outfit-btn" data-img="assets/img/mygirl.jpg" title="Photo">🐰</button>
             </div>
         </div>
     </header>
@@ -111,7 +135,7 @@
     <section class="sticker-zone" id="sticker-area">
         <h2>🎀 Y2K Sticker Deco 🎀</h2>
         <p>Klik di dalam kotak putih untuk menempel stiker!</p>
-        <div class="sticker-canvas" role="button" tabindex="0" aria-label="Click to add stickers">
+        <div class="sticker-canvas">
             <div class="placeholder-text">Tap here!</div>
         </div>
     </section>
@@ -123,7 +147,7 @@
             <p class="fortune-desc">Crack open untuk dapat wisdom dari Hanni!</p>
             
             <div class="fortune-cookie-wrapper">
-                <div class="cookie" id="fortune-cookie" role="button" tabindex="0" aria-label="Fortune cookie">
+                <div class="cookie" id="fortune-cookie">
                     <div class="cookie-top">🥠</div>
                     <div class="fortune-paper" id="fortune-paper">
                         <p id="fortune-text">Klik cookie untuk mulai!</p>
@@ -150,7 +174,7 @@
                 <div class="bread-label">Breads Collected</div>
             </div>
             
-            <button id="bread-clicker" class="bread-btn" aria-label="Click to collect bread">🍞</button>
+            <button id="bread-clicker" class="bread-btn">🍞</button>
             
             <div class="bread-stats">
                 <div class="stat-item">
@@ -185,7 +209,7 @@
         
         <div class="photo-booth-container">
             <div class="photo-frame" id="photo-frame">
-                <img src="assets/img/home.jpg" alt="Hanni photo booth" id="booth-img" loading="lazy" width="400" height="400">
+                <img src="assets/img/home.jpg" alt="Hanni" id="booth-img">
                 <div class="frame-overlay" id="frame-overlay"></div>
                 <div class="photo-stickers" id="photo-stickers"></div>
             </div>
@@ -225,6 +249,149 @@
                         <button class="add-sticker-btn" data-sticker="Pham💙">Pham💙</button>
                     </div>
                     <button id="clear-stickers" class="pixel-btn small-btn">🗑️ Clear All</button>
+                    <button id="download-photo" class="pixel-btn small-btn">📥 Download Photo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Random Quote Generator -->
+    <section class="quote-section">
+        <h2 class="section-title">💬 Hanni's Iconic Quotes</h2>
+        <div class="quote-container">
+            <div class="quote-bubble">
+                <p id="quote-text">"Click the button for a random Hanni moment!"</p>
+            </div>
+            <button id="quote-btn" class="pixel-btn">✨ Get Quote</button>
+            <div class="quote-author">— Hanni Pham 🐰</div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Message Board -->
+    <section class="message-board-section">
+        <h2 class="section-title">💌 Leave a Message for Hanni</h2>
+        <div class="message-board-container">
+            <div class="message-input-area">
+                <input type="text" id="message-name" placeholder="Your name (optional)" maxlength="20">
+                <textarea id="message-text" placeholder="Write your message here... 💕" maxlength="200"></textarea>
+                <div class="message-controls">
+                    <span id="char-count">0/200</span>
+                    <button id="post-message-btn" class="pixel-btn">📮 Post Message</button>
+                </div>
+            </div>
+            <div class="messages-display" id="messages-display">
+                <div class="sample-message">
+                    <div class="message-header">
+                        <span class="message-author">Bunny #1</span>
+                        <span class="message-time">Just now</span>
+                    </div>
+                    <div class="message-content">Hanni unnie, you're the best! 🐰💕</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Mini Games Section -->
+    <section class="mini-games-section">
+        <h2 class="section-title">🎮 Hanni's Mini Games</h2>
+        
+        <!-- Game 1: Bunny Hop -->
+        <div class="game-box">
+            <h3>🐰 Bunny Hop Challenge</h3>
+            <p>Help Hanni jump over obstacles! Press SPACE to jump!</p>
+            <div class="bunny-game-container">
+                <canvas id="bunny-game" width="600" height="300"></canvas>
+                <div class="game-controls">
+                    <button id="start-bunny-game" class="pixel-btn">🎮 Start Game</button>
+                    <div class="game-score">Score: <span id="bunny-score">0</span></div>
+                    <div class="game-high-score">High Score: <span id="bunny-high-score">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game 2: Memory Match -->
+        <div class="game-box">
+            <h3>🧠 Hanni Memory Match</h3>
+            <p>Match the pairs! Test your memory!</p>
+            <div class="memory-game-container">
+                <div class="memory-grid" id="memory-grid"></div>
+                <div class="game-controls">
+                    <button id="start-memory-game" class="pixel-btn">🎮 New Game</button>
+                    <div class="game-score">Moves: <span id="memory-moves">0</span></div>
+                    <div class="game-timer">Time: <span id="memory-time">0</span>s</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game 3: Hanni Puzzle -->
+        <div class="game-box">
+            <h3>🧩 Slide Puzzle</h3>
+            <p>Solve the puzzle by sliding tiles!</p>
+            <div class="puzzle-game-container">
+                <div class="puzzle-grid" id="puzzle-grid"></div>
+                <div class="game-controls">
+                    <button id="start-puzzle-game" class="pixel-btn">🎮 Shuffle</button>
+                    <div class="game-score">Moves: <span id="puzzle-moves">0</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Wallpaper Gallery -->
+    <section class="wallpaper-section">
+        <h2 class="section-title">🖼️ Wallpaper Gallery</h2>
+        <p class="section-desc">Download cute Hanni wallpapers!</p>
+        <div class="wallpaper-grid">
+            <div class="wallpaper-card">
+                <img src="assets/img/home.jpg" alt="Wallpaper 1">
+                <button class="download-wallpaper-btn" data-img="assets/img/home.jpg">📥 Download</button>
+            </div>
+            <div class="wallpaper-card">
+                <img src="assets/img/Gucci.jpg" alt="Wallpaper 2">
+                <button class="download-wallpaper-btn" data-img="assets/img/Gucci.jpg">📥 Download</button>
+            </div>
+            <div class="wallpaper-card">
+                <img src="assets/img/myboo.jpg" alt="Wallpaper 3">
+                <button class="download-wallpaper-btn" data-img="assets/img/myboo.jpg">📥 Download</button>
+            </div>
+            <div class="wallpaper-card">
+                <img src="assets/img/mygirl.jpg" alt="Wallpaper 4">
+                <button class="download-wallpaper-btn" data-img="assets/img/mygirl.jpg">📥 Download</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Phammily Profile -->
+    <section class="profile-section">
+        <h2 class="section-title">💝 Join the Phammily!</h2>
+        <div class="profile-container">
+            <div class="profile-card">
+                <h3>Create Your Bunny Profile</h3>
+                <div class="profile-inputs">
+                    <input type="text" id="profile-name" placeholder="Your name">
+                    <input type="text" id="profile-bias" placeholder="Bias in NewJeans" value="Hanni 🐰">
+                    <select id="profile-country">
+                        <option value="">Select Country</option>
+                        <option value="🇰🇷 Korea">🇰🇷 Korea</option>
+                        <option value="🇦🇺 Australia">🇦🇺 Australia</option>
+                        <option value="🇻🇳 Vietnam">🇻🇳 Vietnam</option>
+                        <option value="🇺🇸 USA">🇺🇸 USA</option>
+                        <option value="🇮🇩 Indonesia">🇮🇩 Indonesia</option>
+                        <option value="🇯🇵 Japan">🇯🇵 Japan</option>
+                        <option value="🌍 Other">🌍 Other</option>
+                    </select>
+                    <textarea id="profile-message" placeholder="Why do you love Hanni?" rows="3"></textarea>
+                    <button id="save-profile-btn" class="pixel-btn">💾 Save Profile</button>
+                </div>
+                <div class="profile-display" id="profile-display" style="display:none;">
+                    <h4>Your Phammily Card 🐰</h4>
+                    <div class="profile-card-display">
+                        <p><strong>Name:</strong> <span id="display-name"></span></p>
+                        <p><strong>Bias:</strong> <span id="display-bias"></span></p>
+                        <p><strong>From:</strong> <span id="display-country"></span></p>
+                        <p><strong>Message:</strong> <span id="display-message"></span></p>
+                    </div>
+                    <button id="edit-profile-btn" class="pixel-btn small-btn">✏️ Edit</button>
                 </div>
             </div>
         </div>
