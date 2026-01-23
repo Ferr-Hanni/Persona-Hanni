@@ -361,38 +361,106 @@
         </div>
     </section>
 
-    <!-- Fitur Baru: Phammily Profile -->
-    <section class="profile-section">
-        <h2 class="section-title">💝 Join the Phammily!</h2>
-        <div class="profile-container">
-            <div class="profile-card">
-                <h3>Create Your Bunny Profile</h3>
-                <div class="profile-inputs">
-                    <input type="text" id="profile-name" placeholder="Your name">
-                    <input type="text" id="profile-bias" placeholder="Bias in NewJeans" value="Hanni 🐰">
-                    <select id="profile-country">
-                        <option value="">Select Country</option>
-                        <option value="🇰🇷 Korea">🇰🇷 Korea</option>
-                        <option value="🇦🇺 Australia">🇦🇺 Australia</option>
-                        <option value="🇻🇳 Vietnam">🇻🇳 Vietnam</option>
-                        <option value="🇺🇸 USA">🇺🇸 USA</option>
-                        <option value="🇮🇩 Indonesia">🇮🇩 Indonesia</option>
-                        <option value="🇯🇵 Japan">🇯🇵 Japan</option>
-                        <option value="🌍 Other">🌍 Other</option>
-                    </select>
-                    <textarea id="profile-message" placeholder="Why do you love Hanni?" rows="3"></textarea>
-                    <button id="save-profile-btn" class="pixel-btn">💾 Save Profile</button>
+    <!-- Fitur Baru: Hanni's Favorite Things -->
+    <section class="favorites-section">
+        <h2 class="section-title">💕 Hanni's Favorite Things</h2>
+        <p class="section-desc">Klik untuk explore hal-hal yang Hanni sukai!</p>
+        <div class="favorites-grid">
+            <div class="favorite-card" data-favorite="bread">
+                <div class="favorite-icon">🥖</div>
+                <h3>Bread</h3>
+                <p class="favorite-detail">Obsesi nomor 1! Terutama croissant & baguette.</p>
+                <div class="favorite-extra">
+                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
+                    <small>Love Level: EXTREME</small>
                 </div>
-                <div class="profile-display" id="profile-display" style="display:none;">
-                    <h4>Your Phammily Card 🐰</h4>
-                    <div class="profile-card-display">
-                        <p><strong>Name:</strong> <span id="display-name"></span></p>
-                        <p><strong>Bias:</strong> <span id="display-bias"></span></p>
-                        <p><strong>From:</strong> <span id="display-country"></span></p>
-                        <p><strong>Message:</strong> <span id="display-message"></span></p>
-                    </div>
-                    <button id="edit-profile-btn" class="pixel-btn small-btn">✏️ Edit</button>
+            </div>
+            
+            <div class="favorite-card" data-favorite="music">
+                <div class="favorite-icon">🎵</div>
+                <h3>Music</h3>
+                <p class="favorite-detail">Dari NewJeans songs sampai indie vibes.</p>
+                <div class="favorite-extra">
+                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
+                    <small>Love Level: PASSION</small>
                 </div>
+            </div>
+            
+            <div class="favorite-card" data-favorite="phoning">
+                <div class="favorite-icon">🐰</div>
+                <h3>Phoning</h3>
+                <p class="favorite-detail">Fans NewJeans yang paling setia!</p>
+                <div class="favorite-extra">
+                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
+                    <small>Love Level: FOREVER</small>
+                </div>
+            </div>
+            
+            <div class="favorite-card" data-favorite="fashion">
+                <div class="favorite-icon">👗</div>
+                <h3>Fashion</h3>
+                <p class="favorite-detail">Y2K vibes & Gucci ambassador style.</p>
+                <div class="favorite-extra">
+                    <span class="love-meter">❤️❤️❤️❤️</span>
+                    <small>Love Level: STYLISH</small>
+                </div>
+            </div>
+            
+            <div class="favorite-card" data-favorite="australia">
+                <div class="favorite-icon">🇦🇺</div>
+                <h3>Australia</h3>
+                <p class="favorite-detail">Home sweet home & that iconic accent!</p>
+                <div class="favorite-extra">
+                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
+                    <small>Love Level: HOMELAND</small>
+                </div>
+            </div>
+            
+            <div class="favorite-card" data-favorite="sleep">
+                <div class="favorite-icon">😴</div>
+                <h3>Sleep</h3>
+                <p class="favorite-detail">Queen of naps & cozy blankets.</p>
+                <div class="favorite-extra">
+                    <span class="love-meter">❤️❤️❤️❤️</span>
+                    <small>Love Level: ESSENTIAL</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur Baru: Hanni Mood Tracker -->
+    <section class="mood-section">
+        <h2 class="section-title">🌈 What's Hanni's Mood Today?</h2>
+        <p class="section-desc">Pilih mood Hanni hari ini!</p>
+        <div class="mood-selector">
+            <button class="mood-btn" data-mood="happy">
+                <span class="mood-emoji">😊</span>
+                <span class="mood-label">Happy</span>
+            </button>
+            <button class="mood-btn" data-mood="excited">
+                <span class="mood-emoji">🤩</span>
+                <span class="mood-label">Excited</span>
+            </button>
+            <button class="mood-btn" data-mood="sleepy">
+                <span class="mood-emoji">😴</span>
+                <span class="mood-label">Sleepy</span>
+            </button>
+            <button class="mood-btn" data-mood="silly">
+                <span class="mood-emoji">🤪</span>
+                <span class="mood-label">Silly</span>
+            </button>
+            <button class="mood-btn" data-mood="bread">
+                <span class="mood-emoji">🥖</span>
+                <span class="mood-label">Bread Mode</span>
+            </button>
+            <button class="mood-btn" data-mood="aussie">
+                <span class="mood-emoji">🇦🇺</span>
+                <span class="mood-label">Aussie Vibes</span>
+            </button>
+        </div>
+        <div class="mood-display">
+            <div class="mood-message" id="mood-message">
+                <p>Pilih mood untuk lihat reaksi Hanni!</p>
             </div>
         </div>
     </section>

@@ -1075,65 +1075,156 @@ downloadWallpaperBtns.forEach(btn => {
     });
 });
 
-// --- 19. PHAMMILY PROFILE ---
-const profileNameInput = document.getElementById('profile-name');
-const profileBiasInput = document.getElementById('profile-bias');
-const profileCountrySelect = document.getElementById('profile-country');
-const profileMessageInput = document.getElementById('profile-message');
-const saveProfileBtn = document.getElementById('save-profile-btn');
-const profileDisplay = document.getElementById('profile-display');
-const editProfileBtn = document.getElementById('edit-profile-btn');
+// --- 19. FAVORITES SECTION - Interactive Cards ---
+const favoriteCards = document.querySelectorAll('.favorite-card');
 
-if (saveProfileBtn) {
-    saveProfileBtn.addEventListener('click', () => {
-        const name = profileNameInput.value.trim();
-        const bias = profileBiasInput.value.trim();
-        const country = profileCountrySelect.value;
-        const message = profileMessageInput.value.trim();
+favoriteCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Add bounce animation
+        card.style.animation = 'none';
+        setTimeout(() => {
+            card.style.animation = 'bounce 0.6s';
+        }, 10);
         
-        if (!name || !bias || !country || !message) {
-            alert('Please fill in all fields! 💕');
-            return;
-        }
-        
-        // Save to localStorage
-        const profile = { name, bias, country, message };
-        localStorage.setItem('hanniProfile', JSON.stringify(profile));
-        
-        // Display profile
-        document.getElementById('display-name').innerText = name;
-        document.getElementById('display-bias').innerText = bias;
-        document.getElementById('display-country').innerText = country;
-        document.getElementById('display-message').innerText = message;
-        
-        document.querySelector('.profile-inputs').style.display = 'none';
-        profileDisplay.style.display = 'block';
+        // Create floating hearts
+        createFloatingHearts(card);
     });
+});
+
+function createFloatingHearts(element) {
+    const hearts = ['❤️', '💕', '💖', '💗', '💝'];
+    for (let i = 0; i < 5; i++) {
+        const heart = document.createElement('div');
+        heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.position = 'absolute';
+        heart.style.fontSize = '2rem';
+        heart.style.pointerEvents = 'none';
+        heart.style.zIndex = '1000';
+        
+        const rect = element.getBoundingClientRect();
+        heart.style.left = rect.left + Math.random() * rect.width + 'px';
+        heart.style.top = rect.top + 'px';
+        
+        document.body.appendChild(heart);
+        
+        // Animate upwards
+        let pos = 0;
+        const interval = setInterval(() => {
+            pos += 5;
+            heart.style.top = rect.top - pos + 'px';
+            heart.style.opacity = 1 - (pos / 200);
+            
+            if (pos > 200) {
+                clearInterval(interval);
+                heart.remove();
+            }
+        }, 20);
+    }
 }
 
-if (editProfileBtn) {
-    editProfileBtn.addEventListener('click', () => {
-        document.querySelector('.profile-inputs').style.display = 'block';
-        profileDisplay.style.display = 'none';
-    });
-}
+// Add bounce animation to CSS dynamically
+const bounceStyle = document.createElement('style');
+bounceStyle.textContent = `
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0) scale(1); }
+        25% { transform: translateY(-20px) scale(1.05); }
+        50% { transform: translateY(0) scale(1); }
+        75% { transform: translateY(-10px) scale(1.02); }
+    }
+`;
+document.head.appendChild(bounceStyle);
 
-// Load saved profile
-const savedProfile = localStorage.getItem('hanniProfile');
-if (savedProfile) {
-    const profile = JSON.parse(savedProfile);
-    profileNameInput.value = profile.name;
-    profileBiasInput.value = profile.bias;
-    profileCountrySelect.value = profile.country;
-    profileMessageInput.value = profile.message;
-    
-    document.getElementById('display-name').innerText = profile.name;
-    document.getElementById('display-bias').innerText = profile.bias;
-    document.getElementById('display-country').innerText = profile.country;
-    document.getElementById('display-message').innerText = profile.message;
-    
-    document.querySelector('.profile-inputs').style.display = 'none';
-    profileDisplay.style.display = 'block';
+// --- 20. MOOD TRACKER - Hanni's Mood ---
+const moodBtns = document.querySelectorAll('.mood-btn');
+const moodMessage = document.getElementById('mood-message');
+
+const moodData = {
+    happy: {
+        message: "Yayyy! Hanni's having the best day ever! 😊✨ Time for some bread and dancing!",
+        color: '#FFD6E8'
+    },
+    excited: {
+        message: "NAURRR THIS IS SO EXCITING! 🤩💫 Hanni can't wait to share this energy with Phoning!",
+        color: '#FFC0D9'
+    },
+    sleepy: {
+        message: "Zzz... Hanni needs her beauty sleep 😴💤 Five more minutes please~",
+        color: '#E6E6FA'
+    },
+    silly: {
+        message: "Hehehe Hanni's in silly mode! 🤪✨ Time for some funny faces and jokes!",
+        color: '#FFE5CC'
+    },
+    bread: {
+        message: "BREAD BREAD BREAD! 🥖🥐 Nothing makes Hanni happier than fresh baked goods!",
+        color: '#FFDAB9'
+    },
+    aussie: {
+        message: "G'day mate! 🇦🇺🦘 Hanni's channeling her Aussie roots and that iconic accent~",
+        color: '#D6EAF8'
+    }
+};
+
+moodBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Remove active from all buttons
+        moodBtns.forEach(b => b.classList.remove('active'));
+        
+        // Add active to clicked button
+        btn.classList.add('active');
+        
+        // Get mood data
+        const mood = btn.getAttribute('data-mood');
+        const data = moodData[mood];
+        
+        // Animate message change
+        moodMessage.style.opacity = '0';
+        moodMessage.style.transform = 'scale(0.8)';
+        
+        setTimeout(() => {
+            moodMessage.querySelector('p').innerText = data.message;
+            moodMessage.style.background = `linear-gradient(135deg, ${data.color}, white)`;
+            moodMessage.style.opacity = '1';
+            moodMessage.style.transform = 'scale(1)';
+            moodMessage.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        }, 200);
+        
+        // Create confetti effect
+        createConfetti();
+    });
+});
+
+function createConfetti() {
+    const emojis = ['✨', '💕', '🎀', '⭐', '💖', '🌸'];
+    for (let i = 0; i < 15; i++) {
+        const confetti = document.createElement('div');
+        confetti.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        confetti.style.position = 'fixed';
+        confetti.style.fontSize = '1.5rem';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '1000';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-50px';
+        
+        document.body.appendChild(confetti);
+        
+        // Animate downwards
+        let pos = -50;
+        const speed = 2 + Math.random() * 3;
+        const drift = (Math.random() - 0.5) * 200;
+        
+        const interval = setInterval(() => {
+            pos += speed;
+            confetti.style.top = pos + 'px';
+            confetti.style.transform = `translateX(${drift * (pos / window.innerHeight)}px) rotate(${pos * 2}deg)`;
+            confetti.style.opacity = 1 - (pos / window.innerHeight);
+            
+            if (pos > window.innerHeight) {
+                clearInterval(interval);
+                confetti.remove();
+            }
+        }, 20);
+    }
 }
 
 // Initialize particles on load
