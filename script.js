@@ -1230,4 +1230,115 @@ function createConfetti() {
 // Initialize particles on load
 window.addEventListener('DOMContentLoaded', () => {
     createParticles();
+    initGreetingCards();
+    initFactCarousel();
+    initSparkleEffect();
 });
+
+// ========================================
+// GREETING CARDS - Dynamic Messages
+// ========================================
+function initGreetingCards() {
+    const greetingText = document.getElementById('greeting-text');
+    if (!greetingText) return;
+
+    const greetings = [
+        "Welcome to Hanni's World! 🌟",
+        "G'day mate! Ready for some fun? 🇦🇺",
+        "Naurrr! So happy you're here! 💕",
+        "Let's vibe together! ✨",
+        "Bread lovers unite! 🥖",
+        "Time for some Phoning energy! 🐰"
+    ];
+
+    let currentIndex = 0;
+
+    setInterval(() => {
+        greetingText.style.opacity = '0';
+        setTimeout(() => {
+            currentIndex = (currentIndex + 1) % greetings.length;
+            greetingText.textContent = greetings[currentIndex];
+            greetingText.style.opacity = '1';
+        }, 300);
+    }, 4000);
+}
+
+// ========================================
+// FACT CAROUSEL - Random Hanni Facts
+// ========================================
+function initFactCarousel() {
+    const factCard = document.getElementById('fact-card');
+    if (!factCard) return;
+
+    const facts = [
+        { icon: '💡', text: 'Did you know? Hanni can speak 3 languages fluently!' },
+        { icon: '🥖', text: 'Hanni eats bread almost every single day!' },
+        { icon: '🇦🇺', text: 'Born in Melbourne, Australia - home of the iconic accent!' },
+        { icon: '🎤', text: 'Hanni trained for 4 months before debuting with NewJeans!' },
+        { icon: '💕', text: 'She loves to sleep and is the ultimate cozy queen!' },
+        { icon: '👜', text: 'Hanni is a Gucci Global Ambassador!' },
+        { icon: '🎨', text: 'Her favorite color is pink and purple!' },
+        { icon: '🐰', text: 'Hanni adores bunnies and all cute animals!' }
+    ];
+
+    let currentFactIndex = 0;
+
+    setInterval(() => {
+        factCard.style.animation = 'none';
+        setTimeout(() => {
+            currentFactIndex = (currentFactIndex + 1) % facts.length;
+            const fact = facts[currentFactIndex];
+            factCard.querySelector('.fact-icon').textContent = fact.icon;
+            factCard.querySelector('.fact-text').textContent = fact.text;
+            factCard.style.animation = 'fact-slide-in 0.6s ease-out';
+        }, 100);
+    }, 6000);
+}
+
+// ========================================
+// SPARKLE EFFECT - Interactive Mouse Sparkles
+// ========================================
+function initSparkleEffect() {
+    const sparkleContainer = document.getElementById('sparkle-container');
+    const hanniImg = document.getElementById('hanni-img');
+    
+    if (!sparkleContainer || !hanniImg) return;
+
+    hanniImg.addEventListener('mouseenter', (e) => {
+        createSparkles(e, sparkleContainer);
+    });
+
+    hanniImg.addEventListener('mousemove', (e) => {
+        if (Math.random() > 0.7) {
+            createSparkles(e, sparkleContainer);
+        }
+    });
+}
+
+function createSparkles(e, container) {
+    const sparkles = ['✨', '⭐', '💫', '🌟'];
+    const rect = container.getBoundingClientRect();
+    
+    for (let i = 0; i < 3; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+        sparkle.style.position = 'absolute';
+        sparkle.style.fontSize = '1.5rem';
+        sparkle.style.pointerEvents = 'none';
+        sparkle.style.left = (e.clientX - rect.left + (Math.random() - 0.5) * 50) + 'px';
+        sparkle.style.top = (e.clientY - rect.top + (Math.random() - 0.5) * 50) + 'px';
+        sparkle.style.opacity = '1';
+        sparkle.style.transition = 'all 1s ease-out';
+        
+        container.appendChild(sparkle);
+        
+        setTimeout(() => {
+            sparkle.style.transform = `translateY(-80px) scale(0)`;
+            sparkle.style.opacity = '0';
+        }, 50);
+        
+        setTimeout(() => {
+            sparkle.remove();
+        }, 1000);
+    }
+}

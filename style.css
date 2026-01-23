@@ -165,10 +165,154 @@ body {
     padding: 60px 20px;
     gap: 40px;
     min-height: 80vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Floating Decorations */
+.hero-decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-element {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: float-drift 6s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+.floating-element.star {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-element.heart {
+    top: 60%;
+    right: 15%;
+    animation-delay: 1s;
+}
+
+.floating-element.sparkle {
+    top: 30%;
+    right: 25%;
+    animation-delay: 2s;
+}
+
+.floating-element.bunny {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 3s;
+}
+
+.floating-element.bread {
+    top: 70%;
+    left: 40%;
+    animation-delay: 1.5s;
+}
+
+@keyframes float-drift {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(20px, -20px) rotate(5deg);
+    }
+    50% {
+        transform: translate(-15px, -30px) rotate(-5deg);
+    }
+    75% {
+        transform: translate(15px, -15px) rotate(3deg);
+    }
 }
 
 .hero-content {
     max-width: 500px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Greeting Card */
+.greeting-card {
+    background: linear-gradient(135deg, white, var(--theme-primary));
+    border: 3px solid #000;
+    border-radius: 20px;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    animation: greeting-pulse 3s ease-in-out infinite;
+}
+
+.greeting-icon {
+    font-size: 2rem;
+    animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(20deg); }
+    75% { transform: rotate(-20deg); }
+}
+
+.greeting-text {
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+@keyframes greeting-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Fact Carousel */
+.fact-carousel {
+    margin-top: 20px;
+}
+
+.fact-card {
+    background: white;
+    border: 3px solid #000;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 4px 4px 0px rgba(255, 158, 201, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: fact-slide-in 0.6s ease-out;
+}
+
+.fact-icon {
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+.fact-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+@keyframes fact-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .badge {
@@ -192,6 +336,66 @@ body {
 
 .hero-image-wrapper {
     position: relative;
+}
+
+/* Sparkle Container */
+.sparkle-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Sticker Decorations */
+.sticker-decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.sticker {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: sticker-float 3s ease-in-out infinite;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+}
+
+.sticker-1 {
+    top: 10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.sticker-2 {
+    top: 15%;
+    right: -5%;
+    animation-delay: 0.5s;
+}
+
+.sticker-3 {
+    bottom: 25%;
+    left: -8%;
+    animation-delay: 1s;
+}
+
+.sticker-4 {
+    bottom: 30%;
+    right: -10%;
+    animation-delay: 1.5s;
+}
+
+@keyframes sticker-float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-15px) rotate(10deg);
+    }
 }
 
 #hanni-img {
@@ -2526,11 +2730,47 @@ body.dark-mode .mood-btn {
     border-color: #5865F2;
 }
 
+body.dark-mode .mood-btn:hover {
+    background: #3a3f5c;
+}
+
 body.dark-mode .mood-btn.active {
     background: linear-gradient(135deg, #5865F2, #7289DA);
 }
 
 body.dark-mode .mood-label {
+    color: #e4e4e4;
+    font-weight: 600;
+}
+
+body.dark-mode .mood-btn.active .mood-label {
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .mood-emoji {
+    filter: brightness(1.2);
+}
+
+/* Dark mode untuk elemen hero baru */
+body.dark-mode .greeting-card {
+    background: linear-gradient(135deg, #2c2f48 0%, #1e1e3f 100%);
+    border-color: #5865F2;
+    box-shadow: 5px 5px 0px rgba(88, 101, 242, 0.4);
+}
+
+body.dark-mode .greeting-text {
+    color: #e4e4e4;
+    text-shadow: 0 0 10px rgba(114, 137, 218, 0.4);
+}
+
+body.dark-mode .fact-card {
+    background: linear-gradient(135deg, #2c2f48 0%, #1e1e3f 100%);
+    border-color: #5865F2;
+    box-shadow: 4px 4px 0px rgba(88, 101, 242, 0.4);
+}
+
+body.dark-mode .fact-text {
     color: #e4e4e4;
 }
 
