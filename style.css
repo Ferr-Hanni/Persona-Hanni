@@ -70,6 +70,15 @@
     }
 }
 
+/* Dark mode mobile specific */
+@media (max-width: 768px) {
+    body.dark-mode .navbar {
+        background: rgba(30, 30, 63, 1) !important;
+        backdrop-filter: none !important; /* ✅ Remove blur di mobile */
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
 /* Reduce motion untuk pengguna yang sensitive */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -154,12 +163,16 @@ body.dark-mode .pixel-btn:hover {
 /* Mobile Button Layout Fix */
 @media (max-width: 768px) {
     .navbar {
+        position: fixed;
         padding: 10px 3% !important;
         flex-wrap: wrap;
         gap: 5px;
+        backdrop-filter: blur(9px) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
     }
     
     .logo {
+        font-size: 0.75rem !important;
         font-size: 0.65rem !important;
         flex: 1 1 100%;
         text-align: center;
@@ -170,13 +183,14 @@ body.dark-mode .pixel-btn:hover {
         flex: 1 1 100%;
         justify-content: center;
         gap: 5px !important;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
     
     .pixel-btn {
-        font-size: 0.45rem !important;
-        padding: 6px 10px !important;
+        font-size: 0.55rem !important;
+        padding: 8px 12px !important;
         white-space: nowrap;
+        flex: 1;
     }
     
     /* Photo Booth Section Mobile Fix */
@@ -356,6 +370,7 @@ body {
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: url('https://cur.cursors-4u.net/cursors/cur-2/cur116.cur'), auto;
     position: relative;
+    padding-top: 80px; /* Space for fixed navbar */
 }
 
 /* Floating Particles */
@@ -404,11 +419,19 @@ body {
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    width: 100%;
+    z-index: 1000;
     border-bottom: 2px solid rgba(255, 255, 255, 0.5);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    padding: 10px 5%;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
 }
 
 .menu {

@@ -1456,3 +1456,53 @@ function createSparkles(e, container) {
         }, 1000);
     }
 }
+
+// ========================================
+// NAVBAR SCROLL BEHAVIOR FIX
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.querySelector('.navbar');
+    
+    if (!navbar) {
+        console.warn('⚠️ Navbar not found!');
+        return;
+    }
+
+    let lastScrollTop = 0;
+    const scrollThreshold = 50; // Trigger scrolled class after 50px
+
+    // Throttled scroll handler untuk performance
+    const handleNavbarScroll = throttle(function() {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Toggle 'scrolled' class
+        if (currentScroll > scrollThreshold) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        // OPTIONAL: Auto-hide navbar saat scroll down
+        // Uncomment jika mau navbar hide/show saat scroll
+        /*
+        if (currentScroll > lastScrollTop && currentScroll > 100) {
+            // Scrolling DOWN - hide navbar
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            // Scrolling UP - show navbar
+            navbar.style.transform = 'translateY(0)';
+        }
+        */
+        
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    }, 100); // Throttle to 100ms
+
+    // Add scroll listener dengan passive untuk performa
+    window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+
+    // Initial state
+    navbar.classList.add('show');
+    
+    console.log('✅ Navbar scroll behavior initialized');
+});
