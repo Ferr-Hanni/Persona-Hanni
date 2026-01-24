@@ -10,7 +10,7 @@
 </head>
 <body>
 
-    <!-- Floating Particles Background -->
+    <!-- Floating Particles Background - OPTIMIZED -->
     <div class="particles-container" id="particles"></div>
 
     <!-- Navigasi -->
@@ -59,7 +59,7 @@
 
     <!-- Hero Section -->
     <header class="hero">
-        <!-- Floating Decorations -->
+        <!-- Floating Decorations - REDUCED -->
         <div class="hero-decorations">
             <div class="floating-element star">⭐</div>
             <div class="floating-element heart">💕</div>
@@ -89,9 +89,9 @@
             
            <!-- REAL FUNCTIONAL MUSIC PLAYER -->
             <div class="music-player-real">
-                <!-- Audio Element - Taruh file musik di folder assets/music/ -->
-                <audio id="bg-music" loop>
-                    <source src="assets/music/darling darling by newjeans’ hanni.mp3" type="audio/mpeg">
+                <!-- Audio Element -->
+                <audio id="bg-music" loop preload="metadata">
+                    <source src="assets/music/darling darling by newjeans' hanni.mp3" type="audio/mpeg">
                     Browser kamu tidak support audio.
                 </audio>
 
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 
-                <!-- Visualizer Bars (Gerak pas musik nyala) -->
+                <!-- Visualizer Bars -->
                 <div class="visualizer" id="visualizer">
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div>
                     <div class="bar"></div><div class="bar"></div>
@@ -119,10 +119,12 @@
             <!-- Sparkle Effect Container -->
             <div class="sparkle-container" id="sparkle-container"></div>
             
+            <!-- LAZY LOADING IMAGE -->
             <img 
                 src="assets/img/home.jpg" 
                 alt="Hanni" 
                 id="hanni-img"
+                loading="lazy"
             >
             <div class="speech-bubble" id="speech-bubble">Naurrr~!</div>
 
@@ -180,147 +182,125 @@
             <h2>🥠 Hanni's Fortune Cookie 🥠</h2>
             <p class="fortune-desc">Crack open untuk dapat wisdom dari Hanni!</p>
             
-            <div class="fortune-cookie-wrapper">
-                <div class="cookie" id="fortune-cookie">
-                    <div class="cookie-top">🥠</div>
-                    <div class="fortune-paper" id="fortune-paper">
-                        <p id="fortune-text">Klik cookie untuk mulai!</p>
+            <div class="fortune-box">
+                <div class="fortune-cookie" id="fortune-cookie">🥠</div>
+                <div class="fortune-paper" id="fortune-paper">
+                    <p id="fortune-text">Click the cookie!</p>
+                </div>
+                <button id="fortune-btn" class="pixel-btn">Crack It!</button>
+                <p class="fortune-counter">Fortunes Collected: <span id="fortune-count">0</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur 2: Bread Clicker Game -->
+    <section class="game-section bread-game-section">
+        <div class="game-container">
+            <h2>🍞 Hanni's Bread Clicker 🍞</h2>
+            <p class="game-desc">Click the bread! Become a Bread Legend!</p>
+            
+            <div class="bread-game">
+                <div class="bread-stats">
+                    <div class="stat-box">
+                        <span class="stat-label">Breads:</span>
+                        <span class="stat-value" id="bread-count">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Power:</span>
+                        <span class="stat-value" id="click-power">1</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Level:</span>
+                        <span class="stat-value" id="bread-level">Bread Rookie</span>
+                    </div>
+                </div>
+
+                <div class="bread-clicker-container">
+                    <button id="bread-clicker" class="bread-btn">🥖</button>
+                </div>
+
+                <div class="upgrades-container">
+                    <h3>🛒 Upgrades Shop</h3>
+                    <div class="upgrades-grid">
+                        <button class="upgrade-btn" data-cost="10" data-power="1" disabled>
+                            <span class="upgrade-name">🥐 Croissant</span>
+                            <span class="upgrade-power">+1 power</span>
+                            <span class="upgrade-cost">Cost: 10🍞</span>
+                        </button>
+                        <button class="upgrade-btn" data-cost="50" data-power="5" disabled>
+                            <span class="upgrade-name">🍞 Baguette</span>
+                            <span class="upgrade-power">+5 power</span>
+                            <span class="upgrade-cost">Cost: 50🍞</span>
+                        </button>
+                        <button class="upgrade-btn" data-cost="150" data-power="10" disabled>
+                            <span class="upgrade-name">🥯 Bagel</span>
+                            <span class="upgrade-power">+10 power</span>
+                            <span class="upgrade-cost">Cost: 150🍞</span>
+                        </button>
+                        <button class="upgrade-btn" data-cost="300" data-power="25" disabled>
+                            <span class="upgrade-name">🥖 Premium Bread</span>
+                            <span class="upgrade-power">+25 power</span>
+                            <span class="upgrade-cost">Cost: 300🍞</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            
-            <button id="fortune-btn" class="pixel-btn">✨ Crack Cookie!</button>
-            
-            <div class="fortune-stats">
-                <span>Fortunes collected: <strong id="fortune-count">0</strong></span>
-            </div>
         </div>
     </section>
 
-    <!-- Fitur 2: Hanni's Bread Clicker Game -->
-    <section class="game-section bread-game-section">
-        <div class="game-container">
-            <h2>🍞 Hanni's Bread Empire 🍞</h2>
-            <p>Help Hanni collect bread! Klik sebanyak mungkin!</p>
-            
-            <div class="bread-display">
-                <div class="bread-count-big" id="bread-count">0</div>
-                <div class="bread-label">Breads Collected</div>
-            </div>
-            
-            <button id="bread-clicker" class="bread-btn">🍞</button>
-            
-            <div class="bread-stats">
-                <div class="stat-item">
-                    <span>Per Click: <strong id="click-power">1</strong>🍞</span>
-                </div>
-                <div class="stat-item">
-                    <span>Level: <strong id="bread-level">Bread Rookie</strong></span>
-                </div>
-            </div>
-            
-            <div class="bread-upgrades">
-                <button class="upgrade-btn" id="upgrade-1" data-cost="10" data-power="1">
-                    <div class="upgrade-name">🥖 Baguette Power</div>
-                    <div class="upgrade-cost">Cost: 10🍞</div>
-                </button>
-                <button class="upgrade-btn" id="upgrade-2" data-cost="50" data-power="5">
-                    <div class="upgrade-name">🥐 Croissant Boost</div>
-                    <div class="upgrade-cost">Cost: 50🍞</div>
-                </button>
-                <button class="upgrade-btn" id="upgrade-3" data-cost="200" data-power="20">
-                    <div class="upgrade-name">🎂 Bakery Boss</div>
-                    <div class="upgrade-cost">Cost: 200🍞</div>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Fitur 3: Phammily Photo Booth -->
+    <!-- Fitur 3: Photo Booth -->
     <section class="photo-booth-section">
-        <h2 class="section-title">📸 Hanni Photo Booth 📸</h2>
-        <p class="booth-desc">Pilih frame & filter lucu buat foto Hanni!</p>
+        <h2 class="section-title">📸 Hanni's Photo Booth</h2>
+        <p class="section-desc">Customize your favorite Hanni photo with frames, filters & stickers!</p>
         
         <div class="photo-booth-container">
             <div class="photo-frame" id="photo-frame">
-                <img src="assets/img/home.jpg" alt="Hanni" id="booth-img">
+                <img src="assets/img/home.jpg" alt="Hanni" id="booth-img" class="booth-img" loading="lazy">
                 <div class="frame-overlay" id="frame-overlay"></div>
                 <div class="photo-stickers" id="photo-stickers"></div>
             </div>
-            
+
             <div class="booth-controls">
+                <!-- Frame Selector -->
                 <div class="control-group">
                     <h3>🖼️ Frames</h3>
-                    <div class="frame-options">
-                        <button class="frame-btn active" data-frame="none">No Frame</button>
+                    <div class="frame-buttons">
+                        <button class="frame-btn active" data-frame="none">None</button>
+                        <button class="frame-btn" data-frame="pink">💗 Pink</button>
                         <button class="frame-btn" data-frame="hearts">💕 Hearts</button>
                         <button class="frame-btn" data-frame="stars">⭐ Stars</button>
-                        <button class="frame-btn" data-frame="flowers">🌸 Flowers</button>
-                        <button class="frame-btn" data-frame="glitter">✨ Glitter</button>
+                        <button class="frame-btn" data-frame="polaroid">📷 Polaroid</button>
                     </div>
                 </div>
-                
+
+                <!-- Filter Selector -->
                 <div class="control-group">
-                    <h3>🎨 Filters</h3>
-                    <div class="filter-options">
-                        <button class="filter-btn active" data-filter="none">Original</button>
-                        <button class="filter-btn" data-filter="y2k">Y2K Pink</button>
-                        <button class="filter-btn" data-filter="vintage">Vintage</button>
-                        <button class="filter-btn" data-filter="dreamy">Dreamy</button>
-                        <button class="filter-btn" data-filter="neon">Neon</button>
+                    <h3>✨ Filters</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="none">None</button>
+                        <button class="filter-btn" data-filter="vintage">📜 Vintage</button>
+                        <button class="filter-btn" data-filter="warm">🌅 Warm</button>
+                        <button class="filter-btn" data-filter="cool">❄️ Cool</button>
+                        <button class="filter-btn" data-filter="dream">💭 Dreamy</button>
                     </div>
                 </div>
-                
+
+                <!-- Sticker Palette -->
                 <div class="control-group">
-                    <h3>💬 Add Stickers</h3>
-                    <div class="sticker-options">
-                        <button class="add-sticker-btn" data-sticker="🐰">🐰</button>
+                    <h3>🎀 Add Stickers</h3>
+                    <div class="sticker-palette">
+                        <button class="add-sticker-btn" data-sticker="🎀">🎀</button>
                         <button class="add-sticker-btn" data-sticker="💕">💕</button>
                         <button class="add-sticker-btn" data-sticker="⭐">⭐</button>
-                        <button class="add-sticker-btn" data-sticker="🎀">🎀</button>
                         <button class="add-sticker-btn" data-sticker="✨">✨</button>
-                        <button class="add-sticker-btn" data-sticker="Naurrr!">Naurrr!</button>
-                        <button class="add-sticker-btn" data-sticker="Pham💙">Pham💙</button>
+                        <button class="add-sticker-btn" data-sticker="🐰">🐰</button>
+                        <button class="add-sticker-btn" data-sticker="🍞">🍞</button>
+                        <button class="add-sticker-btn" data-sticker="💙">💙</button>
+                        <button class="add-sticker-btn" data-sticker="🌸">🌸</button>
                     </div>
-                    <button id="clear-stickers" class="pixel-btn small-btn">🗑️ Clear All</button>
-                    <button id="download-photo" class="pixel-btn small-btn">📥 Download Photo</button>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Fitur Baru: Random Quote Generator -->
-    <section class="quote-section">
-        <h2 class="section-title">💬 Hanni's Iconic Quotes</h2>
-        <div class="quote-container">
-            <div class="quote-bubble">
-                <p id="quote-text">"Click the button for a random Hanni moment!"</p>
-            </div>
-            <button id="quote-btn" class="pixel-btn">✨ Get Quote</button>
-            <div class="quote-author">— Hanni Pham 🐰</div>
-        </div>
-    </section>
-
-    <!-- Fitur Baru: Message Board -->
-    <section class="message-board-section">
-        <h2 class="section-title">💌 Leave a Message for Hanni</h2>
-        <div class="message-board-container">
-            <div class="message-input-area">
-                <input type="text" id="message-name" placeholder="Your name (optional)" maxlength="20">
-                <textarea id="message-text" placeholder="Write your message here... 💕" maxlength="200"></textarea>
-                <div class="message-controls">
-                    <span id="char-count">0/200</span>
-                    <button id="post-message-btn" class="pixel-btn">📮 Post Message</button>
-                </div>
-            </div>
-            <div class="messages-display" id="messages-display">
-                <div class="sample-message">
-                    <div class="message-header">
-                        <span class="message-author">Bunny #1</span>
-                        <span class="message-time">Just now</span>
-                    </div>
-                    <div class="message-content">Hanni unnie, you're the best! 🐰💕</div>
-                </div>
+                <button id="download-photo" class="pixel-btn">📥 Download Photo</button>
             </div>
         </div>
     </section>
@@ -377,19 +357,19 @@
         <p class="section-desc">Download cute Hanni wallpapers!</p>
         <div class="wallpaper-grid">
             <div class="wallpaper-card">
-                <img src="assets/img/home.jpg" alt="Wallpaper 1">
+                <img src="assets/img/home.jpg" alt="Wallpaper 1" loading="lazy">
                 <button class="download-wallpaper-btn" data-img="assets/img/home.jpg">📥 Download</button>
             </div>
             <div class="wallpaper-card">
-                <img src="assets/img/Gucci.jpg" alt="Wallpaper 2">
+                <img src="assets/img/Gucci.jpg" alt="Wallpaper 2" loading="lazy">
                 <button class="download-wallpaper-btn" data-img="assets/img/Gucci.jpg">📥 Download</button>
             </div>
             <div class="wallpaper-card">
-                <img src="assets/img/myboo.jpg" alt="Wallpaper 3">
+                <img src="assets/img/myboo.jpg" alt="Wallpaper 3" loading="lazy">
                 <button class="download-wallpaper-btn" data-img="assets/img/myboo.jpg">📥 Download</button>
             </div>
             <div class="wallpaper-card">
-                <img src="assets/img/mygirl.jpg" alt="Wallpaper 4">
+                <img src="assets/img/mygirl.jpg" alt="Wallpaper 4" loading="lazy">
                 <button class="download-wallpaper-btn" data-img="assets/img/mygirl.jpg">📥 Download</button>
             </div>
         </div>

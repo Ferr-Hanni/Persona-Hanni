@@ -1,3 +1,117 @@
+// ========================================
+// PERFORMANCE OPTIMIZATIONS
+// ========================================
+
+// Throttle function untuk scroll events
+function throttle(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Debounce function
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Intersection Observer untuk lazy load
+const observerOptions = {
+    root: null,
+    rootMargin: '50px',
+    threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const element = entry.target;
+            
+            // Lazy load images
+            if (element.tagName === 'IMG' && element.loading === 'lazy') {
+                element.classList.add('loaded');
+            }
+            
+            // Start animations only when in view
+            if (element.classList.contains('trait-card') || 
+                element.classList.contains('favorite-card')) {
+                element.style.animationPlayState = 'running';
+            }
+        } else {
+            // Pause animations when out of view (save battery!)
+            const element = entry.target;
+            if (element.classList.contains('trait-card') || 
+                element.classList.contains('favorite-card')) {
+                element.style.animationPlayState = 'paused';
+            }
+        }
+    });
+}, observerOptions);
+
+// Observe all lazy load elements
+document.addEventListener('DOMContentLoaded', () => {
+    // Observe images
+    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        observer.observe(img);
+    });
+    
+    // Observe animated cards
+    document.querySelectorAll('.trait-card, .favorite-card').forEach(card => {
+        observer.observe(card);
+    });
+});
+
+// ========================================
+// OPTIMIZED PARTICLES (Reduced count on mobile)
+// ========================================
+const particlesContainer = document.getElementById('particles');
+const isMobile = window.innerWidth <= 768;
+const particleCount = isMobile ? 5 : 15; // Drastically reduce on mobile
+
+const particleEmojis = ['✨', '💕', '🎀', '⭐', '💙'];
+
+function createParticle() {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    particle.innerText = particleEmojis[Math.floor(Math.random() * particleEmojis.length)];
+    
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
+    particle.style.setProperty('--delay', Math.random() * 5 + 's');
+    
+    if (particlesContainer) {
+        particlesContainer.appendChild(particle);
+    }
+    
+    // Remove after animation completes to prevent memory leak
+    const duration = parseFloat(particle.style.getPropertyValue('--duration'));
+    setTimeout(() => {
+        if (particle.parentNode) {
+            particle.remove();
+        }
+    }, duration * 1000);
+}
+
+// Only create particles if not on reduced motion
+if (particlesContainer && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    for (let i = 0; i < particleCount; i++) {
+        setTimeout(() => createParticle(), i * 500);
+    }
+}
+
 // --- CONFIG DATA ---
 const normalState = {
     subtitle: "Hanni the Idol 🌟",

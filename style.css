@@ -1,3 +1,129 @@
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS FOR MOBILE & SCROLL
+   Add this at the TOP of your style.css
+   ======================================== */
+
+/* Hardware acceleration untuk semua animasi */
+.floating-element,
+.particle,
+.sticker,
+.greeting-card,
+.fact-card,
+.trait-card,
+.favorite-card,
+.mood-btn,
+.wallpaper-card,
+.hero-image-wrapper img,
+.navbar,
+.pixel-btn {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Optimize backdrop filter - PALING PENTING! */
+.navbar {
+    backdrop-filter: blur(10px) !important; /* Reduce dari 20px ke 10px */
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Mobile specific optimizations */
+@media (max-width: 768px) {
+    /* Reduce particles drastically */
+    .particles-container {
+        opacity: 0.2 !important;
+    }
+    
+    .particle:nth-child(n+4) {
+        display: none !important;
+    }
+    
+    /* Slower animations = less CPU */
+    .floating-element {
+        animation-duration: 10s !important;
+    }
+    
+    /* Remove blur on mobile - SANGAT BERAT! */
+    .navbar {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+    }
+    
+    /* Disable complex shadows */
+    .trait-card,
+    .favorite-card,
+    .wallpaper-card {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Pause animations when not in view */
+    .trait-card,
+    .favorite-card {
+        animation-play-state: paused;
+    }
+    
+    .trait-card:hover,
+    .favorite-card:hover {
+        animation-play-state: running;
+    }
+}
+
+/* Reduce motion untuk pengguna yang sensitive */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .particles-container,
+    .floating-element,
+    .particle {
+        display: none !important;
+    }
+}
+
+/* Smooth scroll optimization */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+    html {
+        scroll-behavior: auto; /* Auto scroll lebih smooth di mobile */
+    }
+}
+
+/* Lazy load images optimization */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Touch optimization */
+@media (hover: none) and (pointer: coarse) {
+    /* Remove hover effects on touch devices */
+    .pixel-btn:hover,
+    .trait-card:hover,
+    .favorite-card:hover {
+        transform: none !important;
+    }
+    
+    /* Add tap feedback instead */
+    .pixel-btn:active,
+    .trait-card:active,
+    .favorite-card:active {
+        transform: scale(0.95) !important;
+    }
+}
 :root {
     --blue: #A8DAFF;
     --light-blue: #FFF0F5;
