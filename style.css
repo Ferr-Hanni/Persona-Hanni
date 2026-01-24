@@ -124,6 +124,170 @@ img[loading="lazy"].loaded {
         transform: scale(0.95) !important;
     }
 }
+/* ========================================
+   DARK MODE FIXES - Tambahkan ke style.css
+   ======================================== */
+
+/* Fix Navbar Dark Mode */
+body.dark-mode .navbar {
+    background: rgba(30, 30, 63, 0.95) !important;
+    border-bottom: 2px solid #5865F2;
+    box-shadow: 0 8px 32px rgba(88, 101, 242, 0.3);
+}
+
+body.dark-mode .logo {
+    color: #7289DA;
+    text-shadow: 2px 2px 0px rgba(88, 101, 242, 0.4);
+}
+
+body.dark-mode .pixel-btn {
+    background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+    border-color: #7289DA;
+    color: white;
+}
+
+body.dark-mode .pixel-btn:hover {
+    background: linear-gradient(135deg, #7289DA 0%, #5865F2 100%);
+    box-shadow: 6px 6px 0px rgba(88, 101, 242, 0.3);
+}
+
+/* Mobile Button Layout Fix */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 3% !important;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .logo {
+        font-size: 0.65rem !important;
+        flex: 1 1 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+    
+    .menu {
+        flex: 1 1 100%;
+        justify-content: center;
+        gap: 5px !important;
+        flex-wrap: wrap;
+    }
+    
+    .pixel-btn {
+        font-size: 0.45rem !important;
+        padding: 6px 10px !important;
+        white-space: nowrap;
+    }
+    
+    /* Photo Booth Section Mobile Fix */
+    .photo-booth-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .photo-frame {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    
+    .booth-controls {
+        width: 100%;
+    }
+    
+    .frame-buttons,
+    .filter-buttons,
+    .sticker-palette {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 8px;
+    }
+    
+    .frame-btn,
+    .filter-btn,
+    .add-sticker-btn {
+        font-size: 0.7rem;
+        padding: 8px 5px;
+    }
+    
+    /* Hero Section Mobile */
+    .hero {
+        flex-direction: column;
+        padding: 30px 15px;
+        min-height: auto;
+    }
+    
+    .hero h1 {
+        font-size: 4rem !important;
+    }
+    
+    .hero-image-wrapper {
+        max-width: 100%;
+    }
+    
+    .hero-image-wrapper img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Dark Mode Body & Background */
+body.dark-mode {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
+    color: #e4e4e4;
+}
+
+/* Dark Mode Buttons */
+body.dark-mode .outfit-btn {
+    background: #2c2f48;
+    border-color: #5865F2;
+    box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+}
+
+body.dark-mode .outfit-btn:hover {
+    background: #3a3f5c;
+    border-color: #7289DA;
+    transform: translateY(-3px);
+}
+
+/* Fix Speech Bubble Dark Mode */
+body.dark-mode .speech-bubble {
+    background: linear-gradient(135deg, #2c2f48 0%, #1e1e3f 100%);
+    border-color: #5865F2;
+    color: #e4e4e4;
+    box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4);
+}
+
+body.dark-mode .speech-bubble::before {
+    border-top-color: #2c2f48;
+}
+
+/* Fix Badge Dark Mode */
+body.dark-mode .badge {
+    background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+    border-color: #7289DA;
+    color: white;
+}
+
+/* Fix Hero Title Dark Mode */
+body.dark-mode .hero h1 {
+    color: #7289DA;
+    text-shadow: 
+        3px 3px 0px #5865F2,
+        0 0 20px rgba(114, 137, 218, 0.6);
+}
+
+/* Performance: Reduce animations on scroll */
+@media (max-width: 768px) {
+    body.dark-mode .floating-element {
+        animation-duration: 12s !important;
+        opacity: 0.4;
+    }
+    
+    /* Disable heavy effects on mobile */
+    body.dark-mode .hero h1 {
+        text-shadow: 3px 3px 0px #5865F2;
+    }
+}
 :root {
     --blue: #A8DAFF;
     --light-blue: #FFF0F5;
