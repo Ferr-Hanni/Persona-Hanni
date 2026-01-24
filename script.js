@@ -680,4 +680,308 @@ outfitBtns.forEach(btn => {
 // Initialize
 updateUpgradeButtons();
 
-// End of script.js
+// ===== NEW FEATURES JAVASCRIPT =====
+
+// --- 10. FLOATING PARTICLES BACKGROUND ---
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    const particles = ['🌸', '💕', '⭐', '✨', '🐰', '💙', '🎀', '🌺'];
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.innerText = particles[Math.floor(Math.random() * particles.length)];
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
+        particle.style.setProperty('--delay', Math.random() * 5 + 's');
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// --- 11. THEME SELECTOR ---
+const themeModal = document.getElementById('theme-modal');
+const themeSelectorBtn = document.getElementById('theme-selector-btn');
+const closeModal = document.querySelector('.close-modal');
+const themeCards = document.querySelectorAll('.theme-card');
+
+if (themeSelectorBtn) {
+    themeSelectorBtn.addEventListener('click', () => {
+        themeModal.style.display = 'block';
+    });
+}
+
+if (closeModal) {
+    closeModal.addEventListener('click', () => {
+        themeModal.style.display = 'none';
+    });
+}
+
+window.addEventListener('click', (e) => {
+    if (e.target === themeModal) {
+        themeModal.style.display = 'none';
+    }
+});
+
+themeCards.forEach(card => {
+    card.addEventListener('click', () => {
+        // Remove active from all
+        themeCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        
+        const theme = card.getAttribute('data-theme');
+        document.body.setAttribute('data-theme', theme);
+        
+        // Save to localStorage
+        localStorage.setItem('hanniTheme', theme);
+    });
+});
+
+// Load saved theme
+const savedTheme = localStorage.getItem('hanniTheme');
+if (savedTheme) {
+    document.body.setAttribute('data-theme', savedTheme);
+    themeCards.forEach(card => {
+        if (card.getAttribute('data-theme') === savedTheme) {
+            card.classList.add('active');
+        }
+    });
+}
+
+// --- 16. MEMORY MATCH GAME ---
+const memoryGrid = document.getElementById('memory-grid');
+const startMemoryBtn = document.getElementById('start-memory-game');
+const memoryMovesDisplay = document.getElementById('memory-moves');
+const memoryTimeDisplay = document.getElementById('memory-time');
+
+let memoryCards = ['🐰', '💕', '⭐', '🍞', '🎀', '💙', '🌸', '✨'];
+let memoryDeck = [...memoryCards, ...memoryCards];
+let flippedCards = [];
+let matchedPairs = 0;
+let moves = 0;
+let memoryTimer = 0;
+let memoryInterval = null;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function createMemoryGame() {
+    memoryGrid.innerHTML = '';
+    memoryDeck = shuffleArray([...memoryCards, ...memoryCards]);
+    flippedCards = [];
+    matchedPairs = 0;
+    moves = 0;
+    memoryTimer = 0;
+    memoryMovesDisplay.innerText = '0';
+    memoryTimeDisplay.innerText = '0';
+    
+    if (memoryInterval) clearInterval(memoryInterval);
+    memoryInterval = setInterval(() => {
+        memoryTimer++;
+        memoryTimeDisplay.innerText = memoryTimer;
+    }, 1000);
+    
+    memoryDeck.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.index = index;
+        card.dataset.symbol = symbol;
+        card.innerText = '?';
+        card.addEventListener('click', flipMemoryCard);
+        memoryGrid.appendChild(card);
+    });
+}
+
+function flipMemoryCard(e) {
+    const card = e.target;
+    
+    if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+        return;
+    }
+    
+    card.classList.add('flipped');
+    card.innerText = card.dataset.symbol;
+    flippedCards.push(card);
+    
+    if (flippedCards.length === 2) {
+        moves++;
+        memoryMovesDisplay.innerText = moves;
+        
+        setTimeout(() => {
+            if (flippedCards[0].dataset.symbol === flippedCards[1].dataset.symbol) {
+                flippedCards.forEach(c => c.classList.add('matched'));
+                matchedPairs++;
+                
+                if (matchedPairs === memoryCards.length) {
+                    clearInterval(memoryInterval);
+                    setTimeout(() => {
+                        alert(`🎉 You won! Time: ${memoryTimer}s, Moves: ${moves}`);
+                    }, 300);
+                }
+            } else {
+                flippedCards.forEach(c => {
+                    c.classList.remove('flipped');
+                    c.innerText = '?';
+                });
+            }
+            flippedCards = [];
+        }, 800);
+    }
+}
+
+if (startMemoryBtn) {
+    startMemoryBtn.addEventListener('click', createMemoryGame);
+}
+
+// --- 17. SLIDE PUZZLE GAME ---
+const puzzleGrid = document.getElementById('puzzle-grid');
+const startPuzzleBtn = document.getElementById('start-puzzle-game');
+const puzzleMovesDisplay = document.getElementById('puzzle-moves');
+
+let puzzleState = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+let puzzleMoves = 0;
+
+function createPuzzle() {
+    puzzleGrid.innerHTML = '';
+    puzzleMoves = 0;
+    puzzleMovesDisplay.innerText = '0';
+    
+    // Shuffle
+    for (let i = 0; i < 100; i++) {
+        const emptyIndex = puzzleState.indexOf(0);
+        const possibleMoves = getPossibleMoves(emptyIndex);
+        const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+        [puzzleState[emptyIndex], puzzleState[randomMove]] = [puzzleState[randomMove], puzzleState[emptyIndex]];
+    }
+    
+    renderPuzzle();
+}
+
+function getPossibleMoves(emptyIndex) {
+    const moves = [];
+    const row = Math.floor(emptyIndex / 3);
+    const col = emptyIndex % 3;
+    
+    if (row > 0) moves.push(emptyIndex - 3); // Up
+    if (row < 2) moves.push(emptyIndex + 3); // Down
+    if (col > 0) moves.push(emptyIndex - 1); // Left
+    if (col < 2) moves.push(emptyIndex + 1); // Right
+    
+    return moves;
+}
+
+function renderPuzzle() {
+    puzzleGrid.innerHTML = '';
+    
+    puzzleState.forEach((num, index) => {
+        const tile = document.createElement('div');
+        tile.className = num === 0 ? 'puzzle-tile empty' : 'puzzle-tile';
+        tile.innerText = num === 0 ? '' : num;
+        tile.dataset.index = index;
+        
+        if (num !== 0) {
+            tile.addEventListener('click', () => movePuzzleTile(index));
+        }
+        
+        puzzleGrid.appendChild(tile);
+    });
+}
+
+function movePuzzleTile(tileIndex) {
+    const emptyIndex = puzzleState.indexOf(0);
+    const possibleMoves = getPossibleMoves(emptyIndex);
+    
+    if (possibleMoves.includes(tileIndex)) {
+        [puzzleState[emptyIndex], puzzleState[tileIndex]] = [puzzleState[tileIndex], puzzleState[emptyIndex]];
+        puzzleMoves++;
+        puzzleMovesDisplay.innerText = puzzleMoves;
+        renderPuzzle();
+        
+        // Check win
+        const solved = puzzleState.every((num, idx) => num === idx + 1 || (idx === 8 && num === 0));
+        if (solved) {
+            setTimeout(() => {
+                alert(`🎉 Puzzle solved in ${puzzleMoves} moves!`);
+            }, 300);
+        }
+    }
+}
+
+if (startPuzzleBtn) {
+    startPuzzleBtn.addEventListener('click', createPuzzle);
+}
+
+// Add bounce animation to CSS dynamically
+const bounceStyle = document.createElement('style');
+bounceStyle.textContent = `
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0) scale(1); }
+        25% { transform: translateY(-20px) scale(1.05); }
+        50% { transform: translateY(0) scale(1); }
+        75% { transform: translateY(-10px) scale(1.02); }
+    }
+`;
+document.head.appendChild(bounceStyle);
+
+// --- 20. MOOD TRACKER - Hanni's Mood ---
+window.addEventListener('DOMContentLoaded', () => {
+    createParticles();
+    initSparkleEffect();
+});
+
+// ========================================
+// NAVBAR SCROLL BEHAVIOR FIX
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.querySelector('.navbar');
+    
+    if (!navbar) {
+        console.warn('⚠️ Navbar not found!');
+        return;
+    }
+
+    let lastScrollTop = 0;
+    const scrollThreshold = 50; // Trigger scrolled class after 50px
+
+    // Throttled scroll handler untuk performance
+    const handleNavbarScroll = throttle(function() {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Toggle 'scrolled' class
+        if (currentScroll > scrollThreshold) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        // OPTIONAL: Auto-hide navbar saat scroll down
+        // Uncomment jika mau navbar hide/show saat scroll
+        /*
+        if (currentScroll > lastScrollTop && currentScroll > 100) {
+            // Scrolling DOWN - hide navbar
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            // Scrolling UP - show navbar
+            navbar.style.transform = 'translateY(0)';
+        }
+        */
+        
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    }, 100); // Throttle to 100ms
+
+    // Add scroll listener dengan passive untuk performa
+    window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+
+    // Initial state
+    navbar.classList.add('show');
+    
+    console.log('✅ Navbar scroll behavior initialized');
+});
