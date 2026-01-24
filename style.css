@@ -70,15 +70,6 @@
     }
 }
 
-/* Dark mode mobile specific */
-@media (max-width: 768px) {
-    body.dark-mode .navbar {
-        background: rgba(30, 30, 63, 1) !important;
-        backdrop-filter: none !important; /* ✅ Remove blur di mobile */
-        -webkit-backdrop-filter: none !important;
-    }
-}
-
 /* Reduce motion untuk pengguna yang sensitive */
 @media (prefers-reduced-motion: reduce) {
     *,

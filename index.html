@@ -5,25 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hanni Pham | NewJeans</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Lucu & Pixel -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500;700&family=Press+Start+2P&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Floating Particles Background - OPTIMIZED -->
+    <!-- Particles Background -->
     <div class="particles-container" id="particles"></div>
 
-    <!-- Navigasi -->
+    <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo">HANNI PHAM PERSONA</div>
+        <div class="logo">HANNI PHAM</div>
         <div class="menu">
             <button id="theme-selector-btn" class="pixel-btn">🎨 Themes</button>
-            <button id="mode-btn" class="pixel-btn">💕 Cozy Mode</button>
-            <button id="dark-mode-btn" class="pixel-btn">🌙 Dark Mode</button>
+            <button id="mode-btn" class="pixel-btn">💕 Cozy</button>
+            <button id="dark-mode-btn" class="pixel-btn">🌙 Dark</button>
         </div>
     </nav>
 
-    <!-- Theme Selector Modal -->
+    <!-- Theme Modal -->
     <div class="modal" id="theme-modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -35,23 +34,23 @@
                 </button>
                 <button class="theme-card" data-theme="lavender">
                     <div class="theme-preview lavender-theme"></div>
-                    <span>💜 Lavender Dream</span>
+                    <span>💜 Lavender</span>
                 </button>
                 <button class="theme-card" data-theme="mint">
                     <div class="theme-preview mint-theme"></div>
-                    <span>💚 Fresh Mint</span>
+                    <span>💚 Mint</span>
                 </button>
                 <button class="theme-card" data-theme="peach">
                     <div class="theme-preview peach-theme"></div>
-                    <span>🍑 Peachy Soft</span>
+                    <span>🍑 Peach</span>
                 </button>
                 <button class="theme-card" data-theme="sky">
                     <div class="theme-preview sky-theme"></div>
-                    <span>💙 Sky Blue</span>
+                    <span>💙 Sky</span>
                 </button>
                 <button class="theme-card" data-theme="sunset">
                     <div class="theme-preview sunset-theme"></div>
-                    <span>🌅 Sunset Glow</span>
+                    <span>🌅 Sunset</span>
                 </button>
             </div>
         </div>
@@ -59,7 +58,7 @@
 
     <!-- Hero Section -->
     <header class="hero">
-        <!-- Floating Decorations - REDUCED -->
+        <!-- Floating Decorations -->
         <div class="hero-decorations">
             <div class="floating-element star">⭐</div>
             <div class="floating-element heart">💕</div>
@@ -69,30 +68,14 @@
         </div>
 
         <div class="hero-content">
-            <!-- Animated Greeting Card -->
-            <div class="greeting-card">
-                <div class="greeting-icon">👋</div>
-                <div class="greeting-text" id="greeting-text">Welcome to Hanni's World!</div>
-            </div>
-
             <div class="badge">NewJeans Member</div>
             <h1 class="glitch" data-text="HANNI">하니</h1>
-            <p class="subtitle" id="hero-subtitle">P E R S O N A</p>
-
-            <!-- Cute Fact Carousel -->
-            <div class="fact-carousel">
-                <div class="fact-card" id="fact-card">
-                    <span class="fact-icon">💡</span>
-                    <p class="fact-text">Did you know? Hanni can speak 3 languages fluently!</p>
-                </div>
-            </div>
+            <p class="subtitle" id="hero-subtitle">Hanni the Idol 🌟</p>
             
-           <!-- REAL FUNCTIONAL MUSIC PLAYER -->
+            <!-- Music Player -->
             <div class="music-player-real">
-                <!-- Audio Element -->
                 <audio id="bg-music" loop preload="metadata">
                     <source src="assets/music/darling darling by newjeans' hanni.mp3" type="audio/mpeg">
-                    Browser kamu tidak support audio.
                 </audio>
 
                 <div class="player-controls">
@@ -107,28 +90,25 @@
                     </div>
                 </div>
                 
-                <!-- Visualizer Bars -->
+                <!-- Visualizer -->
                 <div class="visualizer" id="visualizer">
-                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                    <div class="bar"></div><div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
                 </div>
             </div>
         </div>
 
         <div class="hero-image-wrapper">
-            <!-- Sparkle Effect Container -->
+            <!-- Sparkle Container -->
             <div class="sparkle-container" id="sparkle-container"></div>
             
-            <!-- LAZY LOADING IMAGE -->
-            <img 
-                src="assets/img/home.jpg" 
-                alt="Hanni" 
-                id="hanni-img"
-                loading="lazy"
-            >
+            <img src="assets/img/home.jpg" alt="Hanni" id="hanni-img" loading="lazy">
             <div class="speech-bubble" id="speech-bubble">Naurrr~!</div>
 
-            <!-- Interactive Sticker Decorations -->
+            <!-- Stickers -->
             <div class="sticker-decorations">
                 <div class="sticker sticker-1">🎀</div>
                 <div class="sticker sticker-2">✨</div>
@@ -138,14 +118,14 @@
 
             <div class="outfit-selector">
                 <button class="outfit-btn" data-img="assets/img/default.jpg" title="Default">🧢</button>
-                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci Ambassador">👜</button>
-                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage My Boo Outfit">🎤</button>
+                <button class="outfit-btn" data-img="assets/img/Gucci.jpg" title="Gucci">👜</button>
+                <button class="outfit-btn" data-img="assets/img/myboo.jpg" title="Stage">🎤</button>
                 <button class="outfit-btn" data-img="assets/img/mygirl.jpg" title="Photo">🐰</button>
             </div>
         </div>
     </header>
 
-    <!-- Section Kepribadian -->
+    <!-- Personality Section -->
     <section class="personality" id="charm-section">
         <h2 class="section-title">Hanni's Charms</h2>
         <div class="traits-container">
@@ -167,7 +147,7 @@
         </div>
     </section>
 
-    <!-- Fitur Baru: Sticker Deco Area -->
+    <!-- Sticker Deco Area -->
     <section class="sticker-zone" id="sticker-area">
         <h2>🎀 Y2K Sticker Deco 🎀</h2>
         <p>Klik di dalam kotak putih untuk menempel stiker!</p>
@@ -176,7 +156,7 @@
         </div>
     </section>
 
-    <!-- Fitur 1: Hanni's Fortune Cookie -->
+    <!-- Fortune Cookie -->
     <section class="game-section">
         <div class="game-container">
             <h2>🥠 Hanni's Fortune Cookie 🥠</h2>
@@ -188,12 +168,12 @@
                     <p id="fortune-text">Click the cookie!</p>
                 </div>
                 <button id="fortune-btn" class="pixel-btn">Crack It!</button>
-                <p class="fortune-counter">Fortunes Collected: <span id="fortune-count">0</span></p>
+                <p class="fortune-counter">Fortunes: <span id="fortune-count">0</span></p>
             </div>
         </div>
     </section>
 
-    <!-- Fitur 2: Bread Clicker Game -->
+    <!-- Bread Clicker Game -->
     <section class="game-section bread-game-section">
         <div class="game-container">
             <h2>🍞 Hanni's Bread Clicker 🍞</h2>
@@ -238,7 +218,7 @@
                             <span class="upgrade-cost">Cost: 150🍞</span>
                         </button>
                         <button class="upgrade-btn" data-cost="300" data-power="25" disabled>
-                            <span class="upgrade-name">🥖 Premium Bread</span>
+                            <span class="upgrade-name">🥖 Premium</span>
                             <span class="upgrade-power">+25 power</span>
                             <span class="upgrade-cost">Cost: 300🍞</span>
                         </button>
@@ -248,10 +228,10 @@
         </div>
     </section>
 
-    <!-- Fitur 3: Photo Booth -->
+    <!-- Photo Booth -->
     <section class="photo-booth-section">
         <h2 class="section-title">📸 Hanni's Photo Booth</h2>
-        <p class="section-desc">Customize your favorite Hanni photo with frames, filters & stickers!</p>
+        <p class="section-desc">Customize your favorite Hanni photo!</p>
         
         <div class="photo-booth-container">
             <div class="photo-frame" id="photo-frame">
@@ -261,7 +241,7 @@
             </div>
 
             <div class="booth-controls">
-                <!-- Frame Selector -->
+                <!-- Frames -->
                 <div class="control-group">
                     <h3>🖼️ Frames</h3>
                     <div class="frame-buttons">
@@ -273,7 +253,7 @@
                     </div>
                 </div>
 
-                <!-- Filter Selector -->
+                <!-- Filters -->
                 <div class="control-group">
                     <h3>✨ Filters</h3>
                     <div class="filter-buttons">
@@ -281,11 +261,11 @@
                         <button class="filter-btn" data-filter="vintage">📜 Vintage</button>
                         <button class="filter-btn" data-filter="warm">🌅 Warm</button>
                         <button class="filter-btn" data-filter="cool">❄️ Cool</button>
-                        <button class="filter-btn" data-filter="dream">💭 Dreamy</button>
+                        <button class="filter-btn" data-filter="dream">💭 Dream</button>
                     </div>
                 </div>
 
-                <!-- Sticker Palette -->
+                <!-- Stickers -->
                 <div class="control-group">
                     <h3>🎀 Add Stickers</h3>
                     <div class="sticker-palette">
@@ -300,33 +280,33 @@
                     </div>
                 </div>
 
-                <button id="download-photo" class="pixel-btn">📥 Download Photo</button>
+                <button id="download-photo" class="pixel-btn">📥 Download</button>
             </div>
         </div>
     </section>
 
-    <!-- Fitur Baru: Mini Games Section -->
+    <!-- Mini Games -->
     <section class="mini-games-section">
         <h2 class="section-title">🎮 Hanni's Mini Games</h2>
         
-        <!-- Game 1: Bunny Hop -->
+        <!-- Bunny Hop -->
         <div class="game-box">
             <h3>🐰 Bunny Hop Challenge</h3>
-            <p>Help Hanni jump over obstacles! Press SPACE to jump!</p>
+            <p>Press SPACE to jump!</p>
             <div class="bunny-game-container">
                 <canvas id="bunny-game" width="600" height="300"></canvas>
                 <div class="game-controls">
-                    <button id="start-bunny-game" class="pixel-btn">🎮 Start Game</button>
+                    <button id="start-bunny-game" class="pixel-btn">🎮 Start</button>
                     <div class="game-score">Score: <span id="bunny-score">0</span></div>
-                    <div class="game-high-score">High Score: <span id="bunny-high-score">0</span></div>
+                    <div class="game-high-score">High: <span id="bunny-high-score">0</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- Game 2: Memory Match -->
+        <!-- Memory Match -->
         <div class="game-box">
-            <h3>🧠 Hanni Memory Match</h3>
-            <p>Match the pairs! Test your memory!</p>
+            <h3>🧠 Memory Match</h3>
+            <p>Match the pairs!</p>
             <div class="memory-game-container">
                 <div class="memory-grid" id="memory-grid"></div>
                 <div class="game-controls">
@@ -337,144 +317,16 @@
             </div>
         </div>
 
-        <!-- Game 3: Hanni Puzzle -->
+        <!-- Slide Puzzle -->
         <div class="game-box">
             <h3>🧩 Slide Puzzle</h3>
-            <p>Solve the puzzle by sliding tiles!</p>
+            <p>Solve by sliding tiles!</p>
             <div class="puzzle-game-container">
                 <div class="puzzle-grid" id="puzzle-grid"></div>
                 <div class="game-controls">
                     <button id="start-puzzle-game" class="pixel-btn">🎮 Shuffle</button>
                     <div class="game-score">Moves: <span id="puzzle-moves">0</span></div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Fitur Baru: Wallpaper Gallery -->
-    <section class="wallpaper-section">
-        <h2 class="section-title">🖼️ Wallpaper Gallery</h2>
-        <p class="section-desc">Download cute Hanni wallpapers!</p>
-        <div class="wallpaper-grid">
-            <div class="wallpaper-card">
-                <img src="assets/img/home.jpg" alt="Wallpaper 1" loading="lazy">
-                <button class="download-wallpaper-btn" data-img="assets/img/home.jpg">📥 Download</button>
-            </div>
-            <div class="wallpaper-card">
-                <img src="assets/img/Gucci.jpg" alt="Wallpaper 2" loading="lazy">
-                <button class="download-wallpaper-btn" data-img="assets/img/Gucci.jpg">📥 Download</button>
-            </div>
-            <div class="wallpaper-card">
-                <img src="assets/img/myboo.jpg" alt="Wallpaper 3" loading="lazy">
-                <button class="download-wallpaper-btn" data-img="assets/img/myboo.jpg">📥 Download</button>
-            </div>
-            <div class="wallpaper-card">
-                <img src="assets/img/mygirl.jpg" alt="Wallpaper 4" loading="lazy">
-                <button class="download-wallpaper-btn" data-img="assets/img/mygirl.jpg">📥 Download</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Fitur Baru: Hanni's Favorite Things -->
-    <section class="favorites-section">
-        <h2 class="section-title">💕 Hanni's Favorite Things</h2>
-        <p class="section-desc">Klik untuk explore hal-hal yang Hanni sukai!</p>
-        <div class="favorites-grid">
-            <div class="favorite-card" data-favorite="bread">
-                <div class="favorite-icon">🥖</div>
-                <h3>Bread</h3>
-                <p class="favorite-detail">Obsesi nomor 1! Terutama croissant & baguette.</p>
-                <div class="favorite-extra">
-                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
-                    <small>Love Level: EXTREME</small>
-                </div>
-            </div>
-            
-            <div class="favorite-card" data-favorite="music">
-                <div class="favorite-icon">🎵</div>
-                <h3>Music</h3>
-                <p class="favorite-detail">Dari NewJeans songs sampai indie vibes.</p>
-                <div class="favorite-extra">
-                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
-                    <small>Love Level: PASSION</small>
-                </div>
-            </div>
-            
-            <div class="favorite-card" data-favorite="phoning">
-                <div class="favorite-icon">🐰</div>
-                <h3>Phoning</h3>
-                <p class="favorite-detail">Fans NewJeans yang paling setia!</p>
-                <div class="favorite-extra">
-                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
-                    <small>Love Level: FOREVER</small>
-                </div>
-            </div>
-            
-            <div class="favorite-card" data-favorite="fashion">
-                <div class="favorite-icon">👗</div>
-                <h3>Fashion</h3>
-                <p class="favorite-detail">Y2K vibes & Gucci ambassador style.</p>
-                <div class="favorite-extra">
-                    <span class="love-meter">❤️❤️❤️❤️</span>
-                    <small>Love Level: STYLISH</small>
-                </div>
-            </div>
-            
-            <div class="favorite-card" data-favorite="australia">
-                <div class="favorite-icon">🇦🇺</div>
-                <h3>Australia</h3>
-                <p class="favorite-detail">Home sweet home & that iconic accent!</p>
-                <div class="favorite-extra">
-                    <span class="love-meter">❤️❤️❤️❤️❤️</span>
-                    <small>Love Level: HOMELAND</small>
-                </div>
-            </div>
-            
-            <div class="favorite-card" data-favorite="sleep">
-                <div class="favorite-icon">😴</div>
-                <h3>Sleep</h3>
-                <p class="favorite-detail">Queen of naps & cozy blankets.</p>
-                <div class="favorite-extra">
-                    <span class="love-meter">❤️❤️❤️❤️</span>
-                    <small>Love Level: ESSENTIAL</small>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Fitur Baru: Hanni Mood Tracker -->
-    <section class="mood-section">
-        <h2 class="section-title">🌈 What's Hanni's Mood Today?</h2>
-        <p class="section-desc">Pilih mood Hanni hari ini!</p>
-        <div class="mood-selector">
-            <button class="mood-btn" data-mood="happy">
-                <span class="mood-emoji">😊</span>
-                <span class="mood-label">Happy</span>
-            </button>
-            <button class="mood-btn" data-mood="excited">
-                <span class="mood-emoji">🤩</span>
-                <span class="mood-label">Excited</span>
-            </button>
-            <button class="mood-btn" data-mood="sleepy">
-                <span class="mood-emoji">😴</span>
-                <span class="mood-label">Sleepy</span>
-            </button>
-            <button class="mood-btn" data-mood="silly">
-                <span class="mood-emoji">🤪</span>
-                <span class="mood-label">Silly</span>
-            </button>
-            <button class="mood-btn" data-mood="bread">
-                <span class="mood-emoji">🥖</span>
-                <span class="mood-label">Bread Mode</span>
-            </button>
-            <button class="mood-btn" data-mood="aussie">
-                <span class="mood-emoji">🇦🇺</span>
-                <span class="mood-label">Aussie Vibes</span>
-            </button>
-        </div>
-        <div class="mood-display">
-            <div class="mood-message" id="mood-message">
-                <p>Pilih mood untuk lihat reaksi Hanni!</p>
             </div>
         </div>
     </section>
