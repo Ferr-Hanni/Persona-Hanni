@@ -479,8 +479,9 @@ filterBtns.forEach(btn => {
         
         const filter = btn.getAttribute('data-filter');
         
-        // Remove only filter classes, keep other classes like 'booth-img'
-        boothImg.classList.remove('filter-y2k', 'filter-vintage', 'filter-dreamy', 'filter-neon');
+        // Remove all filter classes (match HTML filter names)
+        boothImg.classList.remove('filter-vintage', 'filter-warm', 'filter-cool', 'filter-dream',
+                                   'filter-y2k', 'filter-dreamy', 'filter-neon'); // Legacy
         
         // Add selected filter
         if (filter !== 'none') {
