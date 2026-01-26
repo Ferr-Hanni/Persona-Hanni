@@ -1139,7 +1139,8 @@ body.potato-mode .control-btn {
     box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
 }
 
-#booth-img {
+#booth-img,
+.booth-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1235,20 +1236,21 @@ body.potato-mode .control-btn {
 }
 
 /* Filter Effects */
+/* CSS Filters untuk Photo Booth */
 .filter-y2k {
-    filter: saturate(1.4) contrast(1.1) hue-rotate(-10deg);
+    filter: saturate(1.3) contrast(1.05) hue-rotate(-5deg) brightness(1.05);
 }
 
 .filter-vintage {
-    filter: sepia(0.5) contrast(1.2) brightness(0.9);
+    filter: sepia(0.4) contrast(1.1) brightness(0.95) saturate(0.8);
 }
 
 .filter-dreamy {
-    filter: brightness(1.1) blur(0.5px) saturate(1.3);
+    filter: brightness(1.08) contrast(0.95) saturate(1.2);
 }
 
 .filter-neon {
-    filter: saturate(2) contrast(1.3) brightness(1.1);
+    filter: saturate(1.8) contrast(1.2) brightness(1.05) hue-rotate(5deg);
 }
 
 /* Frame Decorations */
