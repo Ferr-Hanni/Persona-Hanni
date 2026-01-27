@@ -934,7 +934,6 @@ document.head.appendChild(bounceStyle);
 // --- 20. MOOD TRACKER - Hanni's Mood ---
 window.addEventListener('DOMContentLoaded', () => {
     createParticles();
-    initSparkleEffect();
 });
 
 // ========================================
