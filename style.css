@@ -292,6 +292,45 @@ body.dark-mode .hero h1 {
     body.dark-mode .hero h1 {
         text-shadow: 3px 3px 0px #5865F2;
     }
+    
+    /* CRITICAL: Dark mode mobile performance optimization */
+    body.dark-mode .particle {
+        animation-duration: 20s !important; /* Slower = less CPU */
+        will-change: auto; /* Don't reserve GPU memory */
+    }
+    
+    /* Hide particles on dark mode mobile for smooth performance */
+    body.dark-mode .particles-container {
+        display: none !important; /* Remove particles completely on dark mode mobile */
+    }
+    
+    /* Disable backdrop blur on dark mode mobile - VERY EXPENSIVE! */
+    body.dark-mode .navbar {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(30, 30, 63, 0.98) !important; /* Solid instead */
+    }
+    
+    /* Reduce glow effects on dark mode mobile */
+    body.dark-mode .game-box,
+    body.dark-mode .message-input-area,
+    body.dark-mode .messages-display,
+    body.dark-mode .profile-card,
+    body.dark-mode .wallpaper-card {
+        box-shadow: 0 4px 10px rgba(88, 101, 242, 0.2) !important; /* Simpler shadow */
+    }
+    
+    /* Disable blur filter on dark mode mobile */
+    body.dark-mode .filter-dream {
+        filter: brightness(1.08) contrast(0.95) saturate(1.2) !important;
+        /* Remove blur - too expensive on mobile */
+    }
+    
+    /* Simplify text shadows on dark mode mobile */
+    body.dark-mode h2.section-title,
+    body.dark-mode .game-box h3 {
+        text-shadow: 2px 2px 0px rgba(88, 101, 242, 0.3) !important;
+    }
 }
 :root {
     --blue: #A8DAFF;
@@ -3445,5 +3484,34 @@ body.dark-mode .particle {
     .message-input-area, .messages-display,
     .profile-card {
         padding: 15px !important;
+    }
+    
+    /* GENERAL MOBILE PERFORMANCE OPTIMIZATION */
+    /* Reduce particles on ALL mobile views */
+    .particle:nth-child(n+6) {
+        display: none !important; /* Show max 5 particles on mobile */
+    }
+    
+    /* Simplify animations on mobile */
+    * {
+        animation-duration: 0.3s !important; /* Faster transitions */
+    }
+    
+    .particle,
+    .floating-element {
+        animation-duration: 15s !important; /* Much slower floats */
+    }
+    
+    /* Reduce backdrop blur on mobile - VERY EXPENSIVE */
+    .navbar {
+        backdrop-filter: blur(5px) !important; /* Reduce from 10px */
+        -webkit-backdrop-filter: blur(5px) !important;
+    }
+    
+    /* Disable complex gradients on mobile */
+    .game-box,
+    .message-input-area,
+    .profile-card {
+        background: var(--theme-primary) !important; /* Solid instead of gradient */
     }
 }
