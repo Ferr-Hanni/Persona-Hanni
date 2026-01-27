@@ -2244,6 +2244,8 @@ body.dark-mode::after {
         width: 250px;
         height: 250px;
         max-width: 90vw;
+        max-height: 90vw;  /* ✅ Maintain aspect ratio! */
+        object-fit: cover; /* ✅ Prevent stretching! */
     }
     
     .navbar {
