@@ -264,49 +264,6 @@ if(stickerCanvas) {
     });
 }
 
-// --- 6. UPGRADE SYSTEM ---
-const upgradeButtons = document.querySelectorAll('.upgrade-btn');
-
-function updateUpgradeButtons() {
-    upgradeButtons.forEach(btn => {
-        const cost = parseInt(btn.getAttribute('data-cost'));
-        if (breadCount >= cost) {
-            btn.disabled = false;
-        } else {
-            btn.disabled = true;
-        }
-    });
-}
-
-upgradeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const cost = parseInt(btn.getAttribute('data-cost'));
-        const power = parseInt(btn.getAttribute('data-power'));
-        
-        if (breadCount >= cost) {
-            breadCount -= cost;
-            clickPower += power;
-            breadCountDisplay.innerText = breadCount;
-            clickPowerDisplay.innerText = clickPower;
-            
-            // Update cost (increase by 1.5x)
-            const newCost = Math.floor(cost * 1.5);
-            btn.setAttribute('data-cost', newCost);
-            btn.querySelector('.upgrade-cost').innerText = `Cost: ${newCost}🍞`;
-            
-            // Animation
-            btn.style.transform = 'scale(1.1)';
-            btn.style.background = '#90EE90';
-            setTimeout(() => {
-                btn.style.transform = 'scale(1)';
-                btn.style.background = '';
-            }, 200);
-            
-            updateUpgradeButtons();
-        }
-    });
-});
-
 // --- 7. PHOTO BOOTH FEATURE ---
 const photoFrame = document.getElementById('photo-frame');
 const boothImg = document.getElementById('booth-img');
@@ -594,9 +551,6 @@ outfitBtns.forEach(btn => {
         }, 200);
     });
 });
-
-// Initialize
-updateUpgradeButtons();
 
 // ===== NEW FEATURES JAVASCRIPT =====
 
