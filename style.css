@@ -3492,9 +3492,15 @@ body.dark-mode .particle {
         display: none !important; /* Show max 5 particles on mobile */
     }
     
-    /* Simplify animations on mobile */
-    * {
-        animation-duration: 0.3s !important; /* Faster transitions */
+    /* Simplify ONLY specific animations on mobile - NOT all text! */
+    .trait-card,
+    .favorite-card,
+    .greeting-card,
+    .fact-card,
+    .mood-btn,
+    .wallpaper-card,
+    .theme-card {
+        transition-duration: 0.3s !important; /* Faster transitions for cards */
     }
     
     .particle,
