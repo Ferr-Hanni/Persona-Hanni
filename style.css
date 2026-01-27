@@ -1210,6 +1210,9 @@ body.potato-mode .control-btn {
     font-size: 2rem;
     cursor: move;
     user-select: none;
+    touch-action: none; /* CRITICAL: Prevent page scroll when dragging on mobile */
+    -webkit-user-select: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 

@@ -505,14 +505,15 @@ function makeStickerDraggable(sticker) {
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragEnd);
 
-    // Touch events untuk mobile
-    sticker.addEventListener('touchstart', dragStart);
-    document.addEventListener('touchmove', drag);
+    // Touch events untuk mobile - IMPROVED!
+    sticker.addEventListener('touchstart', dragStart, { passive: false });
+    document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('touchend', dragEnd);
 
     function dragStart(e) {
-        // Cek apakah mouse atau touch
+        // CRITICAL: Prevent default untuk touch agar tidak scroll
         if (e.type === "touchstart") {
+            e.preventDefault(); // Prevent page scroll
             initialX = e.touches[0].clientX - xOffset;
             initialY = e.touches[0].clientY - yOffset;
         } else {
@@ -529,6 +530,7 @@ function makeStickerDraggable(sticker) {
 
     function drag(e) {
         if (isDragging) {
+            // CRITICAL: Prevent default saat drag untuk stop page scroll
             e.preventDefault();
 
             if (e.type === "touchmove") {
@@ -602,6 +604,57 @@ const clearStickersBtn = document.getElementById('clear-stickers');
 if(clearStickersBtn) {
     clearStickersBtn.addEventListener('click', () => {
         photoStickersContainer.innerHTML = '';
+    });
+}
+
+// Download photo functionality
+const downloadPhotoBtn = document.getElementById('download-photo');
+if(downloadPhotoBtn) {
+    downloadPhotoBtn.addEventListener('click', async () => {
+        try {
+            // Show loading state
+            downloadPhotoBtn.textContent = '⏳ Processing...';
+            downloadPhotoBtn.disabled = true;
+            
+            // Use html2canvas to capture the photo frame
+            const canvas = await html2canvas(photoFrame, {
+                backgroundColor: null,
+                scale: 2, // Higher quality
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            });
+            
+            // Convert canvas to blob
+            canvas.toBlob((blob) => {
+                // Create download link
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const timestamp = new Date().getTime();
+                link.download = `hanni-photo-${timestamp}.png`;
+                link.href = url;
+                link.click();
+                
+                // Cleanup
+                URL.revokeObjectURL(url);
+                
+                // Reset button
+                downloadPhotoBtn.textContent = '📥 Download';
+                downloadPhotoBtn.disabled = false;
+                
+                // Success animation
+                downloadPhotoBtn.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    downloadPhotoBtn.style.transform = 'scale(1)';
+                }, 200);
+            }, 'image/png');
+            
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Sorry, download failed. Please try again!');
+            downloadPhotoBtn.textContent = '📥 Download';
+            downloadPhotoBtn.disabled = false;
+        }
     });
 }
 
@@ -934,6 +987,7 @@ document.head.appendChild(bounceStyle);
 // --- 20. MOOD TRACKER - Hanni's Mood ---
 window.addEventListener('DOMContentLoaded', () => {
     createParticles();
+    initSparkleEffect();
 });
 
 // ========================================
