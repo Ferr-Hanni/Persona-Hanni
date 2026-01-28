@@ -443,38 +443,52 @@ if(downloadPhotoBtn) {
                 scale: 2, // Higher quality
                 logging: false,
                 useCORS: true,
-                allowTaint: true
+                allowTaint: false  // ✅ FIXED: Changed to false for compatibility
             });
             
-            // Convert canvas to blob
-            canvas.toBlob((blob) => {
-                // Create download link
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                const timestamp = new Date().getTime();
-                link.download = `hanni-photo-${timestamp}.png`;
-                link.href = url;
-                link.click();
-                
-                // Cleanup
-                URL.revokeObjectURL(url);
-                
-                // Reset button
-                downloadPhotoBtn.textContent = '📥 Download';
-                downloadPhotoBtn.disabled = false;
-                
-                // Success animation
-                downloadPhotoBtn.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    downloadPhotoBtn.style.transform = 'scale(1)';
-                }, 200);
-            }, 'image/png');
+            // ✅ FIX: Use toDataURL instead of toBlob
+            // toDataURL doesn't have the same CORS restrictions
+            const dataURL = canvas.toDataURL('image/png');
+            
+            // Create download link
+            const link = document.createElement('a');
+            const timestamp = new Date().getTime();
+            link.download = `hanni-photo-${timestamp}.png`;
+            link.href = dataURL;
+            link.click();
+            
+            // Reset button
+            downloadPhotoBtn.textContent = '📥 Download';
+            downloadPhotoBtn.disabled = false;
+            
+            // Success animation
+            downloadPhotoBtn.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                downloadPhotoBtn.style.transform = 'scale(1)';
+            }, 200);
             
         } catch (error) {
             console.error('Download error:', error);
-            alert('Sorry, download failed. Please try again!');
-            downloadPhotoBtn.textContent = '📥 Download';
-            downloadPhotoBtn.disabled = false;
+            
+            // ✅ FALLBACK: Try alternative method if html2canvas fails
+            try {
+                const img = photoFrame.querySelector('img');
+                if (img) {
+                    const link = document.createElement('a');
+                    link.href = img.src;
+                    link.download = `hanni-photo-${new Date().getTime()}.jpg`;
+                    link.click();
+                    
+                    downloadPhotoBtn.textContent = '📥 Download';
+                    downloadPhotoBtn.disabled = false;
+                } else {
+                    throw new Error('Image not found');
+                }
+            } catch (fallbackError) {
+                alert('⚠️ Download failed. Please try:\n1. Right-click on the photo\n2. Select "Save Image As"');
+                downloadPhotoBtn.textContent = '📥 Download';
+                downloadPhotoBtn.disabled = false;
+            }
         }
     });
 }
