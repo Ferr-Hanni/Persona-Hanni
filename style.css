@@ -999,51 +999,6 @@ body.potato-mode .control-btn {
     pointer-events: none;
 }
 
-/* ===== FORTUNE COOKIE STYLES ===== */
-.fortune-cookie-wrapper {
-    margin: 30px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.cookie {
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.cookie:hover {
-    transform: scale(1.05);
-}
-
-.cookie-top {
-    font-size: 5rem;
-    animation: float 3s ease-in-out infinite;
-}
-
-.fortune-paper {
-    background: #FFF9C4;
-    border: 2px solid #000;
-    border-radius: 10px;
-    padding: 15px 20px;
-    margin-top: 10px;
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
-    font-family: var(--font-hand);
-    font-size: 1.1rem;
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.fortune-stats {
-    margin-top: 20px;
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-}
-
 /* ===== PHOTO BOOTH STYLES ===== */
 .photo-booth-section {
     padding: 60px 20px;
