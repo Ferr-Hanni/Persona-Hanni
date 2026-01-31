@@ -159,7 +159,7 @@ const cards = [
     document.getElementById('card-3')
 ];
 
-// --- 1. FITUR GANTI MODE (COZY) ---
+// --- FITUR GANTI MODE (COZY) ---
 modeBtn.addEventListener('click', () => {
     // Matikan dark mode dulu kalau aktif
     if (isDarkMode) {
@@ -200,7 +200,7 @@ modeBtn.addEventListener('click', () => {
     });
 });
 
-// --- 2. FITUR DARK MODE ---
+// --- FITUR DARK MODE ---
 darkModeBtn.addEventListener('click', () => {
     // Matikan cozy mode dulu kalau aktif
     if (isPotatoMode) {
@@ -237,7 +237,7 @@ darkModeBtn.addEventListener('click', () => {
     });
 });
 
-// --- 3. FITUR STICKER DECO ---
+// --- FITUR STICKER DECO ---
 const stickerCanvas = document.querySelector('.sticker-canvas');
 const stickers = ["🎀", "🐰", "💖", "🧢", "✨", "💙", "🍞", "🔥", "⭐", "🌸"];
 
@@ -264,7 +264,7 @@ if(stickerCanvas) {
     });
 }
 
-// --- 7. PHOTO BOOTH FEATURE ---
+// --- PHOTO BOOTH FEATURE ---
 const photoFrame = document.getElementById('photo-frame');
 const boothImg = document.getElementById('booth-img');
 const frameOverlay = document.getElementById('frame-overlay');
@@ -495,7 +495,7 @@ if(downloadPhotoBtn) {
 }
 
 
-// --- 8. FITUR MUSIK PLAYER ---
+// --- FITUR MUSIK PLAYER ---
 const audio = document.getElementById('bg-music');
 const playBtn = document.getElementById('play-pause-btn');
 const visualizer = document.getElementById('visualizer');
@@ -549,7 +549,7 @@ window.addEventListener('load', () => {
     }
 });
 
-// --- 9. FITUR OOTD PICKER ---
+// --- FITUR OOTD PICKER ---
 const outfitBtns = document.querySelectorAll('.outfit-btn');
 const mainImg = document.getElementById('hanni-img');
 
@@ -570,7 +570,7 @@ outfitBtns.forEach(btn => {
 
 // ===== NEW FEATURES JAVASCRIPT =====
 
-// --- 10. FLOATING PARTICLES BACKGROUND ---
+// --- FLOATING PARTICLES BACKGROUND ---
 function createParticles() {
     const particlesContainer = document.getElementById('particles');
     if (!particlesContainer) return;
