@@ -437,96 +437,76 @@ if(downloadPhotoBtn) {
             downloadPhotoBtn.textContent = '⏳ Processing...';
             downloadPhotoBtn.disabled = true;
             
-            // METHOD 1: Try html2canvas (best quality, captures everything)
-            if (typeof html2canvas !== 'undefined') {
-                try {
-                    const canvas = await html2canvas(photoFrame, {
-                        backgroundColor: null,
-                        scale: 2,
-                        logging: false,
-                        useCORS: true,
-                        allowTaint: true,
-                        imageTimeout: 0
-                    });
-                    
-                    const dataURL = canvas.toDataURL('image/png', 1.0);
-                    const link = document.createElement('a');
-                    link.download = `hanni-photo-${new Date().getTime()}.png`;
-                    link.href = dataURL;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    downloadPhotoBtn.textContent = '✅ Downloaded!';
-                    setTimeout(() => {
-                        downloadPhotoBtn.textContent = '📥 Download';
-                        downloadPhotoBtn.disabled = false;
-                    }, 2000);
-                    return;
-                } catch (html2canvasError) {
-                    console.warn('html2canvas failed:', html2canvasError);
-                }
+            // WAIT for html2canvas to be loaded
+            if (typeof html2canvas === 'undefined') {
+                throw new Error('html2canvas not loaded');
             }
             
-            // METHOD 2: Fallback canvas method
-            const img = photoFrame.querySelector('#booth-img');
-            if (img && img.complete) {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.naturalWidth || img.width;
-                canvas.height = img.naturalHeight || img.height;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                
-                const dataURL = canvas.toDataURL('image/png', 1.0);
-                const link = document.createElement('a');
-                link.download = `hanni-photo-${new Date().getTime()}.png`;
-                link.href = dataURL;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                downloadPhotoBtn.textContent = '✅ Downloaded!';
-                setTimeout(() => {
-                    downloadPhotoBtn.textContent = '📥 Download';
-                    downloadPhotoBtn.disabled = false;
-                }, 2000);
-                return;
+            // Get the photo frame element (contains image + filter + frame + stickers)
+            const photoFrameElement = document.getElementById('photo-frame');
+            
+            if (!photoFrameElement) {
+                throw new Error('Photo frame not found');
             }
             
-            throw new Error('All methods failed');
+            // IMPORTANT: Use html2canvas to capture THE ENTIRE photo-frame
+            // This includes: image + CSS filters + frame overlay + stickers
+            const canvas = await html2canvas(photoFrameElement, {
+                backgroundColor: null,        // Transparent background
+                scale: 2,                     // High quality (2x resolution)
+                logging: false,               // No console logs
+                useCORS: true,               // Allow cross-origin images
+                allowTaint: true,            // Allow tainted canvas
+                imageTimeout: 0,             // No timeout
+                removeContainer: false,      // Keep container
+                foreignObjectRendering: false, // Use traditional rendering
+                windowWidth: photoFrameElement.scrollWidth,
+                windowHeight: photoFrameElement.scrollHeight
+            });
+            
+            // Convert canvas to PNG image data
+            const imageData = canvas.toDataURL('image/png', 1.0);
+            
+            // Create download link
+            const downloadLink = document.createElement('a');
+            downloadLink.download = `hanni-edited-${Date.now()}.png`;
+            downloadLink.href = imageData;
+            
+            // Append to body, click, and remove
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Show success message
+            downloadPhotoBtn.textContent = '✅ Downloaded!';
+            downloadPhotoBtn.style.backgroundColor = '#4ade80';
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                downloadPhotoBtn.textContent = '📥 Download';
+                downloadPhotoBtn.style.backgroundColor = '';
+                downloadPhotoBtn.disabled = false;
+            }, 2000);
             
         } catch (error) {
             console.error('Download error:', error);
             
-            try {
-                const img = photoFrame.querySelector('#booth-img');
-                if (img && img.src) {
-                    const link = document.createElement('a');
-                    link.href = img.src;
-                    link.download = `hanni-photo-${new Date().getTime()}.jpg`;
-                    link.target = '_blank';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    downloadPhotoBtn.textContent = '📥 Saved';
-                    setTimeout(() => {
-                        downloadPhotoBtn.textContent = '📥 Download';
-                        downloadPhotoBtn.disabled = false;
-                    }, 2000);
-                } else {
-                    alert('⚠️ Download Error\n\nPlease try:\n1. Right-click on photo\n2. Select "Save Image As"');
-                    downloadPhotoBtn.textContent = '📥 Download';
-                    downloadPhotoBtn.disabled = false;
-                }
-            } catch (finalError) {
-                alert('⚠️ Download failed\n\nRight-click photo → "Save Image As"');
+            // Show error message
+            downloadPhotoBtn.textContent = '❌ Error!';
+            downloadPhotoBtn.style.backgroundColor = '#ef4444';
+            
+            // Show alert with instructions
+            setTimeout(() => {
+                alert(`⚠️ Download Failed!\n\nError: ${error.message}\n\nPlease try:\n1. Make sure you have internet connection (for html2canvas library)\n2. Wait for the page to fully load\n3. If still not working, take a screenshot instead`);
+                
                 downloadPhotoBtn.textContent = '📥 Download';
+                downloadPhotoBtn.style.backgroundColor = '';
                 downloadPhotoBtn.disabled = false;
-            }
+            }, 500);
         }
     });
 }
+
 
 // --- 8. FITUR MUSIK PLAYER ---
 const audio = document.getElementById('bg-music');
