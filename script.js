@@ -1,12 +1,12 @@
 // ========================================
-// PERFORMANCE OPTIMIZATIONS
+// PERFORMANCE OPTIMIZATIONS FOR MOBILE
 // ========================================
 
-// Detect mobile
+// Detect mobile and low-end devices
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const isLowEnd = isMobile && (navigator.hardwareConcurrency <= 4 || navigator.deviceMemory <= 4);
 
-// Throttle function untuk scroll events
+// Throttle function for scroll events
 function throttle(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -19,20 +19,7 @@ function throttle(func, wait) {
     };
 }
 
-// Debounce function
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Intersection Observer untuk lazy load
+// Intersection Observer for lazy load and animation control
 const observerOptions = {
     root: null,
     rootMargin: '50px',
@@ -43,54 +30,26 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const element = entry.target;
-            
-            // Lazy load images
             if (element.tagName === 'IMG' && element.loading === 'lazy') {
                 element.classList.add('loaded');
-            }
-            
-            // Start animations only when in view
-            if (element.classList.contains('trait-card') || 
-                element.classList.contains('favorite-card')) {
-                element.style.animationPlayState = 'running';
-            }
-        } else {
-            // Pause animations when out of view (save battery!)
-            const element = entry.target;
-            if (element.classList.contains('trait-card') || 
-                element.classList.contains('favorite-card')) {
-                element.style.animationPlayState = 'paused';
             }
         }
     });
 }, observerOptions);
 
-// Observe all lazy load elements
-document.addEventListener('DOMContentLoaded', () => {
-    // Observe images
-    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-        observer.observe(img);
-    });
-    
-    // Observe animated cards
-    document.querySelectorAll('.trait-card').forEach(card => {
-        observer.observe(card);
-    });
-});
-
 // ========================================
-// OPTIMIZED PARTICLES (Much reduced on mobile)
+// OPTIMIZED PARTICLES
 // ========================================
 const particlesContainer = document.getElementById('particles');
 
-// CRITICAL: Drastically reduce particles on mobile & low-end devices
+// Drastically reduce particles on mobile & low-end devices
 let particleCount;
 if (isLowEnd) {
-    particleCount = 0; // NO particles on low-end mobile
+    particleCount = 0;
 } else if (isMobile) {
-    particleCount = 3; // Only 3 particles on mobile
+    particleCount = 3;
 } else {
-    particleCount = 10; // 10 particles on desktop (down from 15)
+    particleCount = 8;
 }
 
 const particleEmojis = ['✨', '💕', '🎀', '⭐', '💙'];
@@ -101,14 +60,14 @@ function createParticle() {
     particle.innerText = particleEmojis[Math.floor(Math.random() * particleEmojis.length)];
     
     particle.style.left = Math.random() * 100 + '%';
-    particle.style.setProperty('--duration', (20 + Math.random() * 10) + 's'); // Slower = less CPU
+    particle.style.setProperty('--duration', (20 + Math.random() * 10) + 's');
     particle.style.setProperty('--delay', Math.random() * 5 + 's');
     
     if (particlesContainer) {
         particlesContainer.appendChild(particle);
     }
     
-    // Remove after animation completes to prevent memory leak
+    // Remove after animation completes
     const duration = parseFloat(particle.style.getPropertyValue('--duration'));
     setTimeout(() => {
         if (particle.parentNode) {
@@ -117,7 +76,7 @@ function createParticle() {
     }, duration * 1000);
 }
 
-// Only create particles if not on reduced motion AND not low-end
+// Only create particles if not reduced motion AND not low-end
 if (particlesContainer && 
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
     particleCount > 0) {
@@ -126,10 +85,12 @@ if (particlesContainer &&
     }
 }
 
-// --- CONFIG DATA ---
+// ========================================
+// STATE DATA
+// ========================================
 const normalState = {
     subtitle: "Hanni the Idol 🌟",
-    bubble: "Naurrr! ~",
+    bubble: "Naurrr~!",
     cards: [
         { title: "Viet-Aussie", text: "Logat Australia yang ikonik & multibahasa jenius.", icon: "🇦🇺" },
         { title: "Honey Voice", text: "Suara yang manis seperti madu & dance yang swag.", icon: "🎤" },
@@ -160,7 +121,9 @@ const darkState = {
 let isPotatoMode = false;
 let isDarkMode = false;
 
-// --- DOM ELEMENTS ---
+// ========================================
+// DOM ELEMENTS
+// ========================================
 const body = document.body;
 const modeBtn = document.getElementById('mode-btn');
 const darkModeBtn = document.getElementById('dark-mode-btn');
@@ -173,10 +136,12 @@ const cards = [
     document.getElementById('card-3')
 ];
 
-// --- FITUR GANTI MODE (COZY) ---
+// ========================================
+// COZY MODE TOGGLE
+// ========================================
 if (modeBtn) {
     modeBtn.addEventListener('click', () => {
-        // Matikan dark mode dulu kalau aktif
+        // Turn off dark mode if active
         if (isDarkMode) {
             body.classList.remove('dark-mode');
             isDarkMode = false;
@@ -186,7 +151,6 @@ if (modeBtn) {
         isPotatoMode = !isPotatoMode;
         const currentState = isPotatoMode ? potatoState : normalState;
 
-        // Toggle Class Body
         if (isPotatoMode) {
             body.classList.add('potato-mode');
             modeBtn.innerText = "✨ Idol";
@@ -195,11 +159,9 @@ if (modeBtn) {
             modeBtn.innerText = "💕 Cozy";
         }
 
-        // Ganti Konten Utama
         if (heroSubtitle) heroSubtitle.innerText = currentState.subtitle;
         if (speechBubble) speechBubble.innerText = currentState.bubble;
 
-        // Ganti Konten Cards
         cards.forEach((card, index) => {
             if (!card) return;
             const data = currentState.cards[index];
@@ -210,21 +172,16 @@ if (modeBtn) {
             if (h3) h3.innerText = data.title;
             if (p) p.innerText = data.text;
             if (icon) icon.innerText = data.icon;
-            
-            if (isPotatoMode) {
-                const randomRot = Math.random() * 6 - 3; 
-                card.style.setProperty('--rotation', `${randomRot}deg`);
-            } else {
-                card.style.removeProperty('--rotation');
-            }
         });
     });
 }
 
-// --- FITUR DARK MODE ---
+// ========================================
+// DARK MODE TOGGLE
+// ========================================
 if (darkModeBtn) {
     darkModeBtn.addEventListener('click', () => {
-        // Matikan cozy mode dulu kalau aktif
+        // Turn off cozy mode if active
         if (isPotatoMode) {
             body.classList.remove('potato-mode');
             isPotatoMode = false;
@@ -234,7 +191,6 @@ if (darkModeBtn) {
         isDarkMode = !isDarkMode;
         const currentState = isDarkMode ? darkState : normalState;
 
-        // Toggle Class Body
         if (isDarkMode) {
             body.classList.add('dark-mode');
             darkModeBtn.innerText = "☀️ Light";
@@ -243,11 +199,9 @@ if (darkModeBtn) {
             darkModeBtn.innerText = "🌙 Dark";
         }
 
-        // Ganti Konten Utama
         if (heroSubtitle) heroSubtitle.innerText = currentState.subtitle;
         if (speechBubble) speechBubble.innerText = currentState.bubble;
 
-        // Ganti Konten Cards
         cards.forEach((card, index) => {
             if (!card) return;
             const data = currentState.cards[index];
@@ -258,14 +212,13 @@ if (darkModeBtn) {
             if (h3) h3.innerText = data.title;
             if (p) p.innerText = data.text;
             if (icon) icon.innerText = data.icon;
-            
-            // Dark mode tidak punya rotasi
-            card.style.removeProperty('--rotation');
         });
     });
 }
 
-// --- FITUR STICKER DECO ---
+// ========================================
+// STICKER DECO AREA
+// ========================================
 const stickerCanvas = document.querySelector('.sticker-canvas');
 const stickers = ["🎀", "🐰", "💖", "🧢", "✨", "💙", "🍞", "🔥", "⭐", "🌸"];
 
@@ -282,17 +235,20 @@ if(stickerCanvas) {
         const randomRot = Math.random() * 40 - 20;
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
-        el.style.setProperty('--rot', `${randomRot}deg`);
+        el.style.transform = `rotate(${randomRot}deg)`;
 
         stickerCanvas.appendChild(el);
 
+        // Limit stickers
         if (stickerCanvas.children.length > 25) {
             stickerCanvas.removeChild(stickerCanvas.children[1]); 
         }
     });
 }
 
-// --- PHOTO BOOTH FEATURE ---
+// ========================================
+// PHOTO BOOTH
+// ========================================
 const photoFrame = document.getElementById('photo-frame');
 const boothImg = document.getElementById('booth-img');
 const frameOverlay = document.getElementById('frame-overlay');
@@ -335,7 +291,7 @@ filterBtns.forEach(btn => {
     });
 });
 
-// Fungsi untuk membuat stiker bisa di-drag
+// Make stickers draggable
 function makeStickerDraggable(sticker) {
     let isDragging = false;
     let currentX;
@@ -434,7 +390,7 @@ addStickerBtns.forEach(btn => {
     });
 });
 
-// Download photo functionality
+// Download photo
 const downloadPhotoBtn = document.getElementById('download-photo');
 if(downloadPhotoBtn) {
     downloadPhotoBtn.addEventListener('click', () => {
@@ -477,7 +433,7 @@ if(downloadPhotoBtn) {
                     </p>
                 </div>
                 
-                <button onclick="this.parentElement.remove()" 
+                <button onclick="this.parentElement.remove(); document.querySelector('[data-overlay]').remove();" 
                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                                color: white; border: none; padding: 12px 30px; border-radius: 25px;
                                font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;
@@ -486,7 +442,7 @@ if(downloadPhotoBtn) {
                 </button>
             </div>
             
-            <div onclick="this.remove(); document.querySelector('[data-instruction-modal]').remove();" 
+            <div data-overlay onclick="this.remove(); document.querySelector('[data-instruction-modal]').remove();" 
                  style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
                         background: rgba(0,0,0,0.5); z-index: 9999;">
             </div>
@@ -499,7 +455,9 @@ if(downloadPhotoBtn) {
     });
 }
 
-// --- FITUR MUSIK PLAYER ---
+// ========================================
+// MUSIC PLAYER
+// ========================================
 const audio = document.getElementById('bg-music');
 const playBtn = document.getElementById('play-pause-btn');
 const visualizer = document.getElementById('visualizer');
@@ -536,7 +494,7 @@ if(volumeSlider) {
     });
 }
 
-// Auto-play saat load (kalau browser izinkan)
+// Auto-play on load (if browser allows)
 window.addEventListener('load', () => {
     if(audio) {
         audio.volume = 0.5;
@@ -553,7 +511,9 @@ window.addEventListener('load', () => {
     }
 });
 
-// --- FITUR OOTD PICKER ---
+// ========================================
+// OUTFIT SELECTOR
+// ========================================
 const outfitBtns = document.querySelectorAll('.outfit-btn');
 const mainImg = document.getElementById('hanni-img');
 
@@ -574,7 +534,9 @@ outfitBtns.forEach(btn => {
     });
 });
 
-// --- THEME SELECTOR ---
+// ========================================
+// THEME SELECTOR
+// ========================================
 const themeModal = document.getElementById('theme-modal');
 const themeSelectorBtn = document.getElementById('theme-selector-btn');
 const closeModal = document.querySelector('.close-modal');
@@ -620,7 +582,9 @@ if (savedTheme) {
     });
 }
 
-// --- MEMORY MATCH GAME ---
+// ========================================
+// MEMORY MATCH GAME
+// ========================================
 const memoryGrid = document.getElementById('memory-grid');
 const startMemoryBtn = document.getElementById('start-memory-game');
 const memoryMovesDisplay = document.getElementById('memory-moves');
@@ -713,7 +677,9 @@ if (startMemoryBtn) {
     startMemoryBtn.addEventListener('click', createMemoryGame);
 }
 
-// --- SLIDE PUZZLE GAME ---
+// ========================================
+// SLIDE PUZZLE GAME
+// ========================================
 const puzzleGrid = document.getElementById('puzzle-grid');
 const startPuzzleBtn = document.getElementById('start-puzzle-game');
 const puzzleMovesDisplay = document.getElementById('puzzle-moves');
@@ -795,25 +761,236 @@ if (startPuzzleBtn) {
 }
 
 // ========================================
-// NAVBAR SCROLL BEHAVIOR - OPTIMIZED
+// BUNNY HOP GAME (CANVAS)
 // ========================================
+const bunnyCanvas = document.getElementById('bunny-game');
+const startBunnyBtn = document.getElementById('start-bunny-game');
+const bunnyScoreDisplay = document.getElementById('bunny-score');
+const bunnyHighScoreDisplay = document.getElementById('bunny-high-score');
 
+let bunnyGame = null;
+let bunnyScore = 0;
+let bunnyHighScore = localStorage.getItem('bunnyHighScore') || 0;
+
+if (bunnyHighScoreDisplay) {
+    bunnyHighScoreDisplay.innerText = bunnyHighScore;
+}
+
+function initBunnyGame() {
+    if (!bunnyCanvas) return;
+    
+    const ctx = bunnyCanvas.getContext('2d');
+    const canvasWidth = bunnyCanvas.width;
+    const canvasHeight = bunnyCanvas.height;
+    
+    // Game state
+    let isPlaying = false;
+    let bunny = { x: 50, y: canvasHeight - 80, width: 40, height: 40, dy: 0, jumping: false };
+    let obstacles = [];
+    let gameLoop = null;
+    let obstacleTimer = null;
+    
+    function drawBunny() {
+        // Draw bunny body
+        ctx.fillStyle = '#FFB6C1';
+        ctx.fillRect(bunny.x, bunny.y, bunny.width, bunny.height);
+        
+        // Draw bunny ears
+        ctx.fillStyle = '#FF69B4';
+        ctx.fillRect(bunny.x + 5, bunny.y - 15, 10, 20);
+        ctx.fillRect(bunny.x + 25, bunny.y - 15, 10, 20);
+        
+        // Draw bunny face
+        ctx.fillStyle = '#000';
+        ctx.fillRect(bunny.x + 10, bunny.y + 10, 5, 5);
+        ctx.fillRect(bunny.x + 25, bunny.y + 10, 5, 5);
+        ctx.fillRect(bunny.x + 15, bunny.y + 20, 10, 5);
+    }
+    
+    function drawObstacles() {
+        ctx.fillStyle = '#8B4513';
+        obstacles.forEach(obs => {
+            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        });
+    }
+    
+    function drawGround() {
+        ctx.fillStyle = '#228B22';
+        ctx.fillRect(0, canvasHeight - 40, canvasWidth, 40);
+        
+        // Grass details
+        ctx.fillStyle = '#32CD32';
+        for (let i = 0; i < canvasWidth; i += 20) {
+            ctx.fillRect(i, canvasHeight - 45, 3, 10);
+        }
+    }
+    
+    function drawBackground() {
+        // Sky gradient
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+        gradient.addColorStop(0, '#87CEEB');
+        gradient.addColorStop(0.5, '#E0F6FF');
+        gradient.addColorStop(0.5, '#90EE90');
+        gradient.addColorStop(1, '#228B22');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+    
+    function update() {
+        // Apply gravity
+        if (bunny.jumping) {
+            bunny.y += bunny.dy;
+            bunny.dy += 0.8;
+            
+            if (bunny.y >= canvasHeight - 80) {
+                bunny.y = canvasHeight - 80;
+                bunny.jumping = false;
+                bunny.dy = 0;
+            }
+        }
+        
+        // Move obstacles
+        obstacles.forEach((obs, index) => {
+            obs.x -= obs.speed;
+            
+            // Remove off-screen obstacles
+            if (obs.x + obs.width < 0) {
+                obstacles.splice(index, 1);
+                bunnyScore++;
+                if (bunnyScoreDisplay) bunnyScoreDisplay.innerText = bunnyScore;
+            }
+            
+            // Collision detection
+            if (bunny.x < obs.x + obs.width &&
+                bunny.x + bunny.width > obs.x &&
+                bunny.y < obs.y + obs.height &&
+                bunny.y + bunny.height > obs.y) {
+                gameOver();
+            }
+        });
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        drawBackground();
+        drawGround();
+        drawObstacles();
+        drawBunny();
+    }
+    
+    function gameLoop_fn() {
+        if (!isPlaying) return;
+        update();
+        draw();
+        gameLoop = requestAnimationFrame(gameLoop_fn);
+    }
+    
+    function spawnObstacle() {
+        if (!isPlaying) return;
+        
+        const height = Math.random() * 30 + 30;
+        obstacles.push({
+            x: canvasWidth,
+            y: canvasHeight - 40 - height,
+            width: 30,
+            height: height,
+            speed: 3 + Math.floor(bunnyScore / 10)
+        });
+        
+        obstacleTimer = setTimeout(spawnObstacle, 2000 - Math.min(1000, bunnyScore * 50));
+    }
+    
+    function jump() {
+        if (!bunny.jumping && isPlaying) {
+            bunny.jumping = true;
+            bunny.dy = -15;
+        }
+    }
+    
+    function gameOver() {
+        isPlaying = false;
+        cancelAnimationFrame(gameLoop);
+        clearTimeout(obstacleTimer);
+        
+        // Update high score
+        if (bunnyScore > bunnyHighScore) {
+            bunnyHighScore = bunnyScore;
+            localStorage.setItem('bunnyHighScore', bunnyHighScore);
+            if (bunnyHighScoreDisplay) bunnyHighScoreDisplay.innerText = bunnyHighScore;
+        }
+        
+        alert(`Game Over! Score: ${bunnyScore}`);
+    }
+    
+    function startGame() {
+        if (isPlaying) return;
+        
+        isPlaying = true;
+        bunnyScore = 0;
+        if (bunnyScoreDisplay) bunnyScoreDisplay.innerText = '0';
+        obstacles = [];
+        bunny.y = canvasHeight - 80;
+        bunny.jumping = false;
+        bunny.dy = 0;
+        
+        gameLoop_fn();
+        spawnObstacle();
+    }
+    
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && isPlaying) {
+            e.preventDefault();
+            jump();
+        }
+    });
+    
+    // Touch controls for mobile
+    bunnyCanvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (isPlaying) {
+            jump();
+        }
+    });
+    
+    bunnyCanvas.addEventListener('click', () => {
+        if (isPlaying) {
+            jump();
+        }
+    });
+    
+    // Initial draw
+    drawBackground();
+    drawGround();
+    drawBunny();
+    
+    // Return start function
+    return startGame;
+}
+
+// Initialize bunny game
+if (bunnyCanvas) {
+    bunnyGame = initBunnyGame();
+}
+
+if (startBunnyBtn && bunnyGame) {
+    startBunnyBtn.addEventListener('click', bunnyGame);
+}
+
+// ========================================
+// NAVBAR SCROLL BEHAVIOR
+// ========================================
 document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.querySelector('.navbar');
     
-    if (!navbar) {
-        console.warn('⚠️ Navbar not found!');
-        return;
-    }
+    if (!navbar) return;
 
     let lastScrollTop = 0;
     const scrollThreshold = 50;
 
-    // Throttled scroll handler untuk performance
     const handleNavbarScroll = throttle(function() {
         const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Toggle 'scrolled' class
         if (currentScroll > scrollThreshold) {
             navbar.classList.add('scrolled');
         } else {
@@ -823,17 +1000,17 @@ document.addEventListener('DOMContentLoaded', function() {
         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
     }, 100);
 
-    // Add scroll listener dengan passive untuk performa
     window.addEventListener('scroll', handleNavbarScroll, { passive: true });
-
-    // Initial state
     navbar.classList.add('show');
     
-    console.log('✅ Navbar scroll behavior initialized');
+    // Observe lazy load images
+    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        observer.observe(img);
+    });
 });
 
-// Performance monitoring (optional - can be removed in production)
-if (!isMobile) {
+// Performance logging (dev only)
+if (!isMobile && location.hostname === 'localhost') {
     console.log(`🚀 Performance mode: ${isLowEnd ? 'Low-end' : isMobile ? 'Mobile' : 'Desktop'}`);
     console.log(`✨ Particles count: ${particleCount}`);
 }
