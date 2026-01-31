@@ -390,68 +390,84 @@ addStickerBtns.forEach(btn => {
     });
 });
 
-// Download photo
+// ========================================
+// PHOTO BOOTH DOWNLOAD (FIXED)
+// ========================================
 const downloadPhotoBtn = document.getElementById('download-photo');
-if(downloadPhotoBtn) {
-    downloadPhotoBtn.addEventListener('click', () => {
-        const instructionHTML = `
-            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                        background: white; padding: 30px; border-radius: 20px; border: 3px solid #000;
-                        box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; max-width: 500px;
-                        font-family: 'Fredoka', sans-serif;">
-                <h2 style="margin: 0 0 20px 0; color: #ff69b4;">📸 Cara Save Foto Editan</h2>
-                
-                <p style="margin-bottom: 15px; color: #666;">
-                    Karena security browser, gunakan cara ini:
-                </p>
-                
-                <div style="background: #fff5f7; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; color: #ff69b4;">💻 Windows:</h3>
-                    <p style="margin: 5px 0;">
-                        1. Tekan <strong>Win + Shift + S</strong><br>
-                        2. Pilih area foto yang sudah diedit<br>
-                        3. Paste (Ctrl+V) di Paint/Word<br>
-                        4. Save as PNG
-                    </p>
-                </div>
-                
-                <div style="background: #fff5f7; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; color: #ff69b4;">🍎 Mac:</h3>
-                    <p style="margin: 5px 0;">
-                        1. Tekan <strong>Cmd + Shift + 4</strong><br>
-                        2. Drag untuk select area foto<br>
-                        3. File otomatis tersimpan di Desktop
-                    </p>
-                </div>
-                
-                <div style="background: #fff5f7; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <h3 style="margin: 0 0 10px 0; color: #ff69b4;">📱 Mobile:</h3>
-                    <p style="margin: 5px 0;">
-                        1. Screenshot seperti biasa<br>
-                        2. Crop foto yang sudah diedit<br>
-                        3. Save to gallery
-                    </p>
-                </div>
-                
-                <button onclick="this.parentElement.remove(); document.querySelector('[data-overlay]').remove();" 
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                               color: white; border: none; padding: 12px 30px; border-radius: 25px;
-                               font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;
-                               font-family: 'Fredoka', sans-serif;">
-                    ✅ OK, Mengerti!
-                </button>
-            </div>
-            
-            <div data-overlay onclick="this.remove(); document.querySelector('[data-instruction-modal]').remove();" 
-                 style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-                        background: rgba(0,0,0,0.5); z-index: 9999;">
-            </div>
-        `;
+
+if (downloadPhotoBtn) {
+    downloadPhotoBtn.addEventListener('click', async () => {
+        const photoFrame = document.getElementById('photo-frame');
         
-        const modalContainer = document.createElement('div');
-        modalContainer.setAttribute('data-instruction-modal', 'true');
-        modalContainer.innerHTML = instructionHTML;
-        document.body.appendChild(modalContainer);
+        if (!photoFrame) {
+            alert('Error: Photo frame tidak ditemukan!');
+            return;
+        }
+        
+        // Simpan state awal button
+        const originalText = downloadPhotoBtn.innerText;
+        downloadPhotoBtn.innerText = "⏳ Loading...";
+        downloadPhotoBtn.disabled = true;
+        
+        try {
+            // Tunggu sebentar agar DOM settle (stiker dll)
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Capture dengan html2canvas
+            const canvas = await html2canvas(photoFrame, {
+                scale: 3, // High res (3x)
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null, // Transparan jika perlu
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // Pastikan cloned element visible & fully rendered
+                    const clonedFrame = clonedDoc.getElementById('photo-frame');
+                    if (clonedFrame) {
+                        clonedFrame.style.transform = 'none';
+                        clonedFrame.style.overflow = 'visible';
+                    }
+                }
+            });
+            
+            // Convert ke blob untuk download lebih smooth
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    throw new Error('Gagal membuat gambar');
+                }
+                
+                // Buat URL dan trigger download
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `hanni-booth-${Date.now()}.png`;
+                document.body.appendChild(link);
+                link.click();
+                
+                // Cleanup
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                // Success feedback
+                downloadPhotoBtn.innerText = "✅ Saved!";
+                setTimeout(() => {
+                    downloadPhotoBtn.innerText = originalText;
+                    downloadPhotoBtn.disabled = false;
+                }, 2000);
+                
+            }, 'image/png', 1.0);
+            
+        } catch (error) {
+            console.error('Download error:', error);
+            
+            // Fallback: instruksi manual kalau gagal (CORS issue)
+            alert(`⚠️ Auto-download gagal (kemungkinan CORS).\n\nSolusi manual:\n• Windows: Win + Shift + S\n• Mac: Cmd + Shift + 4\n• HP: Screenshot seperti biasa`);
+            
+            downloadPhotoBtn.innerText = originalText;
+            downloadPhotoBtn.disabled = false;
+        }
     });
 }
 
