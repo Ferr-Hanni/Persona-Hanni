@@ -431,79 +431,66 @@ if(clearStickersBtn) {
 // Download photo functionality
 const downloadPhotoBtn = document.getElementById('download-photo');
 if(downloadPhotoBtn) {
-    downloadPhotoBtn.addEventListener('click', async () => {
-        try {
-            // Show loading state
-            downloadPhotoBtn.textContent = '⏳ Processing...';
-            downloadPhotoBtn.disabled = true;
-            
-            // WAIT for html2canvas to be loaded
-            if (typeof html2canvas === 'undefined') {
-                throw new Error('html2canvas not loaded');
-            }
-            
-            // Get the photo frame element (contains image + filter + frame + stickers)
-            const photoFrameElement = document.getElementById('photo-frame');
-            
-            if (!photoFrameElement) {
-                throw new Error('Photo frame not found');
-            }
-            
-            // IMPORTANT: Use html2canvas to capture THE ENTIRE photo-frame
-            // This includes: image + CSS filters + frame overlay + stickers
-            const canvas = await html2canvas(photoFrameElement, {
-                backgroundColor: null,        // Transparent background
-                scale: 2,                     // High quality (2x resolution)
-                logging: false,               // No console logs
-                useCORS: true,               // Allow cross-origin images
-                allowTaint: true,            // Allow tainted canvas
-                imageTimeout: 0,             // No timeout
-                removeContainer: false,      // Keep container
-                foreignObjectRendering: false, // Use traditional rendering
-                windowWidth: photoFrameElement.scrollWidth,
-                windowHeight: photoFrameElement.scrollHeight
-            });
-            
-            // Convert canvas to PNG image data
-            const imageData = canvas.toDataURL('image/png', 1.0);
-            
-            // Create download link
-            const downloadLink = document.createElement('a');
-            downloadLink.download = `hanni-edited-${Date.now()}.png`;
-            downloadLink.href = imageData;
-            
-            // Append to body, click, and remove
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            // Show success message
-            downloadPhotoBtn.textContent = '✅ Downloaded!';
-            downloadPhotoBtn.style.backgroundColor = '#4ade80';
-            
-            // Reset button after 2 seconds
-            setTimeout(() => {
-                downloadPhotoBtn.textContent = '📥 Download';
-                downloadPhotoBtn.style.backgroundColor = '';
-                downloadPhotoBtn.disabled = false;
-            }, 2000);
-            
-        } catch (error) {
-            console.error('Download error:', error);
-            
-            // Show error message
-            downloadPhotoBtn.textContent = '❌ Error!';
-            downloadPhotoBtn.style.backgroundColor = '#ef4444';
-            
-            // Show alert with instructions
-            setTimeout(() => {
-                alert(`⚠️ Download Failed!\n\nError: ${error.message}\n\nPlease try:\n1. Make sure you have internet connection (for html2canvas library)\n2. Wait for the page to fully load\n3. If still not working, take a screenshot instead`);
+    downloadPhotoBtn.addEventListener('click', () => {
+        // Show instruction modal for taking screenshot
+        const instructionHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                        background: white; padding: 30px; border-radius: 20px; border: 3px solid #000;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; max-width: 500px;
+                        font-family: 'Fredoka', sans-serif;">
+                <h2 style="margin: 0 0 20px 0; color: #ff69b4;">📸 Cara Save Foto Editan</h2>
                 
-                downloadPhotoBtn.textContent = '📥 Download';
-                downloadPhotoBtn.style.backgroundColor = '';
-                downloadPhotoBtn.disabled = false;
-            }, 500);
-        }
+                <p style="margin-bottom: 15px; color: #666;">
+                    Karena security browser, gunakan cara ini:
+                </p>
+                
+                <div style="background: #fff5f7; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff69b4;">💻 Windows:</h3>
+                    <p style="margin: 5px 0;">
+                        1. Tekan <strong>Win + Shift + S</strong><br>
+                        2. Pilih area foto yang sudah diedit<br>
+                        3. Paste (Ctrl+V) di Paint/Word<br>
+                        4. Save as PNG
+                    </p>
+                </div>
+                
+                <div style="background: #fff5f7; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff69b4;">🍎 Mac:</h3>
+                    <p style="margin: 5px 0;">
+                        1. Tekan <strong>Cmd + Shift + 4</strong><br>
+                        2. Drag untuk select area foto<br>
+                        3. File otomatis tersimpan di Desktop
+                    </p>
+                </div>
+                
+                <div style="background: #fff5f7; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 10px 0; color: #ff69b4;">📱 Mobile:</h3>
+                    <p style="margin: 5px 0;">
+                        1. Screenshot seperti biasa<br>
+                        2. Crop foto yang sudah diedit<br>
+                        3. Save to gallery
+                    </p>
+                </div>
+                
+                <button onclick="this.parentElement.remove()" 
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                               color: white; border: none; padding: 12px 30px; border-radius: 25px;
+                               font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;
+                               font-family: 'Fredoka', sans-serif;">
+                    ✅ OK, Mengerti!
+                </button>
+            </div>
+            
+            <div onclick="this.remove(); document.querySelector('[data-instruction-modal]').remove();" 
+                 style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+                        background: rgba(0,0,0,0.5); z-index: 9999;">
+            </div>
+        `;
+        
+        const modalContainer = document.createElement('div');
+        modalContainer.setAttribute('data-instruction-modal', 'true');
+        modalContainer.innerHTML = instructionHTML;
+        document.body.appendChild(modalContainer);
     });
 }
 
