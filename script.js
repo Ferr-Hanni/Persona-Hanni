@@ -2,6 +2,10 @@
 // PERFORMANCE OPTIMIZATIONS
 // ========================================
 
+// Detect mobile
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isLowEnd = isMobile && (navigator.hardwareConcurrency <= 4 || navigator.deviceMemory <= 4);
+
 // Throttle function untuk scroll events
 function throttle(func, wait) {
     let timeout;
@@ -75,11 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ========================================
-// OPTIMIZED PARTICLES (Reduced count on mobile)
+// OPTIMIZED PARTICLES (Much reduced on mobile)
 // ========================================
 const particlesContainer = document.getElementById('particles');
-const isMobile = window.innerWidth <= 768;
-const particleCount = isMobile ? 5 : 15; // Drastically reduce on mobile
+
+// CRITICAL: Drastically reduce particles on mobile & low-end devices
+let particleCount;
+if (isLowEnd) {
+    particleCount = 0; // NO particles on low-end mobile
+} else if (isMobile) {
+    particleCount = 3; // Only 3 particles on mobile
+} else {
+    particleCount = 10; // 10 particles on desktop (down from 15)
+}
 
 const particleEmojis = ['✨', '💕', '🎀', '⭐', '💙'];
 
@@ -89,7 +101,7 @@ function createParticle() {
     particle.innerText = particleEmojis[Math.floor(Math.random() * particleEmojis.length)];
     
     particle.style.left = Math.random() * 100 + '%';
-    particle.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
+    particle.style.setProperty('--duration', (20 + Math.random() * 10) + 's'); // Slower = less CPU
     particle.style.setProperty('--delay', Math.random() * 5 + 's');
     
     if (particlesContainer) {
@@ -105,10 +117,12 @@ function createParticle() {
     }, duration * 1000);
 }
 
-// Only create particles if not on reduced motion
-if (particlesContainer && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+// Only create particles if not on reduced motion AND not low-end
+if (particlesContainer && 
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    particleCount > 0) {
     for (let i = 0; i < particleCount; i++) {
-        setTimeout(() => createParticle(), i * 500);
+        setTimeout(() => createParticle(), i * 1000);
     }
 }
 
@@ -160,82 +174,96 @@ const cards = [
 ];
 
 // --- FITUR GANTI MODE (COZY) ---
-modeBtn.addEventListener('click', () => {
-    // Matikan dark mode dulu kalau aktif
-    if (isDarkMode) {
-        body.classList.remove('dark-mode');
-        isDarkMode = false;
-        darkModeBtn.innerText = "🌙 Dark Mode";
-    }
-    
-    isPotatoMode = !isPotatoMode;
-    const currentState = isPotatoMode ? potatoState : normalState;
-
-    // Toggle Class Body
-    if (isPotatoMode) {
-        body.classList.add('potato-mode');
-        modeBtn.innerText = "✨ Idol Mode";
-    } else {
-        body.classList.remove('potato-mode');
-        modeBtn.innerText = "💕 Cozy Mode";
-    }
-
-    // Ganti Konten Utama
-    heroSubtitle.innerText = currentState.subtitle;
-    speechBubble.innerText = currentState.bubble;
-
-    // Ganti Konten Cards
-    cards.forEach((card, index) => {
-        const data = currentState.cards[index];
-        card.querySelector('h3').innerText = data.title;
-        card.querySelector('p').innerText = data.text;
-        card.querySelector('.card-icon').innerText = data.icon;
-        
-        if (isPotatoMode) {
-            const randomRot = Math.random() * 6 - 3; 
-            card.style.setProperty('--rotation', `${randomRot}deg`);
-        } else {
-            card.style.removeProperty('--rotation');
+if (modeBtn) {
+    modeBtn.addEventListener('click', () => {
+        // Matikan dark mode dulu kalau aktif
+        if (isDarkMode) {
+            body.classList.remove('dark-mode');
+            isDarkMode = false;
+            darkModeBtn.innerText = "🌙 Dark";
         }
+        
+        isPotatoMode = !isPotatoMode;
+        const currentState = isPotatoMode ? potatoState : normalState;
+
+        // Toggle Class Body
+        if (isPotatoMode) {
+            body.classList.add('potato-mode');
+            modeBtn.innerText = "✨ Idol";
+        } else {
+            body.classList.remove('potato-mode');
+            modeBtn.innerText = "💕 Cozy";
+        }
+
+        // Ganti Konten Utama
+        if (heroSubtitle) heroSubtitle.innerText = currentState.subtitle;
+        if (speechBubble) speechBubble.innerText = currentState.bubble;
+
+        // Ganti Konten Cards
+        cards.forEach((card, index) => {
+            if (!card) return;
+            const data = currentState.cards[index];
+            const h3 = card.querySelector('h3');
+            const p = card.querySelector('p');
+            const icon = card.querySelector('.card-icon');
+            
+            if (h3) h3.innerText = data.title;
+            if (p) p.innerText = data.text;
+            if (icon) icon.innerText = data.icon;
+            
+            if (isPotatoMode) {
+                const randomRot = Math.random() * 6 - 3; 
+                card.style.setProperty('--rotation', `${randomRot}deg`);
+            } else {
+                card.style.removeProperty('--rotation');
+            }
+        });
     });
-});
+}
 
 // --- FITUR DARK MODE ---
-darkModeBtn.addEventListener('click', () => {
-    // Matikan cozy mode dulu kalau aktif
-    if (isPotatoMode) {
-        body.classList.remove('potato-mode');
-        isPotatoMode = false;
-        modeBtn.innerText = "💕 Cozy Mode";
-    }
-    
-    isDarkMode = !isDarkMode;
-    const currentState = isDarkMode ? darkState : normalState;
-
-    // Toggle Class Body
-    if (isDarkMode) {
-        body.classList.add('dark-mode');
-        darkModeBtn.innerText = "☀️ Light Mode";
-    } else {
-        body.classList.remove('dark-mode');
-        darkModeBtn.innerText = "🌙 Dark Mode";
-    }
-
-    // Ganti Konten Utama
-    heroSubtitle.innerText = currentState.subtitle;
-    speechBubble.innerText = currentState.bubble;
-
-    // Ganti Konten Cards
-    cards.forEach((card, index) => {
-        const data = currentState.cards[index];
-        card.querySelector('h3').innerText = data.title;
-        card.querySelector('p').innerText = data.text;
-        card.querySelector('.card-icon').innerText = data.icon;
+if (darkModeBtn) {
+    darkModeBtn.addEventListener('click', () => {
+        // Matikan cozy mode dulu kalau aktif
+        if (isPotatoMode) {
+            body.classList.remove('potato-mode');
+            isPotatoMode = false;
+            modeBtn.innerText = "💕 Cozy";
+        }
         
-        // Dark mode tidak punya rotasi
-        card.style.removeProperty('--rotation');
+        isDarkMode = !isDarkMode;
+        const currentState = isDarkMode ? darkState : normalState;
+
+        // Toggle Class Body
+        if (isDarkMode) {
+            body.classList.add('dark-mode');
+            darkModeBtn.innerText = "☀️ Light";
+        } else {
+            body.classList.remove('dark-mode');
+            darkModeBtn.innerText = "🌙 Dark";
+        }
+
+        // Ganti Konten Utama
+        if (heroSubtitle) heroSubtitle.innerText = currentState.subtitle;
+        if (speechBubble) speechBubble.innerText = currentState.bubble;
+
+        // Ganti Konten Cards
+        cards.forEach((card, index) => {
+            if (!card) return;
+            const data = currentState.cards[index];
+            const h3 = card.querySelector('h3');
+            const p = card.querySelector('p');
+            const icon = card.querySelector('.card-icon');
+            
+            if (h3) h3.innerText = data.title;
+            if (p) p.innerText = data.text;
+            if (icon) icon.innerText = data.icon;
+            
+            // Dark mode tidak punya rotasi
+            card.style.removeProperty('--rotation');
+        });
     });
-});
+}
 
 // --- FITUR STICKER DECO ---
 const stickerCanvas = document.querySelector('.sticker-canvas');
@@ -274,18 +302,16 @@ const photoStickersContainer = document.getElementById('photo-stickers');
 const frameBtns = document.querySelectorAll('.frame-btn');
 frameBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Remove active from all
         frameBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const frame = btn.getAttribute('data-frame');
         
-        // Remove all frame classes
-        frameOverlay.className = 'frame-overlay';
-        
-        // Add selected frame
-        if (frame !== 'none') {
-            frameOverlay.classList.add(`frame-${frame}`);
+        if (frameOverlay) {
+            frameOverlay.className = 'frame-overlay';
+            if (frame !== 'none') {
+                frameOverlay.classList.add(`frame-${frame}`);
+            }
         }
     });
 });
@@ -294,19 +320,17 @@ frameBtns.forEach(btn => {
 const filterBtns = document.querySelectorAll('.filter-btn');
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Remove active from all
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         const filter = btn.getAttribute('data-filter');
         
-        // Remove all filter classes (match HTML filter names)
-        boothImg.classList.remove('filter-vintage', 'filter-warm', 'filter-cool', 'filter-dream',
-                                   'filter-y2k', 'filter-dreamy', 'filter-neon'); // Legacy
-        
-        // Add selected filter
-        if (filter !== 'none') {
-            boothImg.classList.add(`filter-${filter}`);
+        if (boothImg) {
+            boothImg.classList.remove('filter-vintage', 'filter-warm', 'filter-cool', 'filter-dream');
+            
+            if (filter !== 'none') {
+                boothImg.classList.add(`filter-${filter}`);
+            }
         }
     });
 });
@@ -321,20 +345,17 @@ function makeStickerDraggable(sticker) {
     let xOffset = 0;
     let yOffset = 0;
 
-    // Mouse events
     sticker.addEventListener('mousedown', dragStart);
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragEnd);
 
-    // Touch events untuk mobile - IMPROVED!
     sticker.addEventListener('touchstart', dragStart, { passive: false });
     document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('touchend', dragEnd);
 
     function dragStart(e) {
-        // CRITICAL: Prevent default untuk touch agar tidak scroll
         if (e.type === "touchstart") {
-            e.preventDefault(); // Prevent page scroll
+            e.preventDefault();
             initialX = e.touches[0].clientX - xOffset;
             initialY = e.touches[0].clientY - yOffset;
         } else {
@@ -342,16 +363,14 @@ function makeStickerDraggable(sticker) {
             initialY = e.clientY - yOffset;
         }
 
-        // Cek apakah klik pada sticker ini
         if (e.target === sticker) {
             isDragging = true;
-            sticker.style.zIndex = 1000; // Taruh di depan semua stiker lain
+            sticker.style.zIndex = 1000;
         }
     }
 
     function drag(e) {
         if (isDragging) {
-            // CRITICAL: Prevent default saat drag untuk stop page scroll
             e.preventDefault();
 
             if (e.type === "touchmove") {
@@ -365,10 +384,7 @@ function makeStickerDraggable(sticker) {
             xOffset = currentX;
             yOffset = currentY;
 
-            // Get rotation value
             const rotation = sticker.style.getPropertyValue('--rot') || '0deg';
-            
-            // Update posisi stiker
             setTranslate(currentX, currentY, sticker, rotation);
         }
     }
@@ -378,7 +394,7 @@ function makeStickerDraggable(sticker) {
             initialX = currentX;
             initialY = currentY;
             isDragging = false;
-            sticker.style.zIndex = ''; // Reset z-index
+            sticker.style.zIndex = '';
         }
     }
 
@@ -391,16 +407,17 @@ function makeStickerDraggable(sticker) {
 const addStickerBtns = document.querySelectorAll('.add-sticker-btn');
 addStickerBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+        if (!photoStickersContainer) return;
+        
         const stickerText = btn.getAttribute('data-sticker');
         
         const sticker = document.createElement('div');
         sticker.className = 'photo-sticker';
         sticker.innerText = stickerText;
         
-        // Random position
-        const randomX = Math.random() * 70 + 10; // 10-80%
+        const randomX = Math.random() * 70 + 10;
         const randomY = Math.random() * 70 + 10;
-        const randomRot = Math.random() * 40 - 20; // -20 to 20 degrees
+        const randomRot = Math.random() * 40 - 20;
         
         sticker.style.left = randomX + '%';
         sticker.style.top = randomY + '%';
@@ -408,11 +425,8 @@ addStickerBtns.forEach(btn => {
         sticker.style.setProperty('--rot', `${randomRot}deg`);
         
         photoStickersContainer.appendChild(sticker);
-        
-        // ✨ TAMBAHKAN FUNGSI DRAG! ✨
         makeStickerDraggable(sticker);
         
-        // Button animation
         btn.style.transform = 'scale(1.2)';
         setTimeout(() => {
             btn.style.transform = 'scale(1)';
@@ -420,19 +434,10 @@ addStickerBtns.forEach(btn => {
     });
 });
 
-// Clear stickers
-const clearStickersBtn = document.getElementById('clear-stickers');
-if(clearStickersBtn) {
-    clearStickersBtn.addEventListener('click', () => {
-        photoStickersContainer.innerHTML = '';
-    });
-}
-
 // Download photo functionality
 const downloadPhotoBtn = document.getElementById('download-photo');
 if(downloadPhotoBtn) {
     downloadPhotoBtn.addEventListener('click', () => {
-        // Show instruction modal for taking screenshot
         const instructionHTML = `
             <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
                         background: white; padding: 30px; border-radius: 20px; border: 3px solid #000;
@@ -494,7 +499,6 @@ if(downloadPhotoBtn) {
     });
 }
 
-
 // --- FITUR MUSIK PLAYER ---
 const audio = document.getElementById('bg-music');
 const playBtn = document.getElementById('play-pause-btn');
@@ -508,13 +512,13 @@ function toggleMusic() {
 
     if (isPlaying) {
         audio.pause();
-        playBtn.innerText = "▶";
-        visualizer.classList.remove('playing');
+        if (playBtn) playBtn.innerText = "▶";
+        if (visualizer) visualizer.classList.remove('playing');
         isPlaying = false;
     } else {
         audio.play().then(() => {
-            playBtn.innerText = "⏸";
-            visualizer.classList.add('playing');
+            if (playBtn) playBtn.innerText = "⏸";
+            if (visualizer) visualizer.classList.add('playing');
             isPlaying = true;
         }).catch(error => {
             console.log("Autoplay dicegah browser. Klik tombol play untuk mulai.");
@@ -539,8 +543,8 @@ window.addEventListener('load', () => {
         const playPromise = audio.play();
         if (playPromise !== undefined) {
             playPromise.then(_ => {
-                playBtn.innerText = "⏸";
-                visualizer.classList.add('playing');
+                if (playBtn) playBtn.innerText = "⏸";
+                if (visualizer) visualizer.classList.add('playing');
                 isPlaying = true;
             }).catch(error => {
                 console.log("Menunggu interaksi user untuk play musik.");
@@ -557,39 +561,20 @@ outfitBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const newSrc = btn.getAttribute('data-img');
         
-        mainImg.style.opacity = "0";
-        mainImg.style.transform = "scale(0.9)";
-        
-        setTimeout(() => {
-            mainImg.src = newSrc;
-            mainImg.style.opacity = "1";
-            mainImg.style.transform = "scale(1)";
-        }, 200);
+        if (mainImg) {
+            mainImg.style.opacity = "0";
+            mainImg.style.transform = "scale(0.9)";
+            
+            setTimeout(() => {
+                mainImg.src = newSrc;
+                mainImg.style.opacity = "1";
+                mainImg.style.transform = "scale(1)";
+            }, 200);
+        }
     });
 });
 
-// ===== NEW FEATURES JAVASCRIPT =====
-
-// --- FLOATING PARTICLES BACKGROUND ---
-function createParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
-    
-    const particles = ['🌸', '💕', '⭐', '✨', '🐰', '💙', '🎀', '🌺'];
-    const particleCount = 15;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.innerText = particles[Math.floor(Math.random() * particles.length)];
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
-        particle.style.setProperty('--delay', Math.random() * 5 + 's');
-        particlesContainer.appendChild(particle);
-    }
-}
-
-// --- 11. THEME SELECTOR ---
+// --- THEME SELECTOR ---
 const themeModal = document.getElementById('theme-modal');
 const themeSelectorBtn = document.getElementById('theme-selector-btn');
 const closeModal = document.querySelector('.close-modal');
@@ -597,13 +582,13 @@ const themeCards = document.querySelectorAll('.theme-card');
 
 if (themeSelectorBtn) {
     themeSelectorBtn.addEventListener('click', () => {
-        themeModal.style.display = 'block';
+        if (themeModal) themeModal.style.display = 'block';
     });
 }
 
 if (closeModal) {
     closeModal.addEventListener('click', () => {
-        themeModal.style.display = 'none';
+        if (themeModal) themeModal.style.display = 'none';
     });
 }
 
@@ -615,14 +600,11 @@ window.addEventListener('click', (e) => {
 
 themeCards.forEach(card => {
     card.addEventListener('click', () => {
-        // Remove active from all
         themeCards.forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         
         const theme = card.getAttribute('data-theme');
         document.body.setAttribute('data-theme', theme);
-        
-        // Save to localStorage
         localStorage.setItem('hanniTheme', theme);
     });
 });
@@ -638,7 +620,7 @@ if (savedTheme) {
     });
 }
 
-// --- 16. MEMORY MATCH GAME ---
+// --- MEMORY MATCH GAME ---
 const memoryGrid = document.getElementById('memory-grid');
 const startMemoryBtn = document.getElementById('start-memory-game');
 const memoryMovesDisplay = document.getElementById('memory-moves');
@@ -661,19 +643,22 @@ function shuffleArray(array) {
 }
 
 function createMemoryGame() {
+    if (!memoryGrid) return;
+    
     memoryGrid.innerHTML = '';
     memoryDeck = shuffleArray([...memoryCards, ...memoryCards]);
     flippedCards = [];
     matchedPairs = 0;
     moves = 0;
     memoryTimer = 0;
-    memoryMovesDisplay.innerText = '0';
-    memoryTimeDisplay.innerText = '0';
+    
+    if (memoryMovesDisplay) memoryMovesDisplay.innerText = '0';
+    if (memoryTimeDisplay) memoryTimeDisplay.innerText = '0';
     
     if (memoryInterval) clearInterval(memoryInterval);
     memoryInterval = setInterval(() => {
         memoryTimer++;
-        memoryTimeDisplay.innerText = memoryTimer;
+        if (memoryTimeDisplay) memoryTimeDisplay.innerText = memoryTimer;
     }, 1000);
     
     memoryDeck.forEach((symbol, index) => {
@@ -700,7 +685,7 @@ function flipMemoryCard(e) {
     
     if (flippedCards.length === 2) {
         moves++;
-        memoryMovesDisplay.innerText = moves;
+        if (memoryMovesDisplay) memoryMovesDisplay.innerText = moves;
         
         setTimeout(() => {
             if (flippedCards[0].dataset.symbol === flippedCards[1].dataset.symbol) {
@@ -708,7 +693,7 @@ function flipMemoryCard(e) {
                 matchedPairs++;
                 
                 if (matchedPairs === memoryCards.length) {
-                    clearInterval(memoryInterval);
+                    if (memoryInterval) clearInterval(memoryInterval);
                     setTimeout(() => {
                         alert(`🎉 You won! Time: ${memoryTimer}s, Moves: ${moves}`);
                     }, 300);
@@ -728,7 +713,7 @@ if (startMemoryBtn) {
     startMemoryBtn.addEventListener('click', createMemoryGame);
 }
 
-// --- 17. SLIDE PUZZLE GAME ---
+// --- SLIDE PUZZLE GAME ---
 const puzzleGrid = document.getElementById('puzzle-grid');
 const startPuzzleBtn = document.getElementById('start-puzzle-game');
 const puzzleMovesDisplay = document.getElementById('puzzle-moves');
@@ -737,9 +722,11 @@ let puzzleState = [1, 2, 3, 4, 5, 6, 7, 8, 0];
 let puzzleMoves = 0;
 
 function createPuzzle() {
+    if (!puzzleGrid) return;
+    
     puzzleGrid.innerHTML = '';
     puzzleMoves = 0;
-    puzzleMovesDisplay.innerText = '0';
+    if (puzzleMovesDisplay) puzzleMovesDisplay.innerText = '0';
     
     // Shuffle
     for (let i = 0; i < 100; i++) {
@@ -757,15 +744,17 @@ function getPossibleMoves(emptyIndex) {
     const row = Math.floor(emptyIndex / 3);
     const col = emptyIndex % 3;
     
-    if (row > 0) moves.push(emptyIndex - 3); // Up
-    if (row < 2) moves.push(emptyIndex + 3); // Down
-    if (col > 0) moves.push(emptyIndex - 1); // Left
-    if (col < 2) moves.push(emptyIndex + 1); // Right
+    if (row > 0) moves.push(emptyIndex - 3);
+    if (row < 2) moves.push(emptyIndex + 3);
+    if (col > 0) moves.push(emptyIndex - 1);
+    if (col < 2) moves.push(emptyIndex + 1);
     
     return moves;
 }
 
 function renderPuzzle() {
+    if (!puzzleGrid) return;
+    
     puzzleGrid.innerHTML = '';
     
     puzzleState.forEach((num, index) => {
@@ -789,10 +778,9 @@ function movePuzzleTile(tileIndex) {
     if (possibleMoves.includes(tileIndex)) {
         [puzzleState[emptyIndex], puzzleState[tileIndex]] = [puzzleState[tileIndex], puzzleState[emptyIndex]];
         puzzleMoves++;
-        puzzleMovesDisplay.innerText = puzzleMoves;
+        if (puzzleMovesDisplay) puzzleMovesDisplay.innerText = puzzleMoves;
         renderPuzzle();
         
-        // Check win
         const solved = puzzleState.every((num, idx) => num === idx + 1 || (idx === 8 && num === 0));
         if (solved) {
             setTimeout(() => {
@@ -806,25 +794,8 @@ if (startPuzzleBtn) {
     startPuzzleBtn.addEventListener('click', createPuzzle);
 }
 
-// Add bounce animation to CSS dynamically
-const bounceStyle = document.createElement('style');
-bounceStyle.textContent = `
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0) scale(1); }
-        25% { transform: translateY(-20px) scale(1.05); }
-        50% { transform: translateY(0) scale(1); }
-        75% { transform: translateY(-10px) scale(1.02); }
-    }
-`;
-document.head.appendChild(bounceStyle);
-
-// --- 20. MOOD TRACKER - Hanni's Mood ---
-window.addEventListener('DOMContentLoaded', () => {
-    createParticles();
-});
-
 // ========================================
-// NAVBAR SCROLL BEHAVIOR FIX
+// NAVBAR SCROLL BEHAVIOR - OPTIMIZED
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -836,7 +807,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let lastScrollTop = 0;
-    const scrollThreshold = 50; // Trigger scrolled class after 50px
+    const scrollThreshold = 50;
 
     // Throttled scroll handler untuk performance
     const handleNavbarScroll = throttle(function() {
@@ -849,20 +820,8 @@ document.addEventListener('DOMContentLoaded', function() {
             navbar.classList.remove('scrolled');
         }
         
-        // OPTIONAL: Auto-hide navbar saat scroll down
-        // Uncomment jika mau navbar hide/show saat scroll
-        /*
-        if (currentScroll > lastScrollTop && currentScroll > 100) {
-            // Scrolling DOWN - hide navbar
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            // Scrolling UP - show navbar
-            navbar.style.transform = 'translateY(0)';
-        }
-        */
-        
         lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-    }, 100); // Throttle to 100ms
+    }, 100);
 
     // Add scroll listener dengan passive untuk performa
     window.addEventListener('scroll', handleNavbarScroll, { passive: true });
@@ -872,3 +831,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Navbar scroll behavior initialized');
 });
+
+// Performance monitoring (optional - can be removed in production)
+if (!isMobile) {
+    console.log(`🚀 Performance mode: ${isLowEnd ? 'Low-end' : isMobile ? 'Mobile' : 'Desktop'}`);
+    console.log(`✨ Particles count: ${particleCount}`);
+}
