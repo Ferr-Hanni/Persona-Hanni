@@ -1428,7 +1428,9 @@ body.potato-mode .control-btn {
    FOOTER — DESAIN YANG AKU SUKAI
    ======================================== */
 footer {
-    background: linear-gradient(135deg, #fdf6f9 0%, #fce4ec 100%);
+    background: linear-gradient(135deg,
+                color-mix(in srgb, var(--theme-accent) 6%, #fff) 0%,
+                color-mix(in srgb, var(--theme-accent) 14%, #fff) 100%);
     padding: 40px 20px 30px;
     text-align: center;
     margin-top: 50px;
@@ -3406,7 +3408,6 @@ body.potato-mode .section-title {
     }
 }
 
-
 /* ========================================
    PHOTO VIEWER (Frame + Arrow Buttons)
    ======================================== */
@@ -3583,6 +3584,361 @@ body.potato-mode .custom-toast.info {
     background: rgba(255, 182, 193, 0.9);
 }
 
+/* ========================================
+   FLOWER GARDEN — CLOSING SCENE
+   The last section before the footer: a quiet
+   bloom that marks the end of the page.
+   ======================================== */
+.flower-garden {
+    padding: 80px 20px 60px;
+    position: relative;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/* Soft glow behind the whole scene, fades in with the bloom */
+.garden-sky {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 55% at 50% 35%,
+                color-mix(in srgb, var(--theme-accent) 16%, transparent) 0%,
+                transparent 70%);
+    opacity: 0;
+    transition: opacity 1.8s ease;
+}
+.flower-garden.bloomed .garden-sky {
+    opacity: 1;
+}
+
+/* Falling petals — ambient, behind the flowers */
+.petal-container {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+.petal {
+    position: absolute;
+    top: -8%;
+    font-size: 1rem;
+    opacity: 0;
+    animation: petalFall linear infinite;
+}
+@keyframes petalFall {
+    0%   { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg); }
+    12%  { opacity: 0.6; }
+    88%  { opacity: 0.45; }
+    100% { opacity: 0; transform: translateY(340px) translateX(var(--drift, 24px)) rotate(220deg); }
+}
+
+/* Small label that frames the scene */
+.garden-eyebrow {
+    position: relative;
+    z-index: 2;
+    font-family: var(--font-hand);
+    font-size: 0.95rem;
+    letter-spacing: 3px;
+    color: var(--theme-accent);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1s ease, transform 1s ease;
+    margin: 0 0 6px;
+}
+.flower-garden.bloomed .garden-eyebrow {
+    opacity: 0.8;
+    transform: translateY(0);
+}
+
+.flower-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 500px;
+    height: 180px;
+    margin: 0 auto;
+}
+
+/* ===== BUNGA ===== */
+.flower {
+    position: absolute;
+    font-size: calc(2.4rem * var(--flower-mult, 1));
+    opacity: 0;
+    transform: scale(0) rotate(-10deg);
+    pointer-events: none;
+    will-change: transform, opacity;
+    transition: none;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.04));
+}
+
+/* The last, largest bloom — the signature element of the scene */
+.flower.hero-bloom {
+    font-size: calc(3.6rem * var(--flower-mult, 1));
+    filter: drop-shadow(0 0 16px color-mix(in srgb, var(--theme-accent) 55%, transparent))
+            drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+}
+
+/* Saat container aktif, bunga mulai tumbuh */
+.flower-container.active .flower {
+    animation: flowerGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Setelah tumbuh, goyang pelan (hanya jika tidak reduced-motion) */
+@media (prefers-reduced-motion: no-preference) {
+    .flower-container.active .flower {
+        animation: flowerGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                   flowerSway 4s ease-in-out infinite 1.2s;
+    }
+    .flower-container.active .flower.hero-bloom {
+        animation: flowerGrow 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                   heroPulse 3.2s ease-in-out infinite 1.6s;
+    }
+}
+
+/* Delay berbeda untuk setiap bunga */
+.flower-container.active .flower:nth-child(1) { animation-delay: 0.0s; }
+.flower-container.active .flower:nth-child(2) { animation-delay: 0.3s; }
+.flower-container.active .flower:nth-child(3) { animation-delay: 0.6s; }
+.flower-container.active .flower:nth-child(4) { animation-delay: 0.9s; }
+.flower-container.active .flower:nth-child(5) { animation-delay: 1.2s; }
+.flower-container.active .flower:nth-child(6) { animation-delay: 1.5s; }
+.flower-container.active .flower:nth-child(7) { animation-delay: 1.8s; }
+.flower-container.active .flower:nth-child(8) { animation-delay: 2.1s; }
+.flower-container.active .flower:nth-child(9) { animation-delay: 2.4s; }
+.flower-container.active .flower:nth-child(10) { animation-delay: 2.7s; }
+.flower-container.active .flower:nth-child(11) { animation-delay: 3.0s; }
+.flower-container.active .flower:nth-child(12) { animation-delay: 3.3s; }
+.flower-container.active .flower:nth-child(13) { animation-delay: 3.6s; }
+
+@keyframes flowerGrow {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(-15deg) translateY(20px);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.15) rotate(3deg) translateY(-5px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg) translateY(0);
+    }
+}
+
+@keyframes flowerSway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
+
+@keyframes heroPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+/* ===== BUBBLE PESAN ===== */
+.flower-message {
+    position: relative;
+    z-index: 2;
+    margin-top: 24px;
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.flower-message.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.flower-bubble {
+    position: relative;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 60px 60px 60px 12px;
+    padding: 20px 32px 18px;
+    border: 2px solid var(--theme-accent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06),
+                0 0 0 6px color-mix(in srgb, var(--theme-accent) 8%, transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.bubble-quote {
+    font-family: var(--font-hand);
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--theme-accent);
+    opacity: 0.55;
+    margin-bottom: 2px;
+}
+
+.bubble-text {
+    font-family: var(--font-hand);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.3px;
+}
+
+.bubble-sub {
+    font-family: var(--font-main);
+    font-size: 0.7rem;
+    color: var(--theme-accent);
+    opacity: 0.6;
+    letter-spacing: 0.5px;
+}
+
+/* ===== DESKTOP (≥ 1024px) ===== */
+@media (min-width: 1024px) {
+    .flower-garden {
+        padding: 110px 20px 80px;
+    }
+    .flower-container {
+        max-width: 700px;
+        height: 260px;
+    }
+    .flower {
+        font-size: calc(3.2rem * var(--flower-mult, 1));
+    }
+    .flower.hero-bloom {
+        font-size: calc(4.6rem * var(--flower-mult, 1));
+    }
+    .garden-eyebrow {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    .flower-bubble {
+        max-width: 400px;
+        padding: 24px 40px 22px;
+        border-radius: 80px 80px 80px 16px;
+    }
+    .bubble-quote {
+        font-size: 2rem;
+    }
+    .bubble-text {
+        font-size: 1.4rem;
+    }
+    .bubble-sub {
+        font-size: 0.85rem;
+    }
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode .flower-bubble {
+    background: rgba(26, 26, 46, 0.92);
+    border-color: rgba(192, 132, 252, 0.4);
+}
+body.dark-mode .bubble-text {
+    color: #e2e8f0;
+}
+body.dark-mode .bubble-sub {
+    color: #c084fc;
+}
+body.dark-mode .bubble-quote {
+    color: #c084fc;
+}
+body.dark-mode .garden-eyebrow {
+    color: #c084fc;
+}
+
+/* ===== COZY MODE ===== */
+body.potato-mode .flower-bubble {
+    background: rgba(255, 245, 228, 0.95);
+    border-color: #FFB6C1;
+}
+body.potato-mode .bubble-text {
+    color: #5D4037;
+}
+body.potato-mode .bubble-sub {
+    color: #FF69B4;
+}
+body.potato-mode .bubble-quote {
+    color: #FF69B4;
+}
+body.potato-mode .garden-eyebrow {
+    color: #FF69B4;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .flower-garden {
+        padding: 60px 16px 44px;
+    }
+    .flower {
+        font-size: calc(1.9rem * var(--flower-mult, 1));
+    }
+    .flower.hero-bloom {
+        font-size: calc(2.9rem * var(--flower-mult, 1));
+    }
+    .flower-container {
+        height: 150px;
+    }
+    .garden-eyebrow {
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+    }
+    .flower-bubble {
+        padding: 18px 24px 16px;
+        max-width: 260px;
+    }
+    .bubble-quote {
+        font-size: 1.3rem;
+    }
+    .bubble-text {
+        font-size: 0.95rem;
+    }
+    .petal {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .flower-garden {
+        padding: 50px 14px 36px;
+    }
+    .flower {
+        font-size: calc(1.4rem * var(--flower-mult, 1));
+    }
+    .flower.hero-bloom {
+        font-size: calc(2.2rem * var(--flower-mult, 1));
+    }
+    .flower-container {
+        height: 130px;
+    }
+    .garden-eyebrow {
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+    }
+    .flower-bubble {
+        padding: 16px 18px 14px;
+        max-width: 210px;
+    }
+    .bubble-quote {
+        font-size: 1.1rem;
+    }
+    .bubble-text {
+        font-size: 0.85rem;
+    }
+    .bubble-sub {
+        font-size: 0.6rem;
+    }
+    .petal {
+        font-size: 0.7rem;
+    }
+}
 
 
 /* ========================================

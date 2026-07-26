@@ -1356,6 +1356,136 @@ if (clearPhotoStickersBtn) {
 }
 
 // ========================================
+// FLOWER GARDEN — SCROLL TRIGGER
+// ========================================
+(function() {
+    const garden = document.getElementById('flower-garden');
+    const container = document.getElementById('flower-container');
+    const message = document.getElementById('flower-message');
+    const petalContainer = document.getElementById('petal-container');
+
+    if (!garden || !container || !message) return;
+
+    let hasBloomed = false;
+
+    // Deteksi layar desktop (≥ 1024px)
+    const isDesktop = window.innerWidth >= 1024;
+
+    // Daftar emoji bunga (lebih banyak untuk desktop)
+    const flowerEmojis = isDesktop
+        ? ['🌸', '🌼', '🌷', '🌺', '💐', '🌻', '🌸', '🌼', '🌷', '🌺', '💐', '🌻']
+        : ['🌸', '🌼', '🌷', '🌺', '💐', '🌸', '🌷', '🌼'];
+
+    // Posisi bunga (lebih tersebar untuk desktop)
+    const positions = isDesktop
+        ? [
+            { left: 5, top: 20 }, { left: 18, top: 8 }, { left: 30, top: 25 },
+            { left: 45, top: 5 }, { left: 58, top: 20 }, { left: 72, top: 10 },
+            { left: 85, top: 22 }, { left: 10, top: 55 }, { left: 25, top: 65 },
+            { left: 45, top: 60 }, { left: 65, top: 70 }, { left: 82, top: 55 }
+        ]
+        : [
+            { left: 8, top: 30 }, { left: 20, top: 10 }, { left: 38, top: 22 },
+            { left: 52, top: 8 }, { left: 68, top: 20 }, { left: 82, top: 15 },
+            { left: 15, top: 60 }, { left: 65, top: 55 }
+        ];
+
+    // Bunga utama — mekar terakhir, di tengah, jadi titik fokus penutup
+    const heroFlower = { emoji: '🌷', left: 50, top: isDesktop ? 42 : 45 };
+
+    function createFlowers() {
+        flowerEmojis.forEach((emoji, index) => {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.textContent = emoji;
+            const pos = positions[index % positions.length];
+            flower.style.left = pos.left + '%';
+            flower.style.top = pos.top + '%';
+            // Variasi ukuran kecil-kecilan saja — base size tetap dikontrol CSS
+            // (lewat media query), supaya ukuran di mobile bisa diatur dari CSS.
+            const sizeMult = (0.85 + Math.random() * 0.3).toFixed(2);
+            flower.style.setProperty('--flower-mult', sizeMult);
+            // Variasi rotasi awal
+            const rot = Math.random() * 30 - 15;
+            flower.style.transform = `rotate(${rot}deg)`;
+            container.appendChild(flower);
+        });
+
+        // Bunga utama ditambahkan terakhir, jadi otomatis dapat delay paling akhir
+        const hero = document.createElement('div');
+        hero.className = 'flower hero-bloom';
+        hero.textContent = heroFlower.emoji;
+        hero.style.left = heroFlower.left + '%';
+        hero.style.top = heroFlower.top + '%';
+        hero.style.setProperty('--flower-mult', '1');
+        hero.style.animationDelay = (flowerEmojis.length * 0.3) + 's';
+        container.appendChild(hero);
+    }
+
+    // Kelopak yang jatuh perlahan di belakang bunga — ambience penutup
+    function createPetals() {
+        if (!petalContainer) return;
+        const petalEmojis = ['🌸', '💮'];
+        const count = isDesktop ? 10 : 4;
+        for (let i = 0; i < count; i++) {
+            const petal = document.createElement('span');
+            petal.className = 'petal';
+            petal.textContent = petalEmojis[i % petalEmojis.length];
+            petal.style.left = (Math.random() * 100) + '%';
+            petal.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+            const duration = 9 + Math.random() * 8;
+            petal.style.animationDuration = duration.toFixed(1) + 's';
+            petal.style.animationDelay = (Math.random() * duration).toFixed(1) + 's';
+            petalContainer.appendChild(petal);
+        }
+    }
+
+    function bloom() {
+        if (hasBloomed) return;
+        hasBloomed = true;
+        garden.classList.add('bloomed');
+        container.classList.add('active');
+        // Tampilkan bubble setelah semua bunga (termasuk bunga utama) muncul
+        const totalDelay = (isDesktop ? 3.6 : 2.4) + 0.3; // + bunga utama
+        setTimeout(() => {
+            message.classList.add('visible');
+        }, (totalDelay + 0.5) * 1000);
+    }
+
+    // Intersection Observer untuk mendeteksi scroll ke bagian bunga
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                bloom();
+                observer.unobserve(garden);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    observer.observe(garden);
+
+    // Buat bunga & kelopak saat halaman dimuat
+    createFlowers();
+    createPetals();
+
+    // Jika pengguna sudah berada di bagian bawah saat load
+    if (garden.getBoundingClientRect().top < window.innerHeight) {
+        bloom();
+    }
+
+    // Update saat window di-resize (agar tidak perlu reload)
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Relatif sederhana: reload bunga jika ukuran berubah drastis
+            // Tapi untuk keperluan ini, kita biarkan saja—pengguna jarang resize saat di fanpage.
+        }, 500);
+    });
+})();
+
+
+// ========================================
 // TOAST NOTIFICATION SYSTEM
 // ========================================
 function showToast(message, type = 'info') {
