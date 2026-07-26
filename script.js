@@ -1484,6 +1484,42 @@ if (clearPhotoStickersBtn) {
     });
 })();
 
+// ========================================
+// LOVE LETTER — AMPLOP → POP-UP
+// ========================================
+(function() {
+    const triggerBtn = document.getElementById('envelope-btn');
+    const modal = document.getElementById('love-letter-modal');
+    const closeBtn = document.getElementById('modal-close');
+    const overlay = document.getElementById('modal-overlay');
+
+    if (!triggerBtn || !modal || !closeBtn || !overlay) return;
+
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Cegah scroll
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Klik amplop → buka
+    triggerBtn.addEventListener('click', openModal);
+
+    // Klik tombol close atau overlay → tutup
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+
+    // Tekan ESC → tutup
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+})();
+
 
 // ========================================
 // TOAST NOTIFICATION SYSTEM

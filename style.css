@@ -4110,3 +4110,310 @@ body.potato-mode .garden-eyebrow {
         opacity: 0.25;
     }
 }
+
+/* ========================================
+   LOVE LETTER — AMPLOP & MODAL
+   ======================================== */
+
+/* ===== AMPLOP DI FOOTER ===== */
+.love-letter-trigger {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 6px;
+    margin-top: -4px;
+    position: relative;
+    z-index: 2;
+}
+
+.envelope-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease;
+}
+
+.envelope-btn:hover {
+    transform: translateY(-3px);
+}
+
+.envelope {
+    position: relative;
+    width: 130px;
+    height: 88px;
+    background: linear-gradient(135deg, #fce4ec, #f8d7e0);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 2px solid var(--theme-accent);
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #fce4ec, #f8d7e0);
+    clip-path: polygon(0 0, 50% 55%, 100% 0);
+    border-bottom: 2px solid var(--theme-accent);
+    z-index: 1;
+}
+
+.envelope-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 0 0 6px 6px;
+}
+
+.envelope-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.envelope-label {
+    font-family: var(--font-hand);
+    font-size: 0.65rem;
+    color: var(--text);
+    opacity: 0.5;
+    letter-spacing: 0.5px;
+}
+
+/* ===== MODAL POP-UP ===== */
+.love-letter-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.love-letter-modal.active {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 0;
+}
+
+.modal-content {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    width: 92%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 2px solid var(--theme-accent);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 32px 28px 28px;
+    transform: scale(0.94);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.love-letter-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: var(--text);
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    line-height: 1;
+    z-index: 2;
+}
+
+.modal-close:hover {
+    opacity: 0.9;
+    transform: rotate(90deg);
+}
+
+/* Letter paper inside modal */
+.love-letter-modal .letter-paper {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    text-align: left;
+}
+
+.love-letter-modal .letter-paper::before {
+    display: none;
+}
+
+.love-letter-modal .letter-greeting {
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--theme-accent);
+    display: block;
+    margin-bottom: 14px;
+}
+
+.love-letter-modal .letter-body {
+    font-family: var(--font-hand);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text);
+    letter-spacing: 0.3px;
+}
+
+.love-letter-modal .letter-closing {
+    display: block;
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--theme-accent);
+    opacity: 0.4;
+    margin-top: 20px;
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode .envelope {
+    background: linear-gradient(135deg, #2c2f48, #1a1a2e);
+    border-color: rgba(192, 132, 252, 0.4);
+}
+body.dark-mode .envelope-flap {
+    background: linear-gradient(135deg, #2c2f48, #1a1a2e);
+}
+body.dark-mode .envelope-body {
+    background: rgba(255, 255, 255, 0.04);
+}
+body.dark-mode .envelope-label {
+    color: #d1d5db;
+}
+body.dark-mode .modal-content {
+    background: rgba(26, 26, 46, 0.94);
+    border-color: rgba(192, 132, 252, 0.4);
+}
+body.dark-mode .love-letter-modal .letter-greeting {
+    color: #c084fc;
+}
+body.dark-mode .love-letter-modal .letter-body {
+    color: #e2e8f0;
+}
+body.dark-mode .love-letter-modal .letter-closing {
+    color: #c084fc;
+}
+body.dark-mode .modal-close {
+    color: #e2e8f0;
+}
+
+/* ===== COZY MODE ===== */
+body.potato-mode .envelope {
+    background: linear-gradient(135deg, #ffe8e0, #ffd9d0);
+    border-color: #FFB6C1;
+}
+body.potato-mode .envelope-flap {
+    background: linear-gradient(135deg, #ffe8e0, #ffd9d0);
+}
+body.potato-mode .modal-content {
+    background: rgba(255, 245, 228, 0.96);
+    border-color: #FFB6C1;
+}
+body.potato-mode .love-letter-modal .letter-greeting {
+    color: #FF69B4;
+}
+body.potato-mode .love-letter-modal .letter-body {
+    color: #5D4037;
+}
+body.potato-mode .love-letter-modal .letter-closing {
+    color: #FF69B4;
+}
+body.potato-mode .modal-close {
+    color: #5D4037;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .envelope {
+        width: 110px;
+        height: 76px;
+    }
+    .envelope-icon {
+        font-size: 1.3rem;
+    }
+    .envelope-label {
+        font-size: 0.55rem;
+    }
+    .modal-content {
+        padding: 28px 20px 22px;
+        border-radius: 20px;
+    }
+    .love-letter-modal .letter-greeting {
+        font-size: 1.3rem;
+    }
+    .love-letter-modal .letter-body {
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+    .modal-close {
+        font-size: 1.4rem;
+        top: 12px;
+        right: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .envelope {
+        width: 100px;
+        height: 68px;
+    }
+    .envelope-icon {
+        font-size: 1.1rem;
+    }
+    .envelope-label {
+        font-size: 0.5rem;
+    }
+    .modal-content {
+        padding: 22px 16px 18px;
+        border-radius: 16px;
+    }
+    .love-letter-modal .letter-greeting {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    .love-letter-modal .letter-body {
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+    .modal-close {
+        font-size: 1.2rem;
+        top: 10px;
+        right: 12px;
+    }
+}
