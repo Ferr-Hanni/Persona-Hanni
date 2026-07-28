@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>a page for her</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500;700&family=Press+Start+2P&family=Gaegu:wght@400;700&display=swap"
         rel="stylesheet">
@@ -23,16 +24,18 @@
     <nav class="navbar">
         <div class="logo">HANNI PHAM</div>
         <div class="menu">
+            <button id="accessibility-btn" class="pixel-btn" aria-label="Accessibility Settings">⚙️</button>
             <button id="theme-selector-btn" class="pixel-btn" aria-label="Open theme selector">🎨 Themes</button>
             <button id="mode-btn" class="pixel-btn" aria-label="Switch to cozy mode">💕 Cozy</button>
             <button id="dark-mode-btn" class="pixel-btn" aria-label="Switch to dark mode">🌙 Dark</button>
+            <button id="social-btn" class="pixel-btn" aria-label="Open social links">🌐</button>
         </div>
     </nav>
     <!-- Theme Modal -->
     <div class="modal" id="theme-modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2>🎨 Choose Your Vibe!</h2>
+            <h2>🎨 Choose Vibe!</h2>
             <div class="theme-grid">
                 <button class="theme-card active" data-theme="default">
                     <div class="theme-preview pink-theme"></div>
@@ -61,6 +64,100 @@
             </div>
         </div>
     </div>
+
+    <!-- Accessibility Modal -->
+    <div id="accessibility-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-accessibility-modal">&times;</span>
+            <h2>Accessibility</h2>
+            <p class="modal-desc">These accessibility settings are useful for lower-end devices. Choose according to your needs.</p>
+
+            <div class="access-controls">
+                <!-- Toggle 1: Reduce Animations -->
+                <div class="access-toggle">
+                    <div class="toggle-info">
+                        <span class="toggle-label">Reduce Animations</span>
+                        <span class="toggle-desc">Disable floating decorations, falling petals, and sparkles.</span>
+                    </div>
+                    <div class="toggle-wrapper">
+                        <span class="toggle-status off" id="status-reduce-animations">OFF</span>
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-reduce-animations">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Toggle 2: Power Saving Mode -->
+                <div class="access-toggle">
+                    <div class="toggle-info">
+                        <span class="toggle-label">Power Saving Mode</span>
+                        <span class="toggle-desc">Remove blur, shadows, and heavy effects for smooth scrolling.</span>
+                    </div>
+                    <div class="toggle-wrapper">
+                        <span class="toggle-status off" id="status-power-saving">OFF</span>
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-power-saving">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <p class="access-note">Changes are saved automatically.</p>
+        </div>
+    </div>
+
+    <!-- Social Media Modal -->
+    <div id="social-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-social-modal">&times;</span>
+            <h2 class="modal-title">Media Social</h2>
+            <p class="modal-subtitle">my social media</p>
+            <div class="social-grid">
+                <!-- Instagram -->
+                <a href="https://instagram.com/imnotferrriii" target="_blank" class="social-card" id="social-ig">
+                    <div class="social-icon-wrapper instagram-bg">
+                        <i class="fab fa-instagram social-icon"></i>
+                    </div>
+                    <div class="social-info">
+                        <span class="social-name">Instagram</span>
+                    </div>
+                    <span class="social-arrow">→</span>
+                </a>
+                <!-- 4. X (Twitter) — BARU! -->
+                    <a href="https://x.com/imnotferrriii" target="_blank" class="social-card" id="social-x">
+                        <div class="social-icon-wrapper x-bg">
+                            <i class="fa-brands fa-x-twitter social-icon"></i>
+                        </div>
+                        <div class="social-info">
+                            <span class="social-name">X</span>
+                        </div>
+                        <span class="social-arrow">→</span>
+                    </a>
+                <!-- Spotify -->
+                <a href="https://open.spotify.com/user/31spj2fx23tza22yk6gka7q23xje?si=ac0cbd4ae71547d8" target="_blank" class="social-card" id="social-spotify">
+                    <div class="social-icon-wrapper spotify-bg">
+                        <i class="fab fa-spotify social-icon"></i>
+                    </div>
+                    <div class="social-info">
+                        <span class="social-name">Spotify</span>
+                    </div>
+                    <span class="social-arrow">→</span>
+                </a>
+
+                <!-- Discord -->
+                    <a href="https://discord.com/users/701465345524891700" target="_blank" class="social-card" id="social-discord">
+                        <div class="social-icon-wrapper discord-bg">
+                            <i class="fab fa-discord social-icon"></i>
+                        </div>
+                        <div class="social-info">
+                            <span class="social-name">Discord</span>
+                        </div>
+                        <span class="social-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     
     <!-- Hero Section -->
     <header class="hero">
@@ -344,7 +441,8 @@
                 <p class="gallery-caption">and still</p>
             </div>
         </div>
-        <p class="gallery-credit">I like all her photos with glasses more than the makeup</p>
+        <p class="gallery-credit">I chose your photo when you were wearing glasses,
+             because I really like it more than just your makeup</p>
     </section>
 
     <!-- Flower Garden — Closing Scene -->
@@ -375,17 +473,6 @@
             </div>
             <!-- Tagline -->
             <p class="footer-tagline">Designed with <span class="heart">❤️</span> for Hanni</p>
-            <!-- Username + Icon IG -->
-            <div class="footer-ig-wrapper">
-                <a href="https://instagram.com/imnotferrriii" target="_blank" class="footer-ig-link">
-                    <span class="ig-username">@imnotferrriii</span>
-                    <svg class="ig-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                    </svg>
-                </a>
-            </div>
             <!-- Copyright + Hati kecil -->
             <div class="footer-copy-wrapper">
                 <span class="footer-copy">&copy; 2026 Feri · All rights reserved</span>
@@ -413,15 +500,14 @@
                     <div class="letter-paper">
                         <span class="letter-greeting">Dear you,</span>
                         <p class="letter-body">
-                            I don't know if this letter will ever reach you, but I wanted to write it anyway.
+                            I know you might never actually see this fan page I made...
                             <br><br>
-                            You don't know me, and maybe you never will. But I see something in you—not the you on stage, but the you who smiles quietly, who listens more than speaks, who feels deeply without needing to say it out loud.
-                            <br><br>
-                            I don't expect anything from you. I just want to acknowledge that you've stayed in my mind, even when I tried to let go. It's not about love in the way people usually mean it. It's about admiration, about quiet longing for a presence that feels real.
-                            <br><br>
-                            If there's someone out there with a soul like yours, I hope I meet her someday. Until then, this page is my way of keeping you close.
+                            the meaning of all the fanpages I made...is because I like your traits and personality, 
+                            but I hope to find a girl out there with traits and personality similar to yours.
                             <br><br>
                             — Feri
+                            <br><br>
+                            🧸🌹
                         </p>
                         <span class="letter-closing">✧</span>
                     </div>

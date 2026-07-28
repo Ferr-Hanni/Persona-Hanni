@@ -1520,6 +1520,147 @@ if (clearPhotoStickersBtn) {
     });
 })();
 
+// ========================================
+// ACCESSIBILITY TOGGLES
+// ========================================
+
+const toggleReduceAnimations = document.getElementById('toggle-reduce-animations');
+const togglePowerSaving = document.getElementById('toggle-power-saving');
+const statusReduce = document.getElementById('status-reduce-animations');
+const statusPower = document.getElementById('status-power-saving');
+
+// --- Load saved states ---
+const savedReduce = localStorage.getItem('accessibility-reduce-animations') === 'true';
+const savedPower = localStorage.getItem('accessibility-power-saving') === 'true';
+
+if (savedReduce) {
+    document.body.classList.add('reduce-animations');
+    if (toggleReduceAnimations) toggleReduceAnimations.checked = true;
+    if (statusReduce) {
+        statusReduce.textContent = 'ON';
+        statusReduce.className = 'toggle-status on';
+    }
+}
+
+if (savedPower) {
+    document.body.classList.add('power-saving');
+    if (togglePowerSaving) togglePowerSaving.checked = true;
+    if (statusPower) {
+        statusPower.textContent = 'ON';
+        statusPower.className = 'toggle-status on';
+    }
+}
+
+// --- Reduce Animations ---
+if (toggleReduceAnimations) {
+    toggleReduceAnimations.addEventListener('change', function() {
+        const isChecked = this.checked;
+        document.body.classList.toggle('reduce-animations', isChecked);
+        localStorage.setItem('accessibility-reduce-animations', isChecked);
+        
+        if (statusReduce) {
+            statusReduce.textContent = isChecked ? 'ON' : 'OFF';
+            statusReduce.className = 'toggle-status ' + (isChecked ? 'on' : 'off');
+        }
+        
+        // Show toast feedback
+        showToast(
+            isChecked ? '🎞️ Animations reduced' : '🎞️ Animations restored',
+            'info'
+        );
+    });
+}
+
+// --- Power Saving Mode ---
+if (togglePowerSaving) {
+    togglePowerSaving.addEventListener('change', function() {
+        const isChecked = this.checked;
+        document.body.classList.toggle('power-saving', isChecked);
+        localStorage.setItem('accessibility-power-saving', isChecked);
+        
+        if (statusPower) {
+            statusPower.textContent = isChecked ? 'ON' : 'OFF';
+            statusPower.className = 'toggle-status ' + (isChecked ? 'on' : 'off');
+        }
+        
+        showToast(
+            isChecked ? '⚡ Power saving enabled' : '⚡ Power saving disabled',
+            'info'
+        );
+    });
+}
+
+// ========================================
+// ACCESSIBILITY MODAL — OPEN/CLOSE
+// ========================================
+
+const accessModal = document.getElementById('accessibility-modal');
+const accessBtn = document.getElementById('accessibility-btn');
+const closeAccessBtn = document.getElementById('close-accessibility-modal');
+
+if (accessBtn && accessModal) {
+    accessBtn.addEventListener('click', () => {
+        accessModal.style.display = 'block';
+    });
+}
+
+if (closeAccessBtn && accessModal) {
+    closeAccessBtn.addEventListener('click', () => {
+        accessModal.style.display = 'none';
+    });
+}
+
+window.addEventListener('click', (e) => {
+    if (e.target === accessModal) {
+        accessModal.style.display = 'none';
+    }
+});
+
+// ========================================
+// KEYBOARD SHORTCUT: ESC to close accessibility modal
+// ========================================
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && accessModal && accessModal.style.display === 'block') {
+        accessModal.style.display = 'none';
+    }
+});
+
+// ========================================
+// SOCIAL MODAL — OPEN / CLOSE
+// ========================================
+
+const socialBtn = document.getElementById('social-btn');
+const socialModal = document.getElementById('social-modal');
+const closeSocialBtn = document.getElementById('close-social-modal');
+
+if (socialBtn && socialModal) {
+    socialBtn.addEventListener('click', () => {
+        socialModal.style.display = 'block';
+    });
+}
+
+if (closeSocialBtn && socialModal) {
+    closeSocialBtn.addEventListener('click', () => {
+        socialModal.style.display = 'none';
+    });
+}
+
+// Tutup modal jika klik di luar konten
+window.addEventListener('click', (e) => {
+    if (e.target === socialModal) {
+        socialModal.style.display = 'none';
+    }
+});
+
+// ESC key untuk tutup semua modal (sudah ada, tapi kita tambahkan untuk social)
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (socialModal && socialModal.style.display === 'block') {
+            socialModal.style.display = 'none';
+        }
+    }
+});
+
 
 // ========================================
 // TOAST NOTIFICATION SYSTEM

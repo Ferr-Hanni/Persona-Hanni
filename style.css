@@ -1299,7 +1299,7 @@ body.potato-mode .control-btn {
 }
 
 /* ========================================
-   THEME MODAL
+   MODAL
    ======================================== */
 .modal {
     display: none;
@@ -1311,22 +1311,64 @@ body.potato-mode .control-btn {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    
+    /* Pusatkan konten */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Saat modal aktif (display:flex) — kita gunakan class .active atau display:flex langsung */
+.modal[style*="display: block"] {
+    display: flex !important;
 }
 
 .modal-content {
     background: white;
-    margin: 5% auto;
     padding: 30px;
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideDown 0.3s ease;
+    margin: 0; /* hilangkan margin auto */
+    position: relative;
+    /* tidak perlu top/left karena flex sudah memusatkan */
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-30px) scale(0.96);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   RESPONSIVE MODAL — MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 24px 20px;
+        max-height: 85vh;
+        border-radius: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 98%;
+        padding: 20px 16px;
+        max-height: 80vh;
+        border-radius: 16px;
+    }
 }
 
 .close-modal {
@@ -4119,8 +4161,8 @@ body.potato-mode .garden-eyebrow {
 .love-letter-trigger {
     display: flex;
     justify-content: center;
-    padding: 10px 0 6px;
-    margin-top: -4px;
+    padding: 10px;
+    margin-top: 15px;
     position: relative;
     z-index: 2;
 }
@@ -4140,7 +4182,7 @@ body.potato-mode .garden-eyebrow {
 .envelope {
     position: relative;
     width: 130px;
-    height: 88px;
+    height: 90px;
     background: linear-gradient(135deg, #fce4ec, #f8d7e0);
     border-radius: 6px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
@@ -4416,4 +4458,522 @@ body.potato-mode .modal-close {
         top: 10px;
         right: 12px;
     }
+}
+
+/* ========================================
+   MODERN ACCESSIBILITY TOGGLES ✨
+   ======================================== */
+
+/* --- Container tiap toggle --- */
+.access-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: background 0.25s ease, border-color 0.25s ease;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.access-toggle:last-child {
+    margin-bottom: 0;
+}
+
+.access-toggle:hover {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: var(--theme-secondary);
+}
+
+/* --- Informasi teks --- */
+.toggle-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.toggle-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    display: block;
+    line-height: 1.3;
+}
+
+.toggle-desc {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    display: block;
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
+/* --- Wrapper kanan (status + switch) --- */
+.toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+/* --- Status ON/OFF (Pill Badge) --- */
+.toggle-status {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    padding: 3px 12px;
+    border-radius: 30px;
+    background: #f1f3f5;
+    color: #9ca3af;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 44px;
+    text-align: center;
+    border: 1px solid transparent;
+}
+
+.toggle-status.on {
+    background: color-mix(in srgb, var(--theme-accent) 20%, white);
+    color: var(--theme-accent);
+    border-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-accent) 15%, transparent);
+}
+
+/* --- MODERN SWITCH (iOS Style) --- */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #d1d5db;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 34px;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background: #ffffff;
+    transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.04);
+    will-change: transform;
+}
+
+/* Saat dicentang (ON) */
+.switch input:checked + .slider {
+    background: var(--theme-accent);
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(24px);
+}
+
+/* Efek "klik" (scale down) biar terasa modern */
+.switch:active .slider::before {
+    transform: scale(0.85);
+}
+
+.switch input:checked:active + .slider::before {
+    transform: translateX(24px) scale(0.85);
+}
+
+/* ========================================
+   DARK MODE — Toggle tetap keren
+   ======================================== */
+body.dark-mode .access-toggle {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(192, 132, 252, 0.15);
+}
+
+body.dark-mode .access-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(192, 132, 252, 0.3);
+}
+
+body.dark-mode .toggle-label {
+    color: #e2e8f0;
+}
+
+body.dark-mode .toggle-desc {
+    color: #6b7280;
+}
+
+body.dark-mode .toggle-status {
+    background: rgba(255, 255, 255, 0.06);
+    color: #6b7280;
+}
+
+body.dark-mode .toggle-status.on {
+    background: rgba(192, 132, 252, 0.2);
+    color: #c084fc;
+    border-color: rgba(192, 132, 252, 0.3);
+}
+
+body.dark-mode .slider {
+    background: #4b4b6b;
+}
+
+body.dark-mode .slider::before {
+    background: #e2e8f0;
+}
+
+/* ========================================
+   COZY MODE — Toggle tetap hangat
+   ======================================== */
+body.potato-mode .access-toggle {
+    background: rgba(255, 245, 228, 0.7);
+    border-color: #fcd5ce;
+}
+
+body.potato-mode .access-toggle:hover {
+    background: rgba(255, 245, 228, 0.95);
+    border-color: #FFB6C1;
+}
+
+body.potato-mode .toggle-label {
+    color: #5D4037;
+}
+
+body.potato-mode .toggle-status.on {
+    background: #ffe4e1;
+    color: #FF69B4;
+    border-color: #FFB6C1;
+}
+
+body.potato-mode .slider {
+    background: #dbb8b0;
+}
+
+/* ========================================
+   RESPONSIVE — Tetap rapi di HP
+   ======================================== */
+@media (max-width: 600px) {
+    .access-toggle {
+        padding: 14px 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+        border-radius: 14px;
+    }
+
+    .toggle-wrapper {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .toggle-label {
+        font-size: 0.85rem;
+    }
+
+    .toggle-desc {
+        font-size: 0.7rem;
+    }
+
+    .switch {
+        width: 44px;
+        height: 24px;
+    }
+
+    .slider::before {
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+    }
+
+    .switch input:checked + .slider::before {
+        transform: translateX(20px);
+    }
+
+    .toggle-status {
+        font-size: 0.6rem;
+        min-width: 36px;
+        padding: 2px 8px;
+    }
+}
+
+/* ========================================
+   SOCIAL MODAL — NAVBAR POPUP
+   ======================================== */
+
+#social-modal .modal-content {
+    max-width: 480px;
+}
+
+.modal-title {
+    font-family: var(--font-pixel);
+    font-size: 1.3rem;
+    text-align: center;
+    color: var(--theme-accent);
+    margin-bottom: 4px;
+}
+
+.modal-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+.social-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.social-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 16px;
+    border: 1.5px solid rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--theme-secondary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 16px;
+}
+
+.social-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    border-color: var(--theme-accent);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.social-card:hover::before {
+    opacity: 0.15;
+}
+
+.social-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    background: #f1f3f5;
+    transition: transform 0.3s ease;
+}
+
+.social-card:hover .social-icon-wrapper {
+    transform: scale(1.05) rotate(-3deg);
+}
+
+.social-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.social-info {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.social-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.social-handle {
+    display: block;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    line-height: 1.3;
+}
+
+.social-arrow {
+    font-size: 1.2rem;
+    color: #d1d5db;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.social-card:hover .social-arrow {
+    transform: translateX(4px);
+    color: var(--theme-accent);
+}
+
+.social-footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #d1d5db;
+    margin-top: 6px;
+    font-family: var(--font-hand);
+    letter-spacing: 0.5px;
+}
+
+/* Warna khusus untuk masing-masing platform (optional) */
+#social-ig .social-icon-wrapper {
+    background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+#social-spotify .social-icon-wrapper {
+    background: #1DB954;
+    color: white;
+}
+#social-spotify .social-icon {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* ========================================
+   DARK MODE — SOCIAL MODAL
+   ======================================== */
+body.dark-mode .social-card {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(192, 132, 252, 0.15);
+}
+body.dark-mode .social-card:hover {
+    border-color: rgba(192, 132, 252, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+body.dark-mode .social-name {
+    color: #e2e8f0;
+}
+body.dark-mode .social-handle {
+    color: #6b7280;
+}
+body.dark-mode .social-arrow {
+    color: #4b5563;
+}
+body.dark-mode .modal-subtitle {
+    color: #6b7280;
+}
+
+/* ========================================
+   COZY MODE — SOCIAL MODAL
+   ======================================== */
+body.potato-mode .social-card {
+    background: rgba(255, 245, 228, 0.7);
+    border-color: #fcd5ce;
+}
+body.potato-mode .social-card:hover {
+    border-color: #FFB6C1;
+    box-shadow: 0 8px 24px rgba(255, 182, 193, 0.2);
+}
+body.potato-mode .social-name {
+    color: #5D4037;
+}
+body.potato-mode .social-handle {
+    color: #b0958a;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 480px) {
+    #social-modal .modal-content {
+        padding: 20px 16px;
+    }
+    .social-card {
+        padding: 12px 14px;
+        gap: 12px;
+    }
+    .social-icon-wrapper {
+        width: 38px;
+        height: 38px;
+    }
+    .social-icon {
+        font-size: 1.3rem;
+    }
+    .social-name {
+        font-size: 0.85rem;
+    }
+    .social-handle {
+        font-size: 0.65rem;
+    }
+    .modal-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY MODE — REDUCE ANIMATIONS
+   ======================================== */
+body.reduce-animations * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+body.reduce-animations .floating-element,
+body.reduce-animations .floating-deco,
+body.reduce-animations .particle,
+body.reduce-animations .petal,
+body.reduce-animations .sparkle-container,
+body.reduce-animations .hero-decorations,
+body.reduce-animations .section-decorations,
+body.reduce-animations #petal-container,
+body.reduce-animations .visualizer.playing .bar {
+    display: none !important;
+}
+body.reduce-animations .flower {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+/* Power Saving */
+body.power-saving .navbar,
+body.power-saving .hero-photo-card,
+body.power-saving .status-badge,
+body.power-saving .outfit-selector,
+body.power-saving .music-player-real,
+body.power-saving .trait-card,
+body.power-saving .control-group,
+body.power-saving .photo-frame,
+body.power-saving .floating-bubble,
+body.power-saving .modal-content,
+body.power-saving .flower-bubble {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+body.power-saving .trait-card:hover,
+body.power-saving .hero-photo-card:hover {
+    transform: none !important;
 }
